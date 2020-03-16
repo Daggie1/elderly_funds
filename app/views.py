@@ -1,31 +1,42 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.base import TemplateView, View
-from .forms import testForm
+from .forms import FileForm, DocumentTypeForm, DocumentForm
 
 
 # Create your views here.
 
+class FileView(View):
+    def get(self, request):
+        template_name = 'add_file.html'
+        form = FileForm()
+        return render(request, template_name, {'form': form})
 
-def create_file(request):
-    json = {'a': 1,
-            'b': 2,
-            'c': 3,
-            'd': 4}
-    form = testForm()
-    return render(request, 'base.html', {'form': form})
+    def post(self, request):
+        template_name = 'view_files.html'
+        form = FileForm(request.Post)
 
-
-class UploadDocument():
-    pass
-
-
-class QualityAssurance():
-    pass
-
-
-class ValidateDocument():
-    pass
+        if form.is_valid():
+            form.save()
+            return render(request, template_name)
+        else:
+            return redirect('add_file')
 
 
-class ReadBarCode():
-    pass
+class DocumentTypeView(View):
+    def get(self, request):
+        template_name = 'add_document_type.html'
+        form = DocumentTypeForm()
+        return render(request, template_name, {'form': form})
+
+    def post(self, request):
+        pass
+
+
+class DocumentUpload(View):
+    def get(self, request):
+        template_name = 'upload_document.html'
+        form = DocumentForm()
+        return render(request, template_name, {'form':form})
+
+    def post(self):
+        pass

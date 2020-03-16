@@ -1,0 +1,32 @@
+{%  extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+     <div class="row">
+          <!-- left column -->
+          <div class="col-md-6">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Add File</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form role="form" action="" method="POST">
+                <div class="card-body">
+                  <div class="form-group">
+                    {{ form.file_type | as_crispy_field }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.file_description | as_crispy_field }}
+                  </div>
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+     </div>
+{% endblock content %}
