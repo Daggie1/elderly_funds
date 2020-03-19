@@ -36,10 +36,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app.apps.AppConfig',
-    'crispy_forms'
+    'crispy_forms',
+    'django_jsonforms',
+    'django_tables2',
+    'django_filters',
 
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+JSONFORMS_SCHEMA_DIR = '/static/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -118,6 +122,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATIC_URL = '/static/'
+STATIC_ROOT =  os.path.join(BASE_DIR, 'static')
 
 
 

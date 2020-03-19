@@ -19,28 +19,28 @@ class DocumentType(models.Model):
 
 #
 class DocumentFile(models.Model):
-    # file_reference = models.CharField(primary_key=True, max_length=100)
+    file_reference = models.CharField(primary_key=True, max_length=100)
     file_type = models.ForeignKey(DocumentFileType, on_delete=models.CASCADE)
     document = models.FileField(upload_to='documents')
-    file_status = models.CharField(max_length=100)
-    captured_by = models.CharField(max_length=100)
+    file_status = models.CharField(max_length=100, null=True)
+    captured_by = models.CharField(max_length=100, null=True)
     created_on = models.DateTimeField(auto_now_add=timezone.now())
-    assessed_by = models.CharField(max_length=100)
-    assessed_on = models.DateTimeField(auto_now_add=timezone.now())
-    validated_by = models.CharField(max_length=100)
+    assessed_by = models.CharField(max_length=100, null=True)
+    assessed_on = models.DateTimeField(auto_now_add=timezone.now(), null=True)
+    validated_by = models.CharField(max_length=100, null=True)
     file_barcode = models.CharField(null=True, max_length=100)
-#
-# class DocumentFileDetail(models.Model):
-#     file_detail_id = models.AutoField(primary_key=True)
-#     file_reference = models.ForeignKey(DocumentFileType, on_delete=models.CASCADE)
-#     document_barcode = models.CharField(max_length=255)
-#     document_name =models.ForeignKey(DocumentFile, on_delete=models.CASCADE)
-#     document_content = JSONField()
-#     document_file_path = models.CharField(max_length=255)
-#     created_on = models.DateTimeField(default=timezone.now())
-#     captured_by = models.CharField(max_length=255)
-#     assessed_by = models.CharField(max_length=255)
-#     validated_by = models.CharField(max_length=255)
+
+class DocumentFileDetail(models.Model):
+    file_detail_id = models.AutoField(primary_key=True)
+    file_reference = models.ForeignKey(DocumentFileType, on_delete=models.CASCADE)
+    document_barcode = models.CharField(max_length=255)
+    document_name =models.ForeignKey(DocumentFile, on_delete=models.CASCADE)
+    document_content = JSONField()
+    document_file_path = models.CharField(max_length=255)
+    created_on = models.DateTimeField(default=timezone.now())
+    captured_by = models.CharField(max_length=255)
+    assessed_by = models.CharField(max_length=255)
+    validated_by = models.CharField(max_length=255)
 #
 #
 #

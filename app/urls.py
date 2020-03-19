@@ -1,9 +1,25 @@
 from django.urls import path, re_path
 
-from .views import FileView, DocumentTypeView, DocumentUpload
+from .views import DocumentTypeView, DocumentUpload, search_file, TranscribeDocument, AdminView, edit_file, \
+    manage_documents, FileTypeDelete, FileTypeCreate, FileTypeList, DocumentFileCreate, DocumentFileList, DocumentTypeCreate, DocumentTypeList
 
 urlpatterns = [
-    path('', FileView.as_view(), name='add_file'),
+    path('', AdminView.as_view(), name='home'),
+
+    # file type urls
+    path('create_file_type/', FileTypeCreate.as_view(), name='create_file_type'),
+    path('list_files_types', FileTypeList.as_view(), name='list_file_types'),
+    path('delete_file_type/<str:pk>/delete/', FileTypeDelete.as_view(), name='delete_file_type'),
+    # physical file urls
+    path('create_file', DocumentFileCreate.as_view(), name='create_document_file'),
+    path('list_document_files', DocumentFileList.as_view(), name='list_document_files'),
+
+    #Document Types
+    path('create_document_type',DocumentTypeCreate.as_view(), name='create_document_type'),
+    path('view_document_types', DocumentTypeList.as_view(), name='list_document_types'),
+
+    path('upload_document/<str:file_type>', manage_documents, name='upload_document'),
     path('add_document_type/', DocumentTypeView.as_view(), name='add_doc_type'),
-    path('upload_document/', DocumentUpload.as_view(), name='upload_document')
+    path('transcribe/', TranscribeDocument.as_view()),
+    path('search_file', search_file, name='search_file'),
 ]

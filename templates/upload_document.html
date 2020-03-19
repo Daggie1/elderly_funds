@@ -5,6 +5,31 @@
 
 {#    upload a document belonging to a give file#}
     <div class="row">
+    <div class="col-md-6">
+    <div class="card card-secondary">
+        <div class="card-header">
+            <h3 class="card-title text-info">Documents</h3>
+        </div>
+        <div class="card-body">
+              <form class="form-inline ml-3">
+          <div class="input-group">
+            <input class="form-control" type="search" placeholder="Search File" aria-label="Search">
+            <div class="input-group-append">
+              <button class="btn btn-navbar" type="submit">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+
+
+          </div>
+        </form>
+              <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Search Results</li>
+                </ul>
+        </div>
+
+    </div>
+        </div>
           <!-- left column -->
           <div class="col-md-6">
             <!-- general form elements -->
@@ -17,6 +42,7 @@
               <form role="form">
                 <div class="card-body">
 {#                    {{ form.file_type | as_crispy_field }}#}
+                    {{ form.file_barcode | as_crispy_field }}
                   {{ form.docfile | as_crispy_field }}
 
                 </div>

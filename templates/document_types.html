@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="row">
+           <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Recent Files</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="width: 10px">#</th>
+                      <th>File Reference</th>
+                      <th>File Type Description</th>
+                      <th style="width: 40px">Edit</th>
+                      <th style="width: 40px">Delete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% if documents %}
+                      {% for doc in documents %}
+                    <tr>
+                      <td></td>
+                      <td>{{    doc.document_name }}</td>
+                      <td>
+                        {{ doc.document_description }}
+                      </td>
+                      <td><a href="" class="btn btn-primary"><span class="fa fa-edit"></span></a></td>
+                      <td><a href="#" class="btn btn-danger"><span class="fa fa-trash"></span></a></td>
+                      <td><a href="#" class="btn btn-success">Preview Form <span class="fa fa-eye"></span></a></td>
+                    </tr>
+                      {% endfor %}
+                  {% else %}
+                      <tr>
+                      <td></td>
+                          <td><b>Not files In the System</b></td>
+                      </tr>
+                  {% endif %}
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+                <ul class="pagination pagination-sm m-0 float-right">
+                  <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                </ul>
+              </div>
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+{% endblock %}
