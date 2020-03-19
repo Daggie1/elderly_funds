@@ -32,9 +32,9 @@ class DocumentFile(models.Model):
 
 
 class DocumentFileDetail(models.Model):
-    file_reference = models.ForeignKey(DocumentFileType, on_delete=models.CASCADE)
+    file_reference = models.ForeignKey(DocumentFile, on_delete=models.CASCADE)
     document_barcode = models.CharField(max_length=255)
-    document_name = models.ForeignKey(DocumentFile, db_column="file_reference", on_delete=models.CASCADE)
+    document_name = models.ForeignKey(DocumentType, db_column="file_reference", on_delete=models.CASCADE)
     document_content = JSONField(null=True)
     document_file_path = models.FileField(upload_to='documents')
     created_on = models.DateTimeField(default=timezone.now())
@@ -47,7 +47,7 @@ class DocumentFileDetail(models.Model):
 # class DocumentState(models.Model):
 #     state_code = models.CharField()
 #     state_name = models.CharField()
-#     state_paremeter = models.CharField()
+#     state_parameter = models.CharField()
 #     document_validation_status = models.CharField()
 #     document_quality_control = models.CharField()
 #

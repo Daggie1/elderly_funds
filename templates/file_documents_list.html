@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load render_table from django_tables2 %}
+{% block content %}
+
+  <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Documents In This FIle</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              {% render_table table %}
+            </div>
+            <!-- /.card-body -->
+          </div>
+        </div>
+  </div>
+{% endblock content %}

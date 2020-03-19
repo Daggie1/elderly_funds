@@ -28,6 +28,8 @@
   <link rel="stylesheet" href="{% static 'adminlte/plugins/summernote/summernote-bs4.css' %}">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    {% block header %}
+    {% endblock %}
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -222,7 +224,7 @@
                 </a>
               </li>
                   <li class="nav-item">
-                <a href="./index.html" class="nav-link">
+                <a href="{% url 'list_document_files' %}" class="nav-link">
                   <i class="fas fa-glasses nav-icon"></i>
                   <p>Transcribe Documents</p>
                 </a>
@@ -343,5 +345,7 @@
 <script src="{% static 'adminlte/plugins/datatables/jquery.dataTables.js' %}"></script>
 <script src="{% static 'adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.js' %}"></script>
 
+{% block js %}
+{% endblock %}
 </body>
 </html>

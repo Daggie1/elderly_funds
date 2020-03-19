@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+     <script src="https://unpkg.com/pdfjs-dist@2.0.489/build/pdf.min.js"></script>
+    <link rel="stylesheet" href="{% static 'scripts/pdf.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="row">
+    <div class="col-md-6">
+        <div id="app">
+      <div role="toolbar" id="toolbar">
+        <div id="pager">
+          <button data-pager="prev">prev</button>
+          <button data-pager="next">next</button>
+        </div>
+        <div id="page-mode">
+          <label>Page Mode <input type="number" value="1" min="1"/></label>
+        </div>
+      </div>
+      <div id="viewport-container"><div role="main" id="viewport"></div></div>
+    </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <form action="" method="POST">
+                    {{form.as_p}}
+                    {{form.media}}
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock content %}
+{% block js %}
+
+
+    <script src="{% static 'scripts/pdfrender.js' %}"></script>
+    <script>
+      initPDFViewer("{{document.document_file_path.url}}");
+    </script>
+
+{% endblock js %}

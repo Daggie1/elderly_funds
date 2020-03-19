@@ -2,14 +2,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import DeleteView, CreateView
 from django.views.generic import ListView, DetailView
-from .forms import FileForm, DocumentTypeForm, DocumentForm, BirthCertificateForm
+from .forms import FileForm, DocumentTypeForm, DocumentForm, FileContentForm
 from .models import DocumentFile, DocumentFileType, DocumentType, DocumentFileDetail
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
-from .tables import DocumentFileTable
+from .tables import DocumentFileTable, DocumentTable
 from .filters import DocumentFileFilter
-from django_tables2 import SingleTableView,SingleTableMixin
+from django_tables2 import SingleTableView, SingleTableMixin
 from django_filters.views import FilterView
+from django_jsonforms.forms import JSONSchemaField, JSONSchemaForm
 
 
 # Create your views here.
@@ -92,9 +93,10 @@ class DocumentFileList(SingleTableMixin, FilterView):
 class DocumentTypeCreate(CreateView):
     model = DocumentType
     template_name = 'add_document_type.html'
-    fields = ['document_name','document_description','document_field_specs']
+    fields = ['document_name', 'document_description', 'document_field_specs']
 
     success_url = reverse_lazy('list_document_types')
+
 
 class DocumentTypeList(ListView):
     model = DocumentType
@@ -111,38 +113,35 @@ class DocumentTypeView(View):
     def post(self, request):
         pass
 
+
 class DocumentUploadView(CreateView):
     model = DocumentFileDetail
     template_name = 'upload_document.html'
-    fields = ['file_reference','document_barcode','document_name','document_file_path']
+    fields = ['file_reference', 'document_barcode', 'document_name', 'document_file_path']
     success_url = reverse_lazy('uploaded_documents')
+
 
 class UploadedDocumentsList(ListView):
     model = DocumentFileDetail
     template_name = 'uploaded_documents_list.html'
 
 
-class DocumentUpload(View):
-    def get(self, request):
-        template_name = 'upload_document.html'
-        form = DocumentForm()
-        return render(request, template_name, {'form': form})
+class DocumentTranscribe(View):
+    def get(self, request, file_reference):
+        # query documents belonging to this file & aggregate with its corresponding document type
+        queryset = DocumentFileDetail.objects.filter(file_reference_id=file_reference)
+        print(queryset)
+        # file = get_object_or_404(DocumentFile, pk=file_reference)
+        table = DocumentTable(queryset)
+        return render(request, 'file_documents_list.html', {'table': table})
 
-    def post(self, request):
-        template_name = 'upload_document.html'
-        if request.method == 'POST':
-            form = DocumentForm(request.POST, request.FILES)
-            if form.is_valid():
-                newdoc = DocumentFile(docfile=request.FILES['docfile'])
-                newdoc.save()
-
-                return redirect('upload_document')
-        form = DocumentForm()
-        return render(request, template_name, {'form': form})
+    def post(self):
+        # update the document file detail
+        pass
 
 
-class TranscribeDocument(View):
-    def get(self, request):
-        form = BirthCertificateForm()
-        template_name = 'transcribe_document.html'
-        return render(request, template_name, {'form': form})
+def get_document_and_document_type(request, doc_id, file_type):
+    document = get_object_or_404(DocumentFileDetail, pk=doc_id)
+    document_type = DocumentType.objects.get(pk=file_type)
+    form = JSONSchemaForm(schema=document_type.document_field_specs, options={"theme":"bootstrap3"})
+    return render(request, 'transcription_lab.html', {'form': form, 'document': document})

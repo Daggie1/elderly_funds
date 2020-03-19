@@ -4,6 +4,12 @@ from django_jsonforms.forms import JSONSchemaField
 from .models import DocumentFileType, DocumentType, DocumentFile
 
 
+class FileContentForm(Form):
+    schema = None
+
+    json = JSONSchemaField(schema=schema, options={"theme": "bootstrap3"}, ajax=True)
+
+
 class FileForm(forms.ModelForm):
     class Meta:
         model = DocumentFileType
@@ -38,7 +44,7 @@ class NationalIDForm(Form):
     id_no = forms.IntegerField(label='ID Card Number')
     full_names = forms.CharField(label='Full Names')
     date_of_birth = forms.DateTimeField(label='Date of Birth')
-    gender = forms.Select( choices=['Male', 'Female'])
+    gender = forms.Select(choices=['Male', 'Female'])
     district = forms.CharField(label='District')
     division = forms.CharField(label='Division')
     location = forms.CharField(label='Location')
