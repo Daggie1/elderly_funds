@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import DeleteView, CreateView
 from django.views.generic import ListView, DetailView
 from .forms import FileForm, DocumentTypeForm, DocumentForm, BirthCertificateForm
-from .models import DocumentFile, DocumentFileType, DocumentType
+from .models import DocumentFile, DocumentFileType, DocumentType, DocumentFileDetail
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from .tables import DocumentFileTable
@@ -110,6 +110,16 @@ class DocumentTypeView(View):
 
     def post(self, request):
         pass
+
+class DocumentUploadView(CreateView):
+    model = DocumentFileDetail
+    template_name = 'upload_document.html'
+    fields = ['file_reference','document_barcode','document_name','document_file_path']
+    success_url = reverse_lazy('uploaded_documents')
+
+class UploadedDocumentsList(ListView):
+    model = DocumentFileDetail
+    template_name = 'uploaded_documents_list.html'
 
 
 class DocumentUpload(View):

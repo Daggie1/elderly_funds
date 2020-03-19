@@ -30,17 +30,17 @@ class DocumentFile(models.Model):
     validated_by = models.CharField(max_length=100, null=True)
     file_barcode = models.CharField(null=True, max_length=100)
 
+
 class DocumentFileDetail(models.Model):
-    file_detail_id = models.AutoField(primary_key=True)
     file_reference = models.ForeignKey(DocumentFileType, on_delete=models.CASCADE)
     document_barcode = models.CharField(max_length=255)
-    document_name =models.ForeignKey(DocumentFile, on_delete=models.CASCADE)
-    document_content = JSONField()
-    document_file_path = models.CharField(max_length=255)
+    document_name = models.ForeignKey(DocumentFile, db_column="file_reference", on_delete=models.CASCADE)
+    document_content = JSONField(null=True)
+    document_file_path = models.FileField(upload_to='documents')
     created_on = models.DateTimeField(default=timezone.now())
-    captured_by = models.CharField(max_length=255)
-    assessed_by = models.CharField(max_length=255)
-    validated_by = models.CharField(max_length=255)
+    captured_by = models.CharField(max_length=255, null=True)
+    assessed_by = models.CharField(max_length=255, null=True)
+    validated_by = models.CharField(max_length=255, null=True)
 #
 #
 #

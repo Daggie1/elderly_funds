@@ -1,7 +1,7 @@
 from django.urls import path, re_path
 
 from .views import DocumentTypeView, DocumentUpload, search_file, TranscribeDocument, AdminView, edit_file, \
-    manage_documents, FileTypeDelete, FileTypeCreate, FileTypeList, DocumentFileCreate, DocumentFileList, DocumentTypeCreate, DocumentTypeList
+    manage_documents, FileTypeDelete, FileTypeCreate, FileTypeList, DocumentFileCreate, DocumentFileList, DocumentTypeCreate, DocumentTypeList, DocumentUploadView, UploadedDocumentsList
 
 urlpatterns = [
     path('', AdminView.as_view(), name='home'),
@@ -18,7 +18,11 @@ urlpatterns = [
     path('create_document_type',DocumentTypeCreate.as_view(), name='create_document_type'),
     path('view_document_types', DocumentTypeList.as_view(), name='list_document_types'),
 
-    path('upload_document/<str:file_type>', manage_documents, name='upload_document'),
+    # document upload and viewing
+    path('upload_document', DocumentUploadView.as_view(),name='upload_document'),
+    path('uploaded_documents', UploadedDocumentsList.as_view(), name='uploaded_documents'),
+
+
     path('add_document_type/', DocumentTypeView.as_view(), name='add_doc_type'),
     path('transcribe/', TranscribeDocument.as_view()),
     path('search_file', search_file, name='search_file'),

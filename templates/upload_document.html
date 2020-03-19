@@ -39,12 +39,10 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form role="form">
+              <form role="form" action="" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
                 <div class="card-body">
-{#                    {{ form.file_type | as_crispy_field }}#}
-                    {{ form.file_barcode | as_crispy_field }}
-                  {{ form.docfile | as_crispy_field }}
-
+                    {{ form | crispy }}
                 </div>
                 <!-- /.card-body -->
 
