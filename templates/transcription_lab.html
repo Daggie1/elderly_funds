@@ -9,27 +9,42 @@
 {% block content %}
     <div class="row">
     <div class="col-md-6">
-        <div id="app">
+        <div id="app" style="border:1px solid rgba(0,0,0,0.4); height: 100%; width: 100%; overflow-y: hidden; border-radius: 3px;">
       <div role="toolbar" id="toolbar">
         <div id="pager">
-          <button data-pager="prev">prev</button>
-          <button data-pager="next">next</button>
+          <button data-pager="prev" class="btn btn-sm btn-dark m-1">prev</button>
+          <button data-pager="next" class="btn btn-sm btn-light m-1">next</button>
+            <div class="pull-right">
+                 <button class="btn btn-sm btn-default" data-pager="zoom_in"><span class ="fas fa-search-plus"></span></button>
+              <button class="btn btn-sm btn-default" data-pager="zoom_out"><span class ="fas fa-search-minus"></span></button>
+            </div>
+
+
         </div>
+
+
         <div id="page-mode">
-          <label>Page Mode <input type="number" value="1" min="1"/></label>
+          <label>Page Number <input class="form-control" type="number" value="1" min="1"/></label>
         </div>
       </div>
       <div id="viewport-container"><div role="main" id="viewport"></div></div>
     </div>
+
     </div>
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
-                <form action="" method="POST">
+                <form action="{% url 'update_doc_content' document.id %}" method="POST">
+                    {% csrf_token %}
                     {{form.as_p}}
                     {{form.media}}
-                </form>
+
             </div>
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+             </form>
         </div>
     </div>
     </div>

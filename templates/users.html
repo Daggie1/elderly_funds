@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+         <div class="row">
+        <div class="col-12">
+    <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">DataTable with default features</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Roles</th>
+                  <th>Active</th>
+                    <th>Superuser</th>
+                    <th style="width:100px; min-width:100px;" class="text-center text-danger"><i class="fa fa-bolt"> </i></th>
+                </tr>
+                </thead>
+                <tbody>
+            {% for obj in object_list %}
+                <tr>
+                <td>{{ obj.id }}</td>
+                    <td><a href="{% url 'users.detail' obj.id %}">{{ obj.username }}</a></td>
+                <td>{{ obj.email }}</td>
+                <td>
+                    {% for group in obj.groups.all %}
+                        <span class="badge badge-info">{{ group.name }}</span>
+                        {% endfor %}
+                        </td>
+                <td>
+                    {% if obj.is_active %}
+                    <span class="badge badge-success">{{obj.is_active }}</span>
+                    {% else %}
+                    <span class="badge badge-danger">{{obj.is_active }}</span>
+                    {% endif %}
+
+                    </td>
+                <td>
+                    {% if obj.is_superuser %}
+                    <span class="badge badge-success">{{obj.is_superuser }}</span>
+                    {% else %}
+                    <span class="badge badge-danger">{{obj.is_superuser }}</span>
+                    {% endif %}
+
+                    </td>
+                <td>
+
+                                    <a href="{% url 'user.update' obj.id %}">
+                                        <button class="btn btn-info btn-icon sq-32" type="button">
+                                            <span class="fa fa-pencil-alt"></span>
+                                        </button>
+                                    </a>
+
+                                    <a href="{% url 'user.delete' obj.id %}"><button class="btn btn-danger btn-icon sq-32 btnDelete"
+                                            type="button">
+                                        <span class="fa fa-trash-alt"></span>
+                </button></a>
+
+
+                                </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                 <th>#</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Roles</th>
+                  <th>Active</th>
+                    <th>Superuser</th>
+                    <th style="width:100px; min-width:100px;" class="text-center text-danger"><i class="fa fa-bolt"> </i></th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+        <div class="row">
+          <div class="col-md-3">
+
+            <!-- Profile Image -->
+            <div class="card card-primary card-outline">
+              <div class="card-body box-profile">
+                <div class="text-center">
+                  <img class="profile-user-img img-fluid img-circle"
+                       src="{%  static 'adminlte/dist/img/user4-128x128.jpg'%}"
+                       alt="User profile picture">
+                </div>
+
+                <h3 class="profile-username text-center">{{object.username}}</h3>
+
+                <p class="text-muted text-center">{{object.email}}</p>
+                <p class="text-muted text-center"><b>Groups:</b>
+                {% for group in object.groups.all %}
+                    {{ group.name }},
+                  {% endfor %}
+                </p>
+                <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                    <b>Super User</b> <a class="float-right">
+                        {% if object.is_superuser %}
+                            <span class="badge badge-success">{{ object.is_superuser }}</span>
+
+                            {% else %}
+                            <span class="badge badge-danger">{{ object.is_superuser }}</span>
+                        {% endif %}
+                    </a>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Documents handled</b> <a class="float-right">788</a>
+                  </li>
+
+                </ul>
+            {% if object.is_active %}
+
+                        <a href="#" class="btn btn-primary btn-block"><b>Active</b></a>
+                            {% else %}
+                            <a href="#" class="btn btn-default btn-block"><b>Suspended</b></a>
+                        {% endif %}
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+          </div>
+          <!-- /.col -->
+          <div class="col-md-9">
+            <div class="card">
+              <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                  <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">General</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Statistics</a></li>
+                </ul>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="active tab-pane" id="activity">
+
+                    General Info
+
+                    <!-- /.post -->
+                  </div>
+                  <!-- /.tab-pane -->
+                  <div class="tab-pane" id="timeline">
+                    <!-- The timeline -->
+                    Statistics
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+{% endblock %}

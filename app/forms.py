@@ -1,8 +1,9 @@
 from django.forms import Form
 from django import forms
 from django_jsonforms.forms import JSONSchemaField
-from .models import DocumentFileType, DocumentType, DocumentFile
-
+from .models import DocumentFileType, DocumentType, DocumentFile, Profile
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
+from django.contrib.auth.models import User, Group
 
 class FileContentForm(Form):
     schema = None
@@ -49,3 +50,45 @@ class NationalIDForm(Form):
     division = forms.CharField(label='Division')
     location = forms.CharField(label='Location')
     sub_location = forms.CharField(label='Sub Location')
+
+class UserRegistrationForm(UserCreationForm):
+    email = forms.EmailField()
+
+    def __init__(self, *args, **kwargs):
+        super(UserCreationForm, self).__init__(*args, **kwargs)
+        self.fields['password1'].required = False
+        self.fields['password2'].required = False
+    class Meta:
+        model = User
+        fields = ['username','email','groups']
+
+class GroupCreationForm(forms.ModelForm):
+    name = forms.CharField(required=True, min_length=3, max_length=255)
+
+    class Meta:
+        model  = Group
+        fields = ['name','permissions']
+
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ['username','email']
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['image','id_no','phone']
+
+class LoginForm(AuthenticationForm):
+    class Meta:
+        model = User
+        fields = ['username','password']
+
+
+class PasswordResetForm(PasswordChangeForm):
+
+    class Meta:
+        model = User
+        fields = ['new_password1','new_password2']

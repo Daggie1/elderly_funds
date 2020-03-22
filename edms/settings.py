@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django_filters',
 
 ]
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
 JSONFORMS_SCHEMA_DIR = '/static/'
 
 MIDDLEWARE = [
@@ -123,8 +122,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATIC_URL = '/static/'
 STATIC_ROOT =  os.path.join(BASE_DIR, 'static')
-
+LOGIN_URL = 'login'
 MEDIA_URL = '/media/'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 

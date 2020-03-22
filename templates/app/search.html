@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <div class="card">
+            <div class="card-body">
+            <form action="." method="GET">
+                <label for="q">Search: </label>
+                <input type="text" name="q" value="{{ query|escape }}">
+                <input type="submit" value="Search">
+            </form>
+            {% if query %}
+            <h2>Results for "{{ query|escape }}":</h2>
+                    {% if results %}
+                            <ul>
+                            {% for result in results %}
+                                <li>{{ result }}</l1>
+                            {% endfor %}
+                            </ul>
+                    {% else %}
+                                <p>No books found</p>
+                    {% endif %}
+            {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

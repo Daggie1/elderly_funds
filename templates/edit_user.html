@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+
+{% block subtitle %}{{ subtitle }}{% endblock %}
+{% block current_url %}{{ current_url }}{% endblock %}
+{% block content %}
+ <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Group Details</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                  <i class="fas fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="card-body">
+              <form  method="POST" >
+                    {% csrf_token %}
+             {{ form|crispy }}
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">Save User</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.card-body -->
+          </div>
+        </div>
+ </div>
+
+
+{% endblock content %}
+
+{% block scripts %}
+    <!-- Select2 -->
+<script src="{% static 'adminlte/plugins/select2/js/select2.full.min.js' %}"></script>
+    <script>
+ $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+     })
+    </script>
+{% endblock %}

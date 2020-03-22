@@ -17,5 +17,6 @@ class DocumentTable(tables.Table):
         template_name = "django_tables2/bootstrap.html"
         fields = ("file_reference_id","document_barcode","document_name_id","document_file_path")
 
-    edit = TemplateColumn(template_name='app/document_action_column.html')
+    Transcribe = TemplateColumn(template_name='app/document_action_column.html')
+    validate = TemplateColumn(template_name='app/inspect_document_column.html')
 

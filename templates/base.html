@@ -30,7 +30,6 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     {% block header %}
     {% endblock %}
-</head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 
@@ -131,7 +130,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-             <li class="nav-item has-treeview menu-open">
+             <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
@@ -150,7 +149,7 @@
             </ul>
              </li>
 
-                   <li class="nav-item has-treeview menu-open">
+                   <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-file-word"></i>
               <p>
@@ -173,7 +172,7 @@
               </li>
             </ul>
           </li>
-                  <li class="nav-item has-treeview menu-open">
+                  <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-folder-open"></i>
               <p>
@@ -196,7 +195,7 @@
               </li>
 
 
-                <li class="nav-item has-treeview menu-open">
+                <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
@@ -234,7 +233,7 @@
                 </li>
             </ul>
 
-             <li class="nav-item has-treeview menu-open">
+             <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-microscope"></i>
               <p>
@@ -245,13 +244,13 @@
             <ul class="nav nav-treeview">
 
                  <li class="nav-item">
-                <a href="./index.html" class="nav-link">
+                <a href="{% url 'list_document_files' %}" class="nav-link">
                   <i class="fas fa-gavel nav-icon"></i>
                   <p>Verify Quality</p>
                 </a>
               </li>
                   <li class="nav-item">
-                <a href="./index.html" class="nav-link">
+                <a href="{% url 'list_document_files' %}" class="nav-link">
                   <i class="fas fa-check-double nav-icon"></i>
                   <p>Validate Documents</p>
                 </a>
@@ -259,6 +258,56 @@
 
             </ul>
             </li>
+
+            {% if perms.auth %}
+            <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                User Management
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+                 {% endif %}
+
+            <ul class="nav nav-treeview">
+            {% if perms.auth.view_user %}
+                 <li class="nav-item">
+                <a href="{% url 'users.index' %}" class="nav-link">
+                  <i class="fas fa-user nav-icon"></i>
+                  <p>Users</p>
+                </a>
+              </li>
+            {% endif %}
+            {% if perms.auth.add_user %}
+                 <li class="nav-item">
+                <a href="{% url 'users.create' %}" class="nav-link">
+                  <i class="fas fa-plus-circle nav-icon"></i>
+                  <p>Add user</p>
+                </a>
+              </li>
+            {% endif %}
+                {% if perms.auth.view_group %}
+                  <li class="nav-item">
+                <a href="{% url 'groups.index' %}" class="nav-link">
+                  <i class="fas fa-check-double nav-icon"></i>
+                  <p>Roles</p>
+                </a>
+              </li>
+             {% if perms.auth.add_user %}
+                 <li class="nav-item">
+                <a href="{% url 'roles.create' %}" class="nav-link">
+                  <i class="fas fa-plus-circle nav-icon"></i>
+                  <p>Add Role</p>
+                </a>
+              </li>
+            {% endif %}
+            </ul>
+
+            </li>
+
+            {% endif %}
+        </ul>
       </nav>
         {% endblock sidebar %}
       <!-- /.sidebar-menu -->

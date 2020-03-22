@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+     <script src="https://unpkg.com/pdfjs-dist@2.0.489/build/pdf.min.js"></script>
+    <link rel="stylesheet" href="{% static 'scripts/pdf.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+    <div class="col-md-6">
+        <div id="app" style="border:1px solid rgba(0,0,0,0.4); height: 100%; width: 100%; overflow-y: hidden; border-radius: 3px;">
+      <div role="toolbar" id="toolbar">
+        <div id="pager">
+          <button data-pager="prev" class="btn btn-sm btn-dark m-1">prev</button>
+          <button data-pager="next" class="btn btn-sm btn-light m-1">next</button>
+            <div class="pull-right">
+                 <button class="btn btn-sm btn-default" data-pager="zoom_in"><span class ="fas fa-search-plus"></span></button>
+              <button class="btn btn-sm btn-default" data-pager="zoom_out"><span class ="fas fa-search-minus"></span></button>
+            </div>
+
+
+        </div>
+
+
+        <div id="page-mode">
+          <label>Page Number <input class="form-control" type="number" value="1" min="1"/></label>
+        </div>
+      </div>
+      <div id="viewport-container"><div role="main" id="viewport"></div></div>
+    </div>
+
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                {{ table_data|safe }}
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-header">Document Status</h3>
+            </div>
+            <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <!-- textarea -->
+                      <div class="form-group">
+                        <label>Textarea</label>
+                        <textarea class="form-control" rows="3" placeholder="Enter ..."></textarea>
+                      </div>
+                    </div>
+                  </div>
+                <div class="custom-control custom-checkbox">
+                          <input class="custom-control-input" type="checkbox" id="customCheckbox2" checked>
+                          <label for="customCheckbox2" class="custom-control-label">Accept</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                          <input class="custom-control-input" type="checkbox" id="customCheckbox2" checked>
+                          <label for="customCheckbox2" class="custom-control-label">Reject</label>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-sm btn-primary">Submit Validation</button>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock content %}
+{% block js %}
+
+
+    <script src="{% static 'scripts/pdfrender.js' %}"></script>
+    <script>
+      initPDFViewer("{{document.document_file_path.url}}");
+    </script>
+
+{% endblock js %}

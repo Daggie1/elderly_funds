@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% load static %}
+{% block content %}
+      <div class="row">
+        <div class="col-12">
+    <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">DataTable with default features</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Permissions</th>
+                    <th style="width:100px; min-width:100px;" class="text-center text-danger"><i class="fa fa-bolt"> </i></th>
+                </tr>
+                </thead>
+                <tbody>
+            {% for obj in object_list %}
+                <tr>
+                <td>{{ obj.id }}</td>
+                <td>{{ obj.name }}</td>
+
+                <td>
+                    {% for permission in obj.permissions.all %}
+                        <span class="badge badge-info">{{ permission.name }}</span>
+                        {% endfor %}
+                        </td>
+                <td>
+
+                                    <a href="{% url 'groups.update' obj.id %}">
+                                        <button class="btn btn-info btn-icon sq-32" type="button">
+                                            <span class="fa fa-pencil-alt"></span>
+                                        </button>
+                                    </a>
+
+                                    <button class="btn btn-danger btn-icon sq-32 btnDelete"
+                                            type="button">
+                                        <span class="fa fa-trash-alt"></span>
+                                    </button>
+
+
+                                </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>#</th>
+                  <th>Name</th>
+                  <th>Permissions</th>
+                    <th style="width:100px; min-width:100px;" class="text-center text-danger"><i class="fa fa-bolt"> </i></th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+
+{% endblock %}
