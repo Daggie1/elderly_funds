@@ -43,13 +43,16 @@ def search_person(request):
         results = []
     return render_to_response("search_html", {"results": results, "query": query})
 
-
+@login_required
+@permission_required(perm='app.change_documentfiletype', raise_exception=True)
 def edit_file(request, file_type):
     if file_type:
         file = get_object_or_404(DocumentFileType, pk=file_type)
+
         return render(request, 'view_document_files.html', {'file': file})
 
-
+@login_required
+@permission_required(perm='app.add_documentfile', raise_exception=True)
 def manage_documents(request, file_type):
     if file_type:
         file = get_object_or_404(DocumentFileType, pk=file_type)
@@ -75,40 +78,51 @@ def add_document(request, file_type):
     return render(request, 'list.html', {'documents': documents, 'form': form})
 
 
-class AdminView(LoginRequiredMixin, View):
+class AdminView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name = 'home.html'
-
+    raise_exception = True
+    permission_required = ''
     def get(self, request):
         return render(request, self.template_name)
 
 
-class FileTypeList(ListView):
+class FileTypeList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    raise_exception = True
+    permission_required = 'app.view_documentfiletype'
     model = DocumentFileType
     template_name = 'file_types.html'
     context_object_name = 'files'
 
 
-class FileTypeCreate(CreateView):
+class FileTypeCreate(LoginRequiredMixin,PermissionRequiredMixin, CreateView):
+    raise_exception = True
+    permission_required = 'app.add_documentfiletype'
     model = DocumentFileType
     template_name = 'add_file.html'
     fields = ['file_type', 'file_description']
     success_url = reverse_lazy('list_file_types')
 
 
-class FileTypeDelete(DeleteView):
+class FileTypeDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    raise_exception = True
+    permission_required = 'app.delete_documentfiletype'
     model = DocumentFileType
 
     success_url = reverse_lazy('list_file_types')
 
 
-class DocumentFileCreate(CreateView):
+class DocumentFileCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    raise_exception = True
+    permission_required = 'app.add_documentfile'
     model = DocumentFile
     template_name = 'create_document_file.html'
     fields = ['file_reference', 'file_type', 'file_barcode']
     success_url = reverse_lazy('list_document_files')
 
 
-class DocumentFileList(SingleTableMixin, FilterView):
+class DocumentFileList(LoginRequiredMixin,PermissionRequiredMixin,SingleTableMixin, FilterView):
+    raise_exception = True
+    permission_required = 'app.view_documentfile'
     model = DocumentFile
     table_class = DocumentFileTable
     template_name = 'view_document_files.html'
@@ -116,7 +130,9 @@ class DocumentFileList(SingleTableMixin, FilterView):
     filterset_class = DocumentFileFilter
 
 
-class DocumentTypeCreate(CreateView):
+class DocumentTypeCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    raise_exception = True
+    permission_required = 'app.add_documenttype'
     model = DocumentType
     template_name = 'add_document_type.html'
     fields = ['document_name', 'document_description', 'document_field_specs']
@@ -124,13 +140,17 @@ class DocumentTypeCreate(CreateView):
     success_url = reverse_lazy('list_document_types')
 
 
-class DocumentTypeList(ListView):
+class DocumentTypeList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    raise_exception = True
+    permission_required = 'app.view_documenttype'
     model = DocumentType
     context_object_name = 'documents'
     template_name = 'document_types.html'
 
 
-class DocumentTypeView(View):
+class DocumentTypeView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    raise_exception = True
+    permission_required = 'app.view_documenttype'
     def get(self, request):
         template_name = 'add_document_type.html'
         form = DocumentTypeForm()
@@ -140,19 +160,25 @@ class DocumentTypeView(View):
         pass
 
 
-class DocumentUploadView(CreateView):
+class DocumentUploadView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    raise_exception = True
+    permission_required = 'app.add_documentfiledetail'
     model = DocumentFileDetail
     template_name = 'upload_document.html'
     fields = ['file_reference', 'document_barcode', 'document_name', 'document_file_path']
     success_url = reverse_lazy('uploaded_documents')
 
 
-class UploadedDocumentsList(ListView):
+class UploadedDocumentsList(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    raise_exception = True
+    permission_required = 'app.view_documentfiledetail'
     model = DocumentFileDetail
     template_name = 'uploaded_documents_list.html'
 
 
-class DocumentTranscribe(View):
+class DocumentTranscribe(LoginRequiredMixin,PermissionRequiredMixin,View):
+    raise_exception = True
+    permission_required = 'app.add_documentfiledetail'
     def get(self, request, file_reference):
         # query documents belonging to this file & aggregate with its corresponding document type
         queryset = DocumentFileDetail.objects.filter(file_reference_id=file_reference)
@@ -161,21 +187,24 @@ class DocumentTranscribe(View):
         table = DocumentTable(queryset)
         return render(request, 'file_documents_list.html', {'table': table})
 
-
+@login_required
+@permission_required( perm='app.view_documentfiledetail')
 def get_document_and_document_type(request, doc_id, file_type):
     document = get_object_or_404(DocumentFileDetail, pk=doc_id)
     document_type = DocumentType.objects.get(pk=file_type)
     form = JSONSchemaForm(schema=document_type.document_field_specs, options={"theme": "bootstrap3"})
     return render(request, 'transcription_lab.html', {'form': form, 'document': document})
 
-
+@login_required
+@permission_required( perm='app.view_documentfiledetail')
 def update_document_content(request, doc_id):
     document = DocumentFileDetail.objects.get(id=doc_id)
     document.document_content = request.POST.get('json')
     document.save()
     return redirect('view_docs_in_file', document.file_reference_id)
 
-
+@login_required
+@permission_required( perm='app.view_documentfiledetail')
 def validate_document_content(request, doc_id):
     document = DocumentFileDetail.objects.get(id=doc_id)
     content = document.document_content
@@ -183,7 +212,8 @@ def validate_document_content(request, doc_id):
                                                                   "table-hover\"")
     return render(request, 'validate.html', {'table_data': table_data, 'document': document})
 
-
+@login_required
+@permission_required( perm='app.view_documentfiledetail')
 def pdfrender(request):
     return render(request, template_name='app/pdfrender.html')
 

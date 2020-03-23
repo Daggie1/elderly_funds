@@ -148,8 +148,8 @@
 
             </ul>
              </li>
-
-                   <li class="nav-item has-treeview">
+            {% if perms.app.view_documentfiletype %}
+            <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-file-word"></i>
               <p>
@@ -158,12 +158,15 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+                {% if perms.app.add_documentfiletype %}
               <li class="nav-item">
                 <a href="{% url 'create_file_type' %}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Add File Type</p>
                 </a>
               </li>
+                    {% endif %}
+            {% if perms.app.view_documentfiletype %}
                  <li class="nav-item">
                 <a href="{% url 'list_file_types' %}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -172,6 +175,8 @@
               </li>
             </ul>
           </li>
+        {% endif %}
+        {% if perms.app.view_documenttype %}
                   <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-folder-open"></i>
@@ -181,12 +186,15 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+            {% if perms.app.add_documenttype %}
               <li class="nav-item">
                 <a href="{% url 'create_document_file' %}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Create Document File</p>
                 </a>
               </li>
+                {% endif %}
+                {% perms.app.view_documenttype %}
                  <li class="nav-item">
                 <a href="{% url 'list_document_files' %}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -194,7 +202,8 @@
                 </a>
               </li>
 
-
+{% endif %}
+        {% if perms.app.view_documentfiledetail %}
                 <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -204,6 +213,7 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+                {% if perms.app.add_documentfiledetail %}
               <li class="nav-item">
                 <a href="{% url 'create_document_type' %}" class="nav-link">
                   <i class="fas fa-plus-circle nav-icon"></i>
@@ -215,24 +225,28 @@
                   <p>Document Types</p>
                 </a>
               </li>
-
+{% endif %}
+            {% if perms.app.add_documentfiledetail %}
                  <li class="nav-item">
                 <a href="{% url 'upload_document' %}" class="nav-link">
                   <i class="fas fa-file-upload nav-icon"></i>
                   <p>Upload Documents</p>
                 </a>
               </li>
+                {% endif %}
+            {% if perms.app.add_documentfiledetail %}
                   <li class="nav-item">
                 <a href="{% url 'list_document_files' %}" class="nav-link">
                   <i class="fas fa-glasses nav-icon"></i>
                   <p>Transcribe Documents</p>
                 </a>
               </li>
-
+{% endif %}
         </ul>
                 </li>
+            {% endif %}
             </ul>
-
+{% endif %}
              <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-microscope"></i>
