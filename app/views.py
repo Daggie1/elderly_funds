@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import DeleteView, CreateView, UpdateView
 from django.views.generic import ListView, DetailView
@@ -9,6 +10,7 @@ from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from .tables import DocumentFileTable, DocumentTable
 from .filters import DocumentFileFilter
+from django.contrib.messages.views import SuccessMessageMixin
 from django_tables2 import SingleTableView, SingleTableMixin
 from django_filters.views import FilterView
 from django_jsonforms.forms import JSONSchemaField, JSONSchemaForm
@@ -94,27 +96,29 @@ class FileTypeList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     context_object_name = 'files'
 
 
-class FileTypeCreate(LoginRequiredMixin,PermissionRequiredMixin, CreateView):
+class FileTypeCreate(LoginRequiredMixin,PermissionRequiredMixin, SuccessMessageMixin,CreateView):
     raise_exception = True
     permission_required = 'app.add_documentfiletype'
     model = DocumentFileType
     template_name = 'add_file.html'
     fields = ['file_type', 'file_description']
+    success_message = 'Added created successfully'
     success_url = reverse_lazy('list_file_types')
 
 
-class FileTypeDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class FileTypeDelete(LoginRequiredMixin, PermissionRequiredMixin,SuccessMessageMixin, DeleteView):
     raise_exception = True
     permission_required = 'app.delete_documentfiletype'
     model = DocumentFileType
-
+    success_message = 'Deleted created successfully'
     success_url = reverse_lazy('list_file_types')
 
 
-class DocumentFileCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class DocumentFileCreate(LoginRequiredMixin, PermissionRequiredMixin,SuccessMessageMixin, CreateView):
     raise_exception = True
     permission_required = 'app.add_documentfile'
     model = DocumentFile
+    success_message = 'Added created successfully'
     template_name = 'create_document_file.html'
     fields = ['file_reference', 'file_type', 'file_barcode']
     success_url = reverse_lazy('list_document_files')
@@ -130,10 +134,11 @@ class DocumentFileList(LoginRequiredMixin,PermissionRequiredMixin,SingleTableMix
     filterset_class = DocumentFileFilter
 
 
-class DocumentTypeCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class DocumentTypeCreate(LoginRequiredMixin, PermissionRequiredMixin,SuccessMessageMixin, CreateView):
     raise_exception = True
     permission_required = 'app.add_documenttype'
     model = DocumentType
+    success_message = 'Added created successfully'
     template_name = 'add_document_type.html'
     fields = ['document_name', 'document_description', 'document_field_specs']
 
@@ -148,9 +153,10 @@ class DocumentTypeList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = 'document_types.html'
 
 
-class DocumentTypeView(LoginRequiredMixin, PermissionRequiredMixin, View):
+class DocumentTypeView(LoginRequiredMixin, PermissionRequiredMixin,SuccessMessageMixin, View):
     raise_exception = True
     permission_required = 'app.view_documenttype'
+    success_message = 'Added created successfully'
     def get(self, request):
         template_name = 'add_document_type.html'
         form = DocumentTypeForm()
