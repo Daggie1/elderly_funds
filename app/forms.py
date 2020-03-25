@@ -1,9 +1,10 @@
-from django.forms import Form
+from django.forms import Form, SelectMultiple
 from django import forms
 from django_jsonforms.forms import JSONSchemaField
 from .models import DocumentFileType, DocumentType, DocumentFile, Profile
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
+
 
 class FileContentForm(Form):
     schema = None
@@ -51,6 +52,7 @@ class NationalIDForm(Form):
     location = forms.CharField(label='Location')
     sub_location = forms.CharField(label='Sub Location')
 
+
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
 
@@ -58,37 +60,59 @@ class UserRegistrationForm(UserCreationForm):
         super(UserCreationForm, self).__init__(*args, **kwargs)
         self.fields['password1'].required = False
         self.fields['password2'].required = False
+
     class Meta:
         model = User
-        fields = ['username','email','groups']
+        fields = ['username', 'email', 'groups']
+        widgets = {'groups': SelectMultiple(attrs={'required': 'true',
+                                                        'class': 'form-control select2',
+                                                        'data-dropdown-css-class': 'select2-primary',
+                                                        'multiple': 'multiple',
+                                                        'data-placeholder': 'Select a State',
+                                                        'style': 'width: 100%;'})}
+
 
 class GroupCreationForm(forms.ModelForm):
-    name = forms.CharField(required=True, min_length=3, max_length=255)
+    name = forms.TextInput()
+
+    # permissions = forms.SelectMultiple(attrs={'required': u'true',
+    #                                           'class': 'select2',
+    #                                           'multiple': 'multiple',
+    #                                           'data-placeholder': 'Select a State',
+    #                                           'style': u"width: 100%;"})
 
     class Meta:
-        model  = Group
-        fields = ['name','permissions']
+        model = Group
+        fields = ['name', 'permissions']
+        widgets = {'permissions': SelectMultiple(attrs={'required': 'true',
+                                                        'class': 'form-control select2',
+                                                        'data-dropdown-css-class': 'select2-primary',
+                                                        'multiple': 'multiple',
+                                                        'data-placeholder': 'Select a State',
+                                                        'style': 'width: 100%;'})}
+
 
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()
 
     class Meta:
         model = User
-        fields = ['username','email']
+        fields = ['username', 'email']
+
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['image','id_no','phone']
+        fields = ['image', 'id_no', 'phone']
+
 
 class LoginForm(AuthenticationForm):
     class Meta:
         model = User
-        fields = ['username','password']
+        fields = ['username', 'password']
 
 
 class PasswordResetForm(PasswordChangeForm):
-
     class Meta:
         model = User
-        fields = ['new_password1','new_password2']
+        fields = ['new_password1', 'new_password2']
