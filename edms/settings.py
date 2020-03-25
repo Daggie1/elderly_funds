@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_jsonforms',
     'django_tables2',
     'django_filters',
+    'django_crontab',
 
 ]
 JSONFORMS_SCHEMA_DIR = '/static/'
@@ -77,17 +78,32 @@ WSGI_APPLICATION = 'edms.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+DOCKER = True
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'work',
-        'USER': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432',
-        'PASSWORD': 'toor'
+if DOCKER:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'work',
+            'USER': 'postgres',
+            'HOST': 'db',
+            'PORT': '5432',
+            'PASSWORD': 'password'
+        }
     }
-}
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'work',
+            'USER': 'postgres',
+            'HOST': 'localhost',
+            'PORT': '5432',
+            'PASSWORD': 'password'
+        }
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
