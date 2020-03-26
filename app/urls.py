@@ -14,6 +14,7 @@ urlpatterns = [
     path('create_file_type/', FileTypeCreate.as_view(), name='create_file_type'),
     path('list_files_types', FileTypeList.as_view(), name='list_file_types'),
     path('delete_file_type/<str:pk>/delete/', FileTypeDelete.as_view(), name='delete_file_type'),
+
     # physical file urls
     path('create_file', DocumentFileCreate.as_view(), name='create_document_file'),
     path('list_document_files', DocumentFileList.as_view(), name='list_document_files'),
