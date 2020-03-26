@@ -2,7 +2,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-             <li class="nav-item has-treeview">
+             <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'home' %} menu-open {% endif %}">
             <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' %} active {% endif %} ">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
@@ -12,7 +12,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{% url 'home' %}" class="nav-link active">
+                <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %} active {% endif %}">
                   <i class="fas fa-flag nav-icon"></i>
                   <p>Reports</p>
                 </a>
@@ -21,8 +21,8 @@
             </ul>
              </li>
             {% if perms.app.view_documentfiletype %}
-            <li class="nav-item has-treeview">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' %} active {% endif %}">
+            <li class="nav-item has-treeview  {% if request.resolver_match.url_name == 'list_file_types'  or request.resolver_match.url_name == 'create_file_type' %} menu-open {% endif %}" >
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'list_file_types'  or request.resolver_match.url_name == 'create_file_type' %} active {% endif %}">
               <i class="nav-icon fas fa-file-word"></i>
               <p>
                 File Types
@@ -32,7 +32,7 @@
             <ul class="nav nav-treeview">
                 {% if perms.app.add_documentfiletype %}
               <li class="nav-item">
-                <a href="{% url 'create_file_type' %}" class="nav-link">
+                <a href="{% url 'create_file_type' %}" class="nav-link {% if request.resolver_match.url_name == 'create_file_type' %} active {% endif %}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Add File Type</p>
                 </a>
@@ -40,7 +40,7 @@
                     {% endif %}
             {% if perms.app.view_documentfiletype %}
                  <li class="nav-item">
-                <a href="{% url 'list_file_types' %}" class="nav-link">
+                <a href="{% url 'list_file_types' %}" class="nav-link {% if request.resolver_match.url_name == 'list_file_types' %} active {% endif %}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>View Files</p>
                 </a>
@@ -51,7 +51,7 @@
         {% endif %}
         {% if perms.app.view_documenttype %}
                   <li class="nav-item has-treeview ">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' %} active {% endif %} ">
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'upload_document' or request.resolver_match.url_name == 'uploaded_documents' %} active {% endif %} ">
               <i class="nav-icon fas fa-folder-open"></i>
               <p>
                 Files
@@ -78,7 +78,7 @@
 {% endif %}
         {% if perms.app.view_documentfiledetail %}
                 <li class="nav-item has-treeview">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' %} active {% endif %}">
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'create_document_type'  or request.resolver_match.url_name == 'view_document_types' %} active {% endif %}">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Documents
@@ -121,7 +121,7 @@
             </ul>
 {% endif %}
              <li class="nav-item has-treeview">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' %} active {% endif %}">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-microscope"></i>
               <p>
                 Quality Control
@@ -148,7 +148,7 @@
 
             {% if perms.auth %}
             <li class="nav-item has-treeview">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' %} active {% endif %}">
+            <a href="#" class="nav-link ">
               <i class="nav-icon fas fa-users"></i>
               <p>
                 User Management
