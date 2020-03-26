@@ -5,6 +5,8 @@ from django.contrib.postgres.fields import JSONField
 from django.utils import timezone
 from django.contrib.auth.models import User
 from PIL import Image
+
+
 # Create your models here.
 
 
@@ -34,16 +36,17 @@ class DocumentFile(models.Model):
 
 
 class StateOptions(Enum):
-        UNASSESSED = 'Unassessed'
-        REJECTED = 'Rejected'
-        APPROVED = 'Approved'
+    UNASSESSED = 'Unassessed'
+    REJECTED = 'Rejected'
+    APPROVED = 'Approved'
 
-        @classmethod
-        def choices(cls):
-            print(tuple((i.name, i.value) for i in cls))
-            return tuple((i.name, i.value) for i in cls)
+    @classmethod
+    def choices(cls):
+        print(tuple((i.name, i.value) for i in cls))
+        return tuple((i.name, i.value) for i in cls)
+
+
 class DocumentState(models.Model):
-
     state_code = models.CharField(max_length=255)
     state_name = models.CharField(max_length=255)
     state_parameter = models.CharField(max_length=255)
@@ -69,6 +72,8 @@ class DocumentFileDetail(models.Model):
     assessed_by = models.CharField(max_length=255, null=True)
     validated_by = models.CharField(max_length=255, null=True)
     state = models.ForeignKey(DocumentState, db_column='state_code', on_delete=models.CASCADE)
+
+
 #
 #
 #
@@ -84,18 +89,21 @@ class DocumentFileDetail(models.Model):
 #     next_state = models.CharField()
 #     pre_condition = models.CharField()
 #
-# class DocumentWorkFlow(models.Model):
-#     current_node_id = models.CharField()
-#     current_state_code = models.CharField()
-#     current_state_name = models.CharField()
-#     state_transition_parameter = models.CharField()
-#     document_validation_status = models.CharField()
-#     document_quality_control = models.CharField()
-#     transition_code = models.CharField()
-#     transition_name = models.CharField()
-#     next_node_id = models.CharField()
-#     next_state_code = models.CharField()
-#     next_state = models.CharField()
+
+class DocumentWorkFlow(models.Model):
+    current_node_id = models.CharField(max_length=50, primary_key=True)
+    current_state_code = models.CharField(max_length=10)
+    current_state_name = models.CharField(max_length=40)
+    state_transition_parameter = models.CharField(max_length=5)
+    document_validation_status = models.CharField(max_length=40)
+    document_quality_control = models.CharField(max_length=40)
+    transition_code = models.CharField(max_length=40)
+    transition_name = models.CharField(max_length=40)
+    next_node_id = models.CharField(max_length=40)
+    next_state_code = models.CharField(max_length=40)
+    next_state = models.CharField(max_length=40)
+    document = models.ForeignKey(DocumentFileDetail, null=True, on_delete=models.CASCADE)
+    document_file = models.ForeignKey(DocumentFile, null=True, on_delete=models.CASCADE)
 
 
 class Profile(models.Model):
@@ -112,10 +120,9 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         super().save()
 
-
         img = Image.open(self.image.path)
 
         if img.height > 300 or img.width > 300:
-            output_size = (300,300)
+            output_size = (300, 300)
             img.thumbnail(output_size)
             img.save(self.image.path)
