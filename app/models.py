@@ -91,7 +91,7 @@ class DocumentFileDetail(models.Model):
 #
 
 class DocumentWorkFlow(models.Model):
-    current_node_id = models.CharField(max_length=50)
+    current_node_id = models.CharField(max_length=50, primary_key=True)
     current_state_code = models.CharField(max_length=10)
     current_state_name = models.CharField(max_length=40)
     state_transition_parameter = models.CharField(max_length=5)
@@ -102,6 +102,8 @@ class DocumentWorkFlow(models.Model):
     next_node_id = models.CharField(max_length=40)
     next_state_code = models.CharField(max_length=40)
     next_state = models.CharField(max_length=40)
+    document = models.ForeignKey(DocumentFileDetail, null=True)
+    document_file = models.ForeignKey(DocumentFile, null=True)
 
 
 class Profile(models.Model):
