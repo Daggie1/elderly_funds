@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'adminlte/plugins/select2/css/select2.min.css' %}">
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+{% endblock %}
 {% block content %}
     <div class="row">
         <div class="col-6 offset-3">
@@ -15,90 +22,13 @@
             <div class="card-body">
               <form  method="POST" >
                     {% csrf_token %}
-              {% for field in form %}
-                  {% if field.name == 'username' %}
-                    <div class="form-group ">
-                        <label for="username" class="control-label"> {{ field.label_tag }}<span class="text-danger"> *</span></label></label>
-                        <input id="username" class="form-control " type="text" name="username" required value="">
-
-
-
-                            {% for error in field.errors %}
-                                <p class="help-block text-danger" >{{ error }}</p>
-                            {% endfor %}
-
-                    </div>
-                  {% endif %}
-                  {% if field.name == 'email' %}
-               <div class="form-group ">
-                        <label for="email" class="control-label"> Email<span class="text-danger"> *</span></label>
-                        <input id="email" class="form-control " type="email" name="email" required value="">
-
-                        {% for error in field.errors %}
-                                <p class="help-block text-danger" >{{ error }}</p>
-                            {% endfor %}
-                    </div>
-                  {% endif %}
-{#                  {% if field.name == 'password1' %}#}
-{#              <div class="row">#}
-
-{#              {% if field.name == 'password1' %}#}
-{#                  <div class="col-md-6">#}
-{##}
-{#                <div class="form-group ">#}
-{#                        <label for="id_no" class="control-label"> ID No<span class="text-danger"> *</span></label></label>#}
-{#                        <input id="id_no" class="form-control " type="text" name="password1" required value="">#}
-{##}
-{#                        <p class="help-block" >to be used as initial password</p>#}
-{#                    </div>#}
-{##}
-{#              </div>#}
-{#              {% endif %}#}
-{#                {% if field.name == 'password2' %}#}
-{#                  <div class="col-md-6">#}
-{##}
-{#              <div class="form-group ">#}
-{#                        <label for="id_no2" class="control-label"> Confirm ID No <span class="text-danger"> *</span></label></label>#}
-{#                        <input id="id_no2" class="form-control " type="text" name="password2" required value="">#}
-{##}
-{#                        <p class="help-block" ></p>#}
-{#                    </div>#}
-{##}
-{#                      </div>#}
-{#                  {% endif %}#}
-{#                  {% if field.name == 'password2' %}#}
-{#              </div>#}
-{#                  {% endif %}#}
-
-{% if field.name == 'groups' %}
-                    <div class="form-group  ">
-                        <label for="groups">Roles <span class="text-danger"> *</span></label>
-                        <select name="groups" id="groups" class="select2" multiple="multiple" data-placeholder="Select a Role"  required style="width: 100%">
-                            {% for group in groups %}
-                            <option value="{{ group.id }}">{{  group.name}}</option>
-                            {% endfor %}
-                        </select>
-                        {% for error in field.errors %}
-                                <p class="help-block text-danger" >{{ error }}</p>
-                            {% endfor %}
-                    </div>
-                  {% endif %}
-
-              {% endfor %}
-                              <div class="form-group ">
-                        <label for="id_no" class="control-label"> ID No<span class="text-danger"> *</span></label>
-                        <input id="id_no" class="form-control " type="number" name="id_no" required value="">
-
-                        <p class="help-block" >to be used as initial password</p>
-                    </div>
-
-               <div class="form-group">
-                        <label class="custom-control custom-control-primary custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" name="set_super_admin">
-                            <span class="custom-control-indicator"></span>
-                            <span class="custom-control-label">Set SuperAdmin</span>
-                        </label>
-                    </div>
+             {{ form |crispy }}
+                  <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                          <input class="custom-control-input" type="checkbox" id="customCheckbox1" name="is_superuser">
+                          <label for="customCheckbox1" class="custom-control-label">Set SuperUser</label>
+                        </div>
+                  </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-block">Save User</button>
                     </div>
@@ -108,4 +38,18 @@
           </div>
         </div>
  </div>
+{% endblock %}
+{% block js %}
+<script src="{% static 'adminlte/plugins/select2/js/select2.full.min.js' %}"></script>
+    <script>
+ $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+     })
+    </script>
 {% endblock %}

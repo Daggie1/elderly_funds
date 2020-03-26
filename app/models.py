@@ -1,3 +1,5 @@
+from enum import Enum
+
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.utils import timezone
@@ -24,11 +26,36 @@ class DocumentFile(models.Model):
     document = models.FileField(upload_to='documents')
     file_status = models.CharField(max_length=100, null=True)
     captured_by = models.CharField(max_length=100, null=True)
-    created_on = models.DateTimeField(auto_now_add=timezone.now())
+    created_on = models.DateTimeField(auto_now_add=timezone.now)
     assessed_by = models.CharField(max_length=100, null=True)
-    assessed_on = models.DateTimeField(auto_now_add=timezone.now(), null=True)
+    assessed_on = models.DateTimeField(auto_now_add=timezone.now, null=True)
     validated_by = models.CharField(max_length=100, null=True)
     file_barcode = models.CharField(null=True, max_length=100)
+
+
+class StateOptions(Enum):
+        UNASSESSED = 'Unassessed'
+        REJECTED = 'Rejected'
+        APPROVED = 'Approved'
+
+        @classmethod
+        def choices(cls):
+            print(tuple((i.name, i.value) for i in cls))
+            return tuple((i.name, i.value) for i in cls)
+class DocumentState(models.Model):
+
+    state_code = models.CharField(max_length=255)
+    state_name = models.CharField(max_length=255)
+    state_parameter = models.CharField(max_length=255)
+
+    document_validation_status = models.CharField(max_length=255,
+                                                  choices=StateOptions.choices(),
+                                                  default=StateOptions.UNASSESSED
+                                                  )
+    document_quality_control = models.CharField(max_length=255,
+                                                choices=StateOptions.choices(),
+                                                default=StateOptions.UNASSESSED
+                                                )
 
 
 class DocumentFileDetail(models.Model):
@@ -37,19 +64,15 @@ class DocumentFileDetail(models.Model):
     document_name = models.ForeignKey(DocumentType, db_column="file_reference", on_delete=models.CASCADE)
     document_content = JSONField(null=True)
     document_file_path = models.FileField(upload_to='documents')
-    created_on = models.DateTimeField(default=timezone.now())
+    created_on = models.DateTimeField(default=timezone.now)
     captured_by = models.CharField(max_length=255, null=True)
     assessed_by = models.CharField(max_length=255, null=True)
     validated_by = models.CharField(max_length=255, null=True)
+    state = models.ForeignKey(DocumentState, db_column='state_code', on_delete=models.CASCADE)
 #
 #
 #
-# class DocumentState(models.Model):
-#     state_code = models.CharField()
-#     state_name = models.CharField()
-#     state_parameter = models.CharField()
-#     document_validation_status = models.CharField()
-#     document_quality_control = models.CharField()
+
 #
 # class DocumentStateTransition(models.Model):
 #     transition_code = models.CharField()
@@ -79,6 +102,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     id_no = models.CharField(null=True, max_length=25)
     phone = models.CharField(null=True, max_length=25)
+    full_name = models.CharField(null=True, max_length=25)
     first_login = models.BooleanField(default=True)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
 

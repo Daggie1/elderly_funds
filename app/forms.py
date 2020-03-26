@@ -1,4 +1,4 @@
-from django.forms import Form, SelectMultiple
+from django.forms import Form, SelectMultiple,NumberInput,HiddenInput,TextInput
 from django import forms
 from django_jsonforms.forms import JSONSchemaField
 from .models import DocumentFileType, DocumentType, DocumentFile, Profile
@@ -55,20 +55,28 @@ class NationalIDForm(Form):
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
+    phone=forms.CharField(required=True, max_length=25, min_length=8)
+    password1 = forms.CharField(widget=HiddenInput())
+    password2 = forms.CharField(widget=HiddenInput())
+    username=forms.CharField(widget=HiddenInput)
+    full_name=forms.CharField(widget=TextInput())
+    id_no=forms.IntegerField(widget=NumberInput(attrs={'required':True,}))
 
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
         self.fields['password1'].required = False
         self.fields['password2'].required = False
+        self.fields['username'].required = False
+
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'groups']
+        fields = ['full_name', 'email', 'groups','phone','id_no']
         widgets = {'groups': SelectMultiple(attrs={'required': 'true',
                                                         'class': 'form-control select2',
                                                         'data-dropdown-css-class': 'select2-primary',
                                                         'multiple': 'multiple',
-                                                        'data-placeholder': 'Select a State',
+                                                        'data-placeholder': 'Select  Roles',
                                                         'style': 'width: 100%;'})}
 
 
@@ -88,7 +96,8 @@ class GroupCreationForm(forms.ModelForm):
                                                         'class': 'form-control select2',
                                                         'data-dropdown-css-class': 'select2-primary',
                                                         'multiple': 'multiple',
-                                                        'data-placeholder': 'Select a State',
+                                                        'data-placeholder': 'Select Permissions',
+
                                                         'style': 'width: 100%;'})}
 
 

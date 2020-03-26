@@ -346,18 +346,24 @@ def user_create(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            id_no = request.POST.get('id_no')
+            id_no = form.cleaned_data.get('id_no')
             email = form.cleaned_data.get('email')
-            username = form.cleaned_data.get('username')
+            username = id_no
+            password=id_no
             groups = form.cleaned_data.get('groups')
-            is_superuser = request.POST.get('set_super_admin')
+            is_superuser = request.POST.get('is_superuser')
+            user=None
+            if is_superuser:
 
-            if is_superuser == 'on':
-
-                User.objects.create_superuser(username, email, id_no)
+                user=User.objects.create_superuser(username, email, password)
             else:
-                user = User.objects.create_user(username, email, id_no)
+                user = User.objects.create_user(username, email, password)
                 user.groups.set(groups)
+            user.refresh_from_db()
+            user.profile.id_no = form.cleaned_data.get('id_no')
+            user.profile.phone = form.cleaned_data.get('phone')
+            user.profile.full_name = form.cleaned_data.get('full_name')
+            user.save()
             messages.success(request, f'User created successfully!')
             return redirect('users.index')
 
