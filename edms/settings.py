@@ -77,41 +77,31 @@ WSGI_APPLICATION = 'edms.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-DOCKER = True
+DOCKER = False
 
-DATABASES = {
+if DOCKER:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'work',
+            'USER': 'postgres',
+            'HOST': 'db',
+            'PORT': '5432',
+            'PASSWORD': 'password'
+        }
+    }
+
+else:
+    DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'work',
             'USER': 'postgres',
             'HOST': 'localhost',
             'PORT': '5432',
-            'PASSWORD': 'toor'
+            'PASSWORD': 'password'
         }
     }
-# if DOCKER:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#             'NAME': 'work',
-#             'USER': 'postgres',
-#             'HOST': 'db',
-#             'PORT': '5432',
-#             'PASSWORD': 'password'
-#         }
-#     }
-#
-# else:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#             'NAME': 'work',
-#             'USER': 'postgres',
-#             'HOST': 'localhost',
-#             'PORT': '5432',
-#             'PASSWORD': 'password'
-#         }
-#     }
 
 
 # Password validation
