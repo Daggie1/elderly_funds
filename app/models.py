@@ -102,8 +102,8 @@ class DocumentWorkFlow(models.Model):
     next_node_id = models.CharField(max_length=40)
     next_state_code = models.CharField(max_length=40)
     next_state = models.CharField(max_length=40)
-    document = models.ForeignKey(DocumentFileDetail, null=True)
-    document_file = models.ForeignKey(DocumentFile, null=True)
+    document = models.ForeignKey(DocumentFileDetail, null=True, on_delete=models.CASCADE)
+    document_file = models.ForeignKey(DocumentFile, null=True, on_delete=models.CASCADE)
 
 
 class Profile(models.Model):
