@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | Dashboard</title>
+  <title>EDMS | Ministry for Interior</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
@@ -47,7 +47,7 @@
         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
+        <a href="#" class="nav-link">Home</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
         <a href="#" class="nav-link">Contact</a>
@@ -115,8 +115,8 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
-      <span class="brand-text font-weight-light">AdminLTE 3</span>
+    <a href="{% url 'home' %}" class="brand-link">
+      <span class="brand-text font-weight-light">EDMS</span>
     </a>
 
     <!-- Sidebar -->
@@ -126,210 +126,13 @@
         <div class="image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block">{{ user.get_username }}</a>
         </div>
       </div>
 
         {% block sidebar %}
       <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-             <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
-                Dashboard
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{% url 'home' %}" class="nav-link">
-                  <i class="fas fa-flag nav-icon"></i>
-                  <p>Reports</p>
-                </a>
-              </li>
-
-            </ul>
-             </li>
-            {% if perms.app.view_documentfiletype %}
-            <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-file-word"></i>
-              <p>
-                File Types
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-                {% if perms.app.add_documentfiletype %}
-              <li class="nav-item">
-                <a href="{% url 'create_file_type' %}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Add File Type</p>
-                </a>
-              </li>
-                    {% endif %}
-            {% if perms.app.view_documentfiletype %}
-                 <li class="nav-item">
-                <a href="{% url 'list_file_types' %}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>View Files</p>
-                </a>
-              </li>
-                {% endif %}
-            </ul>
-          </li>
-        {% endif %}
-        {% if perms.app.view_documenttype %}
-                  <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-folder-open"></i>
-              <p>
-                Files
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-            {% if perms.app.add_documenttype %}
-              <li class="nav-item">
-                <a href="{% url 'create_document_file' %}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Create Document File</p>
-                </a>
-              </li>
-                {% endif %}
-                {% if perms.app.view_documenttype %}
-                 <li class="nav-item">
-                <a href="{% url 'list_document_files' %}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>View Document Files</p>
-                </a>
-              </li>
-
-{% endif %}
-        {% if perms.app.view_documentfiledetail %}
-                <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
-                Documents
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-                {% if perms.app.add_documentfiledetail %}
-              <li class="nav-item">
-                <a href="{% url 'create_document_type' %}" class="nav-link">
-                  <i class="fas fa-plus-circle nav-icon"></i>
-                  <p>Add Document Type</p>
-                </a>
-              </li><li class="nav-item">
-                <a href="{% url 'list_document_types' %}" class="nav-link">
-                  <i class="fas fa-plus-circle nav-icon"></i>
-                  <p>Document Types</p>
-                </a>
-              </li>
-{% endif %}
-            {% if perms.app.add_documentfiledetail %}
-                 <li class="nav-item">
-                <a href="{% url 'upload_document' %}" class="nav-link">
-                  <i class="fas fa-file-upload nav-icon"></i>
-                  <p>Upload Documents</p>
-                </a>
-              </li>
-                {% endif %}
-            {% if perms.app.add_documentfiledetail %}
-                  <li class="nav-item">
-                <a href="{% url 'list_document_files' %}" class="nav-link">
-                  <i class="fas fa-glasses nav-icon"></i>
-                  <p>Transcribe Documents</p>
-                </a>
-              </li>
-{% endif %}
-        </ul>
-                </li>
-            {% endif %}
-            </ul>
-{% endif %}
-             <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-microscope"></i>
-              <p>
-                Quality Control
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-
-                 <li class="nav-item">
-                <a href="{% url 'list_document_files' %}" class="nav-link">
-                  <i class="fas fa-gavel nav-icon"></i>
-                  <p>Verify Quality</p>
-                </a>
-              </li>
-                  <li class="nav-item">
-                <a href="{% url 'list_document_files' %}" class="nav-link">
-                  <i class="fas fa-check-double nav-icon"></i>
-                  <p>Validate Documents</p>
-                </a>
-              </li>
-
-            </ul>
-            </li>
-
-            {% if perms.auth %}
-            <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-users"></i>
-              <p>
-                User Management
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-                 {% endif %}
-
-            <ul class="nav nav-treeview">
-            {% if perms.auth.view_user %}
-                 <li class="nav-item">
-                <a href="{% url 'users.index' %}" class="nav-link">
-                  <i class="fas fa-user nav-icon"></i>
-                  <p>Users</p>
-                </a>
-              </li>
-            {% endif %}
-            {% if perms.auth.add_user %}
-                 <li class="nav-item">
-                <a href="{% url 'users.create' %}" class="nav-link">
-                  <i class="fas fa-plus-circle nav-icon"></i>
-                  <p>Add user</p>
-                </a>
-              </li>
-            {% endif %}
-                {% if perms.auth.view_group %}
-                  <li class="nav-item">
-                <a href="{% url 'groups.index' %}" class="nav-link">
-                  <i class="fas fa-check-double nav-icon"></i>
-                  <p>Roles</p>
-                </a>
-              </li>
-             {% if perms.auth.add_user %}
-                 <li class="nav-item">
-                <a href="{% url 'roles.create' %}" class="nav-link">
-                  <i class="fas fa-plus-circle nav-icon"></i>
-                  <p>Add Role</p>
-                </a>
-              </li>
-            {% endif %}
-            </ul>
-
-            </li>
-
-            {% endif %}
-        </ul>
-      </nav>
+            {% include 'app/sidebar.html' %}
         {% endblock sidebar %}
       <!-- /.sidebar-menu -->
     </div>
