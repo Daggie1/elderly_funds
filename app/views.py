@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from .mixin import FirstTimeLoginMixing
 from django.contrib import messages
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import DeleteView, CreateView, UpdateView
@@ -21,7 +22,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import Group, User, Permission
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
-from .decorators import unauthenticated_user
+from .decorators import unauthenticated_user, first_time_login
 
 from django.db.models import Q
 from django.shortcuts import render_to_response
@@ -80,7 +81,7 @@ def add_document(request, file_type):
     return render(request, 'list.html', {'documents': documents, 'form': form})
 
 
-class AdminView(LoginRequiredMixin, PermissionRequiredMixin, View):
+class AdminView(LoginRequiredMixin,FirstTimeLoginMixing, PermissionRequiredMixin, View):
     template_name = 'home.html'
     raise_exception = True
     permission_required = ''
@@ -88,7 +89,7 @@ class AdminView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, self.template_name)
 
 
-class FileTypeList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class FileTypeList(LoginRequiredMixin, FirstTimeLoginMixing,PermissionRequiredMixin, ListView):
     raise_exception = True
     permission_required = 'app.view_documentfiletype'
     model = DocumentFileType
@@ -96,7 +97,10 @@ class FileTypeList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     context_object_name = 'files'
 
 
-class FileTypeCreate(LoginRequiredMixin,PermissionRequiredMixin, SuccessMessageMixin,CreateView):
+
+
+
+class FileTypeCreate(LoginRequiredMixin,FirstTimeLoginMixing,PermissionRequiredMixin, SuccessMessageMixin,CreateView):
     raise_exception = True
     permission_required = 'app.add_documentfiletype'
     model = DocumentFileType
@@ -106,15 +110,21 @@ class FileTypeCreate(LoginRequiredMixin,PermissionRequiredMixin, SuccessMessageM
     success_url = reverse_lazy('list_file_types')
 
 
-class FileTypeDelete(LoginRequiredMixin, PermissionRequiredMixin,SuccessMessageMixin, DeleteView):
+
+class FileTypeDelete(LoginRequiredMixin,FirstTimeLoginMixing, PermissionRequiredMixin,SuccessMessageMixin, DeleteView):
     raise_exception = True
     permission_required = 'app.delete_documentfiletype'
     model = DocumentFileType
     success_message = 'Deleted created successfully'
     success_url = reverse_lazy('list_file_types')
 
+    def test_func(self):
+        if self.request.user.profile.first_login:
+            return False
+        else:
+            return True
 
-class DocumentFileCreate(LoginRequiredMixin, PermissionRequiredMixin,SuccessMessageMixin, CreateView):
+class DocumentFileCreate(LoginRequiredMixin,UserPassesTestMixin, PermissionRequiredMixin,SuccessMessageMixin, CreateView):
     raise_exception = True
     permission_required = 'app.add_documentfile'
     model = DocumentFile
@@ -124,7 +134,7 @@ class DocumentFileCreate(LoginRequiredMixin, PermissionRequiredMixin,SuccessMess
     success_url = reverse_lazy('list_document_files')
 
 
-class DocumentFileList(LoginRequiredMixin,PermissionRequiredMixin,SingleTableMixin, FilterView):
+class DocumentFileList(LoginRequiredMixin,FirstTimeLoginMixing,PermissionRequiredMixin,SingleTableMixin, FilterView):
     raise_exception = True
     permission_required = 'app.view_documentfile'
     model = DocumentFile
@@ -134,18 +144,20 @@ class DocumentFileList(LoginRequiredMixin,PermissionRequiredMixin,SingleTableMix
     filterset_class = DocumentFileFilter
 
 
-class DocumentTypeCreate(LoginRequiredMixin, PermissionRequiredMixin,SuccessMessageMixin, CreateView):
+
+class DocumentTypeCreate(LoginRequiredMixin,FirstTimeLoginMixing, PermissionRequiredMixin,SuccessMessageMixin, CreateView):
     raise_exception = True
     permission_required = 'app.add_documenttype'
     model = DocumentType
     success_message = 'Added created successfully'
     template_name = 'add_document_type.html'
     fields = ['document_name', 'document_description', 'document_field_specs']
-
     success_url = reverse_lazy('list_document_types')
 
 
-class DocumentTypeList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+
+
+class DocumentTypeList(LoginRequiredMixin,FirstTimeLoginMixing, PermissionRequiredMixin, ListView):
     raise_exception = True
     permission_required = 'app.view_documenttype'
     model = DocumentType
@@ -153,7 +165,8 @@ class DocumentTypeList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = 'document_types.html'
 
 
-class DocumentTypeView(LoginRequiredMixin, PermissionRequiredMixin,SuccessMessageMixin, View):
+
+class DocumentTypeView(LoginRequiredMixin, FirstTimeLoginMixing,PermissionRequiredMixin,SuccessMessageMixin, View):
     raise_exception = True
     permission_required = 'app.view_documenttype'
     success_message = 'Added created successfully'
@@ -162,11 +175,13 @@ class DocumentTypeView(LoginRequiredMixin, PermissionRequiredMixin,SuccessMessag
         form = DocumentTypeForm()
         return render(request, template_name, {'form': form})
 
+
+
     def post(self, request):
         pass
 
 
-class DocumentUploadView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class DocumentUploadView(LoginRequiredMixin, FirstTimeLoginMixing,PermissionRequiredMixin, CreateView):
     raise_exception = True
     permission_required = 'app.add_documentfiledetail'
     model = DocumentFileDetail
@@ -175,14 +190,15 @@ class DocumentUploadView(LoginRequiredMixin, PermissionRequiredMixin, CreateView
     success_url = reverse_lazy('uploaded_documents')
 
 
-class UploadedDocumentsList(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+class UploadedDocumentsList(LoginRequiredMixin, FirstTimeLoginMixing,PermissionRequiredMixin,ListView):
     raise_exception = True
     permission_required = 'app.view_documentfiledetail'
     model = DocumentFileDetail
     template_name = 'uploaded_documents_list.html'
 
 
-class DocumentTranscribe(LoginRequiredMixin,PermissionRequiredMixin,View):
+
+class DocumentTranscribe(LoginRequiredMixin,FirstTimeLoginMixing,PermissionRequiredMixin,View):
     raise_exception = True
     permission_required = 'app.add_documentfiledetail'
     def get(self, request, file_reference):
@@ -193,7 +209,9 @@ class DocumentTranscribe(LoginRequiredMixin,PermissionRequiredMixin,View):
         table = DocumentTable(queryset)
         return render(request, 'file_documents_list.html', {'table': table})
 
+
 @login_required
+@first_time_login
 @permission_required( perm='app.view_documentfiledetail')
 def get_document_and_document_type(request, doc_id, file_type):
     document = get_object_or_404(DocumentFileDetail, pk=doc_id)
@@ -202,6 +220,7 @@ def get_document_and_document_type(request, doc_id, file_type):
     return render(request, 'transcription_lab.html', {'form': form, 'document': document})
 
 @login_required
+@first_time_login
 @permission_required( perm='app.view_documentfiledetail')
 def update_document_content(request, doc_id):
     document = DocumentFileDetail.objects.get(id=doc_id)
@@ -210,6 +229,7 @@ def update_document_content(request, doc_id):
     return redirect('view_docs_in_file', document.file_reference_id)
 
 @login_required
+@first_time_login
 @permission_required( perm='app.view_documentfiledetail')
 def validate_document_content(request, doc_id):
     document = DocumentFileDetail.objects.get(id=doc_id)
@@ -219,6 +239,7 @@ def validate_document_content(request, doc_id):
     return render(request, 'validate.html', {'table_data': table_data, 'document': document})
 
 @login_required
+@first_time_login
 @permission_required( perm='app.view_documentfiledetail')
 def pdfrender(request):
     return render(request, template_name='app/pdfrender.html')
@@ -250,6 +271,8 @@ def password_reset(request):
         if form.is_valid():
             form.save()
             u = request.user
+            print (u)
+            u.refresh_from_db()
             u.profile.first_Login = False
             u.save()
             logout(request)
@@ -260,6 +283,7 @@ def password_reset(request):
 
 
 @login_required
+@first_time_login
 @permission_required('auth.add_group', raise_exception=True)
 def add_group(request):
     form = GroupCreationForm(request.POST)
@@ -274,29 +298,31 @@ def add_group(request):
     return render(request, 'create_group.html', {'form': form})
 
 
-class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class UserListView(LoginRequiredMixin, FirstTimeLoginMixing, PermissionRequiredMixin, ListView):
     raise_exception = True
     permission_required = 'auth.view_user'
     model = User
     template_name = 'users.html'
 
 
-class UserDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
-    # print(f"from detail"+s['ph'])
+
+
+class UserDetailView(LoginRequiredMixin,FirstTimeLoginMixing, PermissionRequiredMixin, DetailView):
+
     permission_required = 'auth.view_user'
     raise_exception = True
     model = User
     template_name = 'user_details.html'
 
 
-class GroupListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class GroupListView(LoginRequiredMixin, FirstTimeLoginMixing, PermissionRequiredMixin, ListView):
     permission_required = 'auth.view_user'
     raise_exception = True
     model = Group
     template_name = 'groups.html'
 
 
-class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class UserUpdateView(LoginRequiredMixin, FirstTimeLoginMixing, PermissionRequiredMixin, UpdateView):
     permission_required = 'auth.change_user'
     raise_exception = True
     model = User
@@ -306,7 +332,7 @@ class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'edit_user.html'
 
 
-class GroupUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class GroupUpdateView(LoginRequiredMixin, FirstTimeLoginMixing,PermissionRequiredMixin, UpdateView):
     permission_required = 'auth.change_group'
     raise_exception = True
     model = Group
@@ -324,23 +350,10 @@ class UserDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     template_name = ''
 
 
-@login_required
-def index(request):
-    context = {
-        'title': 'Admin Dashboard',
-        'subtitle': 'Dashboard',
-        'current_url': 'Dashboard'
-    }
-
-    # s=SessionStore()
-    # s['ph']=request.session['phone']
-    # s.create()
-    # print(s['ph'])
-
-    return render(request, 'multi_auth/index.html', context)
 
 
 @login_required
+@first_time_login
 @permission_required('auth.add_user', raise_exception=True)
 def user_create(request):
     if request.method == 'POST':
@@ -376,12 +389,13 @@ def user_create(request):
 
 
 @login_required
+@first_time_login
 @permission_required('auth.add_group', raise_exception=True)
 def group_create(request):
     return render(request, 'create_group.html')
 
 
-class GroupCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class GroupCreateView(LoginRequiredMixin,FirstTimeLoginMixing, PermissionRequiredMixin, CreateView):
     model = Group
 
     raise_exception = True
