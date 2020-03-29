@@ -86,7 +86,7 @@ if DOCKER:
             'NAME': 'work',
             'USER': 'postgres',
             'HOST': 'db',
-            'PORT': '5432',
+            'PORT': '5433',
             'PASSWORD': 'password'
         }
     }
