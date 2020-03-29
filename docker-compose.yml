@@ -2,12 +2,14 @@ version: '3'
 services:
   db:
     image: postgres
+    ports:
+      - "5433:5433"
   web:
     build: .
-    command: python3 manage.py runserver 0.0.0.0:8990
+    command: python3 manage.py runserver 127.0.0.1:8000
     volumes:
-      - .:/django-docker
+      - .:/edms
     ports:
-      - "8990:8990"
+      - "8000:8000"
     depends_on:
       - db

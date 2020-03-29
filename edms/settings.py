@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'edms.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-DOCKER = False
+DOCKER = True
 
 if DOCKER:
     DATABASES = {
@@ -86,7 +86,7 @@ if DOCKER:
             'NAME': 'work',
             'USER': 'postgres',
             'HOST': 'db',
-            'PORT': '5432',
+            'PORT': '5433',
             'PASSWORD': 'password'
         }
     }

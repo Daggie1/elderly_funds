@@ -1,7 +1,22 @@
-FROM python:3
+FROM python:3.6
+
+MAINTAINER Allan
+
 ENV PYTHONUNBUFFERED 1
-RUN mkdir /django-docker
-WORKDIR /django-docker
-ADD requirements.txt /django-docker/
+
+RUN mkdir /edms
+
+WORKDIR /edms
+
+ADD requirements.txt /edms/
+
+RUN python3 manage.py makemigrations
+
+RUN python3 manage.py migrate
+
 RUN pip install -r requirements.txt
-ADD . /django-docker/
+
+
+ADD . /edms/
+
+EXPOSE 8000
