@@ -1,15 +1,22 @@
 version: '3'
 services:
   db:
-    image: postgres
+    restart: always
+    image: postgres:latest
     ports:
       - "5433:5433"
   web:
-    build: .
+    restart: always
+    build: ./
     command: python3 manage.py runserver 127.0.0.1:8000
     volumes:
       - .:/edms
     ports:
       - "8000:8000"
+    expose:
+      - "8000"
+    links:
+      - db:db
+
     depends_on:
       - db
