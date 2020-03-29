@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3
 
 MAINTAINER Allan
 
@@ -8,15 +8,10 @@ RUN mkdir /edms
 
 WORKDIR /edms
 
-ADD requirements.txt /edms/
-
-RUN python3 manage.py makemigrations
-
-RUN python3 manage.py migrate
+COPY requirements.txt ./
 
 RUN pip install -r requirements.txt
 
+COPY . .
 
-ADD . /edms/
-
-EXPOSE 8000
+CMD exec gunicorn edms.wsgi:application - bind 0.0.0.0:8000 - workers 3
