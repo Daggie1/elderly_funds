@@ -84,10 +84,11 @@ if DOCKER:
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'work',
-            'USER': 'postgres',
-            'HOST': 'db',
+            'USER': os.environ.get('django_project_username'),
+            'HOST': 'localhost',
             'PORT': '5432',
-            'PASSWORD': 'password'
+
+            'PASSWORD': os.environ.get('django_project_password')
         }
     }
 
@@ -99,7 +100,10 @@ else:
             'USER': os.environ.get('django_project_username'),
             'HOST': 'localhost',
             'PORT': '5432',
+
             'PASSWORD': os.environ.get('django_project_password')
+
+
         }
     }
 
