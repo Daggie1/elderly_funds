@@ -20,6 +20,25 @@
 
             </ul>
              </li>
+
+        <li class="nav-item has-treeview  {% if request.resolver_match.url_name == 'list_file_types'  or request.resolver_match.url_name == 'create_file_type' %} menu-open {% endif %}" >
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'list_file_types'  or request.resolver_match.url_name == 'create_file_type' %} active {% endif %}">
+              <i class="nav-icon fas fa-file-word"></i>
+              <p>
+                Batches
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+              <li class="nav-item">
+                <a href="{% url 'batch.index' %}" class="nav-link ">
+                  <i class="far fa-plus-circle nav-icon"></i>
+                  <p>Batches</p>
+                </a>
+              </li>
+            </ul>
+        </li>
             {% if perms.app.view_documentfiletype %}
             <li class="nav-item has-treeview  {% if request.resolver_match.url_name == 'list_file_types'  or request.resolver_match.url_name == 'create_file_type' %} menu-open {% endif %}" >
             <a href="#" class="nav-link {% if request.resolver_match.url_name == 'list_file_types'  or request.resolver_match.url_name == 'create_file_type' %} active {% endif %}">
@@ -61,7 +80,7 @@
             <ul class="nav nav-treeview">
             {% if perms.app.add_documenttype %}
               <li class="nav-item">
-                <a href="{% url 'create_document_file' %}" class="nav-link">
+                <a href="#" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Create Document File</p>
                 </a>

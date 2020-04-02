@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.css' %}">
+{% endblock %}
+{% block content %}
+
+         <div class="row">
+        <div class="col-12">
+    <div class="card">
+           <div class="card-header">
+                <h3 class="card-title">All Batches</h3>
+
+                <div class="card-tools">
+                    <a href="{% url 'document.create' file_ref_no  %}" class="btn btn-primary">Add Document</a>
+                </div>
+              </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Barcode</th>
+
+                    <th style="width:150px; min-width:100px;" class="text-center text-danger"><i class="fa fa-bolt"> </i></th>
+                </tr>
+                </thead>
+                <tbody>
+            {% for obj in object_list %}
+                <tr>
+                <td>{{ obj.id }}</td>
+                    <td>{{ obj.document_barcode }}</td>
+
+                <td>
+                        <a href="#" class="btn btn-info btn-icon sq-32" title="open">
+
+                                            <span class="fa fa-eye"></span>
+
+                                    </a>
+                                    <a href="#" title="edit">
+                                        <button class="btn btn-info btn-icon sq-32" type="button">
+                                            <span class="fa fa-pencil-alt"></span>
+                                        </button>
+                                    </a>
+
+                                    <a title="delete" href="#"><button class="btn btn-danger btn-icon sq-32 btnDelete"
+                                            type="button">
+                                        <span class="fa fa-trash-alt"></span>
+                </button></a>
+
+
+                                </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                 <th>#</th>
+                  <th>Ref</th>
+                    <th style="width:150px; min-width:100px;" class="text-center text-danger"><i class="fa fa-bolt"> </i></th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'adminlte/plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="{% static 'adminlte/plugins/datatables/jquery.dataTables.js' %}"></script>
+
+    <script>
+  $(function () {
+    $("#example1").DataTable();
+  });
+</script>
+{% endblock %}

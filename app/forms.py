@@ -4,6 +4,7 @@ from django_jsonforms.forms import JSONSchemaField
 from .models import DocumentFileType, DocumentType, DocumentFile, Profile
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
+from .models import Batch
 
 
 class FileContentForm(Form):
@@ -100,6 +101,11 @@ class GroupCreationForm(forms.ModelForm):
 
                                                         'style': 'width: 100%;'})}
 
+class BatchCreationForm(forms.ModelForm):
+
+    class Meta:
+        model = Batch
+        fields = ['batch_no', 'name']
 
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()

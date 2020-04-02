@@ -1,14 +1,26 @@
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth.views import LogoutView,PasswordChangeView
 from django.urls import path, re_path
 
-from .views import DocumentTypeView, search_file, AdminView, edit_file, \
-    manage_documents, FileTypeDelete, FileTypeCreate, FileTypeList, DocumentFileCreate, DocumentFileList, \
-    DocumentTypeCreate, DocumentTypeList, DocumentUploadView, UploadedDocumentsList, DocumentTranscribe, \
-    get_document_and_document_type, pdfrender, UserListView, UserDetailView, UserUpdateView, UserDeleteView, \
-    GroupListView, GroupUpdateView, user_create, password_reset, add_group, login, update_document_content, validate_document_content
+from .views import (
+    BatchListView,create_batch,registry_submit,FilesView,DocumentCreate,DocumentView, search_file, AdminView, edit_file,
+    manage_documents, FileTypeDelete, FileTypeCreate,
+    FileTypeList, DocumentFileCreate, DocumentFileList,
+    DocumentTypeCreate, DocumentTypeList, DocumentUploadView,
+    UploadedDocumentsList, DocumentTranscribe,
+    get_document_and_document_type, pdfrender,
+    UserListView, UserDetailView, UserUpdateView,
+    UserDeleteView, GroupListView, GroupUpdateView, user_create,
+    password_reset, add_group, login, update_document_content,
+    validate_document_content)
 
 urlpatterns = [
     path('', AdminView.as_view(), name='home'),
+    #submits
+    path('submit/<int:batch_id>', registry_submit, name='submit.registry'),
+
+    # batches
+    path('batches/', BatchListView.as_view(), name='batch.index'),
+    path('create_batch/',create_batch,name='batch.create'),
 
     # file type urls
     path('create_file_type/', FileTypeCreate.as_view(), name='create_file_type'),
@@ -16,7 +28,8 @@ urlpatterns = [
     path('delete_file_type/<str:pk>/delete/', FileTypeDelete.as_view(), name='delete_file_type'),
 
     # physical file urls
-    path('create_file', DocumentFileCreate.as_view(), name='create_document_file'),
+    path('batch/<int:batch_id>/files', FilesView.as_view(), name='files.view'),
+    path('batch/<int:batch_id>/create_file/', DocumentFileCreate.as_view(), name='create_document_file'),
     path('list_document_files', DocumentFileList.as_view(), name='list_document_files'),
 
     # Document Types
@@ -24,6 +37,8 @@ urlpatterns = [
     path('view_document_types', DocumentTypeList.as_view(), name='list_document_types'),
 
     # document upload and viewing
+    path('file/<file_ref_no>/documents', DocumentView.as_view(), name='document.view'),
+    path('file/<file_ref_no>/create_document/', DocumentCreate.as_view(), name='document.create'),
     path('upload_document', DocumentUploadView.as_view(), name='upload_document'),
     path('uploaded_documents', UploadedDocumentsList.as_view(), name='uploaded_documents'),
 
@@ -42,7 +57,7 @@ urlpatterns = [
     path('users/create/', user_create, name='users.create'),
     path('users/<int:pk>/', UserDetailView.as_view(), name='users.detail'),
     path('users/update/<int:pk>/', UserUpdateView.as_view(), name='user.update'),
-    path('users/password_reset/', password_reset, name='user.changepass'),
+    path('users/password_reset/', PasswordChangeView.as_view( template_name='reset_password.html'), name='user.changepass'),
 
     path('user/delete/<int:pk>/', UserDeleteView.as_view(), name='user.delete'),
     # groups
