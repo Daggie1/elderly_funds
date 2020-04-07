@@ -2,7 +2,7 @@ version: '3'
 services:
   db:
     restart: always
-    image: postgres:latest
+    build: ./postgres/
     ports:
       - "5433:5433"
   web:
