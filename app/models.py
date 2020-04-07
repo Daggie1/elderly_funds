@@ -37,7 +37,8 @@ class DocumentState(models.Model):
                              default=StateOptions.REGISTRY
                              )
 
-
+    def __str__(self):
+        return self.state
 
 class Batch(models.Model):
     batch_no=models.CharField(max_length=255, null=False,unique=True)
@@ -59,19 +60,22 @@ class Batch(models.Model):
                                     related_name='return_state')
     state=models.ForeignKey(DocumentState,null=True,on_delete=models.DO_NOTHING)
     rejection_by_receiver_dec=models.TextField(null=True,blank=True)
-
+    def __str__(self):
+        return self.batch_no
 
 
 class DocumentFileType(models.Model):
     file_type = models.CharField(max_length=100, null=False, primary_key=True)
     file_description = models.CharField(max_length=255)
-
+    def __str__(self):
+        return self.file_type
 
 class DocumentType(models.Model):
     document_name = models.CharField(max_length=255, primary_key=True)
     document_field_specs = JSONField()
     document_description = models.CharField(max_length=255)
-
+    def __str__(self):
+        return self.document_name
 
 #
 class DocumentFile(models.Model):
@@ -79,7 +83,7 @@ class DocumentFile(models.Model):
     file_type = models.ForeignKey(DocumentFileType, on_delete=models.CASCADE)
     document = models.FileField(upload_to='documents')
     file_status = models.CharField(max_length=100, null=True)
-    batch = models.OneToOneField(Batch, on_delete=models.CASCADE,null=True,blank=True)
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE,null=True,blank=True)
     file_created_by=models. ForeignKey(User,null=True,blank=True,
                                     on_delete=models.DO_NOTHING,
                                     related_name='file_created_by')
@@ -105,9 +109,11 @@ class DocumentFile(models.Model):
     rejection_by_transcriber_dec = models.TextField(null=True,blank=True)
     rejection_by_aq_dec = models.TextField(null=True,blank=True)
     rejection_by_validation_dec = models.TextField(null=True,blank=True)
+    state = models.ForeignKey(DocumentState, null=True, on_delete=models.DO_NOTHING)
     file_path = models.CharField(null=True, max_length=100)
 
-
+    def __str__(self):
+        return self.file_reference
 
 
 class DocumentFileDetail(models.Model):
@@ -140,8 +146,9 @@ class DocumentFileDetail(models.Model):
     rejection_by_transcriber_dec = models.TextField(null=True,blank=True)
     rejection_by_aq_dec = models.TextField(null=True,blank=True)
     rejection_by_validation_dec = models.TextField(null=True,blank=True)
-    state = models.ForeignKey(DocumentState, db_column='state_code', on_delete=models.CASCADE,null=True)
-
+    state=models.ForeignKey(DocumentState,null=True,on_delete=models.DO_NOTHING)
+    def __str__(self):
+        return self.document_barcode
 
 #
 #

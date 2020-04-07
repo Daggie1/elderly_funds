@@ -1,0 +1,9 @@
+[
+  {
+  "model": "auth.permission",
+  "fields": {
+    "name": "can scan",
+    "content_type": 14
+  }
+}
+]

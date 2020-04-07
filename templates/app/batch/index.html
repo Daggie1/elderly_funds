@@ -61,12 +61,21 @@
                                         </button>
                                     </a>
                     {% else %}
+                    <button class="btn btn-info btn-icon sq-32" type="button" disabled="true">
                                                 <span class="fa fa-lock"></span>
+                    </button>
                                             {% endif %}
-
+{% if obj.state.group in  request.user.groups.all %}
                                     <a title="delete" href="{% url 'user.delete' obj.id %}"><button class="btn btn-danger btn-icon sq-32 btnDelete"
                                             type="button">
                                         <span class="fa fa-trash-alt"></span>
+                                    </button></a>
+                    {% else %}
+                    <button class="btn btn-danger btn-icon sq-32 btnDelete"
+                                            type="button" disabled="true">
+                                        <span class="fa fa-trash-alt"></span>
+                </button></a>
+                                            {% endif %}
                 </button></a>
 
 
