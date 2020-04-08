@@ -213,6 +213,7 @@ class Filer(models.Model):
     """
     filepond = models.FileField(upload_to=document_directory_path)
     file_reference = models.ForeignKey(DocumentFile,related_name='documents', on_delete=models.CASCADE)
+    # document_reference = models.CharField(null=True, max_length=40)
 
     def filename(self):
         return os.path.basename(self.filepond.name)

@@ -1,19 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
+{% include 'app/viewerjs/index.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8" id="pdf">
 
-            {% for document in scanned_documents %}
-                <li>{{ document.filepond.url }}</li>
-            {% endfor %}
-{#        <iframe style="text-align: center" src = "/ViewerJS/#..{{ scanned_documents.filepond.url }}" width='800' height='600' allowfullscreen webkitallowfullscreen></iframe>#}
-            <div class="row">
-                <button id="clicky" class="btn btn-info">Next</button>
-            </div>
+
         </div>
     <div class="col-md-4">
+         <div class="row">
+                <button id="clicky" class="btn btn-info">Next Document</button>
+         </div>
 {#        search its barcode here#}
 {#        select the document type here#}
 {#        if not empty, proceed to transcibe#}
@@ -22,9 +20,36 @@
                 <h4 class="card-title">Document MetaData</h4>
             </div>
             <div class="card-body">
-{#                search form#}
-{#                select box#}
+                     <div class="form-group">
+                        <label>Select Document Type</label>
+                        <select class="form-control">
+                          <option>option 1</option>
+                          <option>option 2</option>
+                          <option>option 3</option>
+                          <option>option 4</option>
+                          <option>option 5</option>
+                        </select>
+
+                         <div class="form-group">
+                        <label>Barcode</label>
+                        <select class="form-control">
+                          <option>option 1</option>
+                          <option>option 2</option>
+                          <option>option 3</option>
+                          <option>option 4</option>
+                          <option>option 5</option>
+                        </select>
+                      </div>
+                         <div class="form-group">
+                             <button class="btn btn-default bg-gradient-gray-dark">Update Document</button>
+                         </div>
+                      </div>
+
+              </div>
+              <!-- /.card-body -->
+
             </div>
+            <!-- /.card -->
         </div>
     </div>
     </div>
@@ -33,12 +58,17 @@
 {% block js %}
     <script>
          $(function(){
-        var documents = "{{ scanned_documents }}"
-        var document_barcodes  = "{{ digital_documents }}"
-        console.log(documents)
+        var documents = {{ scanned_documents | safe }};
+        var document_barcodes  = {{ digital_documents | safe }};
+        $('#pdf').append("<embed id='pdf' src= 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf#toolbar=0' width= '100%' height= '800'>")
         $('#clicky').click(function(){
-            console.log(documents)_
-        })
+            var pdfsource = "http://www.africau.edu/images/default/sample.pdf"+"#toolbar=0"
+            $('#pdf').empty()
+            {#$('#pdf').replaceWith("<embed id='pdf' src= "+ pdfsource +" width= '100%' height= '800'>")#}
+            $('#pdf').append("<embed id='pdf' src= "+ pdfsource +" width= '100%' height= '800'>")
+            console.log(pdfsource)
+        });
+
 
     })
     </script>
