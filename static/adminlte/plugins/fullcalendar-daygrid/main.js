@@ -62,7 +62,7 @@ Docs & License: https://fullcalendar.io/
             var start = renderRange.start;
             var end = renderRange.end;
             var endOfWeek;
-            // year and month views should be aligned with weeks. this is already done for week
+            // year and month view should be aligned with weeks. this is already done for week
             if (/^(year|month)$/.test(currentRangeUnit)) {
                 start = dateEnv.startOfWeek(start);
                 // make end-of-week if not already
@@ -1278,7 +1278,7 @@ Docs & License: https://fullcalendar.io/
     }(core.DateComponent));
 
     var WEEK_NUM_FORMAT$1 = core.createFormatter({ week: 'numeric' });
-    /* An abstract class for the daygrid views, as well as month view. Renders one or more rows of day cells.
+    /* An abstract class for the daygrid view, as well as month view. Renders one or more rows of day cells.
     ----------------------------------------------------------------------------------------------------------------------*/
     // It is a manager for a DayGrid subcomponent, which does most of the heavy lifting.
     // It is responsible for managing width/height.

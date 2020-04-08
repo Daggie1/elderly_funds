@@ -1,56 +1,79 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% block css %}
+    <link rel="stylesheet" href="{% static '/filepond.css' %}">
+{% endblock %}
 {% block content %}
 
 {#    upload a document belonging to a give file#}
     <div class="row">
-    <div class="col-md-6">
-    <div class="card card-secondary">
-        <div class="card-header">
-            <h3 class="card-title text-info">Documents</h3>
-        </div>
-        <div class="card-body">
-              <form class="form-inline ml-3">
-          <div class="input-group">
-            <input class="form-control" type="search" placeholder="Search File" aria-label="Search">
-            <div class="input-group-append">
-              <button class="btn btn-navbar" type="submit">
-                <i class="fas fa-search"></i>
-              </button>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Upload Scanned Documents To {{ file.file_reference }}</h4>
+                </div>
+                <div class="card-body">
+                    <input type="file"
+                    class="filepond" name="filepond" multiple data-allow-reorder="true" data-max-file-size="10MB"
+                           data-max-files="200"
+                    >
+                </div>
             </div>
-
-
-          </div>
-        </form>
-              <ul class="list-group list-group-flush">
-                  <li class="list-group-item">Search Results</li>
-                </ul>
         </div>
 
-    </div>
-        </div>
-          <!-- left column -->
-          <div class="col-md-6">
-            <!-- general form elements -->
-            <div class="card card-primary">
+        <div class="col-md-6">
+             <div class="row">
+                 <a href="" class="btn btn-sm btn-default bg-gradient-yellow m-2 float-right">Update File Status</a>
+                </div>
+            <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Upload Document</h3>
+                <h3 class="card-title">Documents</h3>
               </div>
               <!-- /.card-header -->
-              <!-- form start -->
-              <form role="form" action="" method="post" enctype="multipart/form-data">
-                  {% csrf_token %}
-                <div class="card-body">
-                    {{ form | crispy }}
-                </div>
-                <!-- /.card-body -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Document</th>
+                      <th>View</th>
+                      <th>Delete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
 
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-              </form>
+                      <td>Update software</td>
+                      <td>
+                          <a href="" class="btn btn-sm btn-info"><span class="fas fa-eye"></span></a>
+                      </td>
+                      <td><span class="fas fa-trash"></span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+
             </div>
-          </div>
+        </div>
+
     </div>
 {% endblock content %}
+
+{% block js %}
+     <script src="{% static '/filepond.js' %}"></script>
+      <script>
+  FilePond.parse(document.body);
+  FilePond.setOptions({
+      server: {
+          url:"{% url 'upload_document' file.file_reference %}",
+          process:{
+              headers: {
+                  'X-CSRF-TOKEN': '{{ csrf_token }}'
+              }
+          }
+      }
+  })
+  </script>
+{% endblock%}

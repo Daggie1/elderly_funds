@@ -3,35 +3,45 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="row">
-     <div class="col-md-12 card">
-         <div class="card-header">
-             <h3 class="card-title text-center">Transcribing Contents of File: ########</h3>
-         </div>
-         <div class="card-body">
-             <button class="btn-sm btn-primary">Load Another File</button>
-         </div>
+        <div class="col-md-8">
 
-    </div>
-    </div>
-    <div class="row">
-
-    <div class="col-md-6"></div>
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Birth Certificate</h3>
-            </div>
-            <div class="card-body">
-                <form action="" method="POST">
-            {% csrf_token %}
-            {{ form | crispy }}
-                     <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-        </form>
+            {% for document in scanned_documents %}
+                <li>{{ document.filepond.url }}</li>
+            {% endfor %}
+{#        <iframe style="text-align: center" src = "/ViewerJS/#..{{ scanned_documents.filepond.url }}" width='800' height='600' allowfullscreen webkitallowfullscreen></iframe>#}
+            <div class="row">
+                <button id="clicky" class="btn btn-info">Next</button>
             </div>
         </div>
-
+    <div class="col-md-4">
+{#        search its barcode here#}
+{#        select the document type here#}
+{#        if not empty, proceed to transcibe#}
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Document MetaData</h4>
+            </div>
+            <div class="card-body">
+{#                search form#}
+{#                select box#}
+            </div>
+        </div>
     </div>
     </div>
 {% endblock content %}
+
+{% block js %}
+    <script>
+         $(function(){
+        var documents = "{{ scanned_documents }}"
+        var document_barcodes  = "{{ digital_documents }}"
+        console.log(documents)
+        $('#clicky').click(function(){
+            console.log(documents)_
+        })
+
+    })
+    </script>
+
+
+{% endblock %}

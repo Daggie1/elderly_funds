@@ -4,9 +4,9 @@ from django.contrib import messages
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import DeleteView, CreateView, UpdateView
 from django.views.generic import ListView, DetailView
-from .forms import FileForm, DocumentTypeForm, DocumentForm, FileContentForm, LoginForm, UserRegistrationForm, \
-    PasswordResetForm, GroupCreationForm,BatchCreationForm
-from .models import DocumentFile, DocumentFileType, DocumentType, DocumentFileDetail, Batch,DocumentState
+from .forms import FileForm, DocumentTypeForm, FileContentForm, LoginForm, UserRegistrationForm, \
+    PasswordResetForm, GroupCreationForm, BatchCreationForm
+from .models import DocumentFile, DocumentFileType, DocumentType, DocumentFileDetail, Batch, DocumentState
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from .tables import DocumentFileTable, DocumentTable
@@ -30,7 +30,7 @@ from django.shortcuts import render_to_response
 from json2html import *
 
 
-# Create your views here.
+# Create your view here.
 def search_file(request):
     pass
 
@@ -46,62 +46,50 @@ def search_person(request):
         results = []
     return render_to_response("search_html", {"results": results, "query": query})
 
-@login_required
 
+@login_required
 def edit_file(request, file_type):
     if file_type:
         file = get_object_or_404(DocumentFileType, pk=file_type)
 
         return render(request, 'view_document_files.html', {'file': file})
 
-@login_required
 
+@login_required
 def manage_documents(request, file_type):
     if file_type:
         file = get_object_or_404(DocumentFileType, pk=file_type)
         documents = DocumentFile.objects.filter(file_type=file_type)
-        form = DocumentForm()
+        form = None
+        # form = DOcumentForm()
         context = {'file': file, 'documents': documents, 'form': form}
         return render(request, 'upload_document.html', context)
 
-
-def add_document(request, file_type):
-    if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)
-        if form.is_valid():
-            newdoc = DocumentForm(docfile=request.FILES['document'])
-            newdoc.save()
-
-            return HttpResponseRedirect(reverse('upload'))
-        else:
-            form = DocumentForm()
-
-    form = DocumentForm()
-    documents = Document.objects.all()
-    return render(request, 'list.html', {'documents': documents, 'form': form})
 
 
 class AdminView(LoginRequiredMixin, View):
     template_name = 'home.html'
 
     permission_required = ''
+
     def get(self, request):
         return render(request, self.template_name)
 
 
 class BatchListView(LoginRequiredMixin, ListView):
-
     permission_required = 'app.view_batch'
     model = Batch
     template_name = 'app/batch/index.html'
+
+
 @login_required
 def create_batch(request):
     form = BatchCreationForm(data=request.POST)
     if form.is_valid():
         form.save()
-        batch=Batch.objects.get(batch_no=form.cleaned_data.get('batch_no'))
+        batch = Batch.objects.get(batch_no=form.cleaned_data.get('batch_no'))
         batch.refresh_from_db()
-        batch.created_by=request.user
+        batch.created_by = request.user
         batch.save()
         print('iooio')
         messages.success(request, f"Created successfully")
@@ -113,19 +101,15 @@ def create_batch(request):
         form = BatchCreationForm()
     return render(request, 'app/batch/create.html', {'form': form})
 
-class FileTypeList(LoginRequiredMixin, ListView):
 
+class FileTypeList(LoginRequiredMixin, ListView):
     permission_required = 'app.view_documentfiletype'
     model = DocumentFileType
     template_name = 'file_types.html'
     context_object_name = 'files'
 
 
-
-
-
-class FileTypeCreate(LoginRequiredMixin, SuccessMessageMixin,CreateView):
-
+class FileTypeCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     permission_required = 'app.add_documentfiletype'
     model = DocumentFileType
     template_name = 'add_file.html'
@@ -134,9 +118,7 @@ class FileTypeCreate(LoginRequiredMixin, SuccessMessageMixin,CreateView):
     success_url = reverse_lazy('list_file_types')
 
 
-
-class FileTypeDelete(LoginRequiredMixin,SuccessMessageMixin, DeleteView):
-
+class FileTypeDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     permission_required = 'app.delete_documentfiletype'
     model = DocumentFileType
     success_message = 'Deleted created successfully'
@@ -148,7 +130,6 @@ class FileTypeDelete(LoginRequiredMixin,SuccessMessageMixin, DeleteView):
         else:
             return True
 
-
     class FilesView(LoginRequiredMixin, ListView):
 
         permission_required = 'app.add_documentfile'
@@ -156,69 +137,70 @@ class FileTypeDelete(LoginRequiredMixin,SuccessMessageMixin, DeleteView):
 
         def get_queryset(self):
             return DocumentFile.objects.filter(batch=Batch.objects.get(pk=self.kwargs['batch_id']))
-class DocumentCreate(LoginRequiredMixin, SuccessMessageMixin,CreateView):
 
+
+class DocumentCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     permission_required = 'app.add_documentfiledetails'
     model = DocumentFileDetail
     template_name = 'app/document/create.html'
     fields = ['document_barcode']
     success_message = 'Added created successfully'
     success_url = reverse_lazy('list_file_types')
+
     def form_valid(self, form):
         form.instance.doc_created_by = self.request.user
-        form.instance.file_reference=DocumentFile.objects.get(file_reference=self.kwargs['file_ref_no'])
+        form.instance.file_reference = DocumentFile.objects.get(file_reference=self.kwargs['file_ref_no'])
         return super().form_valid(form)
 
+
 class DocumentView(LoginRequiredMixin, ListView):
+    permission_required = 'app.add_documentfiledetails'
+    template_name = 'app/document/index.html'
 
-            permission_required = 'app.add_documentfiledetails'
-            template_name = 'app/document/index.html'
+    def get_queryset(self):
+        return DocumentFileDetail.objects.filter(file_reference=DocumentFile.objects.get(pk=self.kwargs['file_ref_no']))
 
-            def get_queryset(self):
-                return DocumentFileDetail.objects.filter(file_reference=DocumentFile.objects.get(pk=self.kwargs['file_ref_no']))
-            def get_context_data(self, **kwargs):
-                context = super().get_context_data(**kwargs)
-                context['file_ref_no'] = self.kwargs['file_ref_no']
-                return context
-class DocumentFileCreate(LoginRequiredMixin,SuccessMessageMixin, CreateView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['file_ref_no'] = self.kwargs['file_ref_no']
+        return context
 
+
+class DocumentFileCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     permission_required = 'app.add_documentfile'
     success_message = 'Added created successfully'
     model = DocumentFile
     template_name = 'app/file/create.html'
     fields = ['file_reference', 'file_type', 'file_barcode']
     success_url = reverse_lazy('list_document_files')
-    m=None
+    m = None
+
     def get(self, request, batch_id):
         # query documents belonging to this file & aggregate with its corresponding document type
-        DocumentFileCreate.m=batch_id
+        DocumentFileCreate.m = batch_id
         print(DocumentFileCreate.m)
         return super().get(request)
+
     def form_valid(self, form):
         form.instance.file_created_by = self.request.user
-        form.instance.batch=Batch.objects.get(pk=DocumentFileCreate.m)
+        form.instance.batch = Batch.objects.get(pk=DocumentFileCreate.m)
         return super().form_valid(form)
 
-class FilesView(LoginRequiredMixin,ListView):
 
+class FilesView(LoginRequiredMixin, ListView):
     permission_required = 'app.add_documentfile'
 
     def get(self, request, *args, **kwargs):
-        batch_id=kwargs['batch_id']
-        files=DocumentFile.objects.filter(batch=Batch.objects.get(pk=batch_id))
+        batch_id = kwargs['batch_id']
+        files = DocumentFile.objects.filter(batch=Batch.objects.get(pk=batch_id))
 
-        return render(request,'app/file/index.html',{
-            'object_list':files,
-            'batch_id':batch_id
+        return render(request, 'app/file/index.html', {
+            'object_list': files,
+            'batch_id': batch_id
         })
 
 
-
-
-
-
-class DocumentFileList(LoginRequiredMixin,SingleTableMixin, FilterView):
-
+class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     permission_required = 'app.view_documentfile'
     model = DocumentFile
     table_class = DocumentFileTable
@@ -227,9 +209,7 @@ class DocumentFileList(LoginRequiredMixin,SingleTableMixin, FilterView):
     filterset_class = DocumentFileFilter
 
 
-
-class DocumentTypeCreate(LoginRequiredMixin,SuccessMessageMixin, CreateView):
-
+class DocumentTypeCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     permission_required = 'app.add_documenttype'
     model = DocumentType
     success_message = 'Added created successfully'
@@ -238,34 +218,27 @@ class DocumentTypeCreate(LoginRequiredMixin,SuccessMessageMixin, CreateView):
     success_url = reverse_lazy('list_document_types')
 
 
-
-
 class DocumentTypeList(LoginRequiredMixin, ListView):
-
     permission_required = 'app.view_documenttype'
     model = DocumentType
     context_object_name = 'documents'
     template_name = 'document_types.html'
 
 
-
-class DocumentTypeView(LoginRequiredMixin,SuccessMessageMixin, View):
-
+class DocumentTypeView(LoginRequiredMixin, SuccessMessageMixin, View):
     permission_required = 'app.view_documenttype'
     success_message = 'Added created successfully'
+
     def get(self, request):
         template_name = 'add_document_type.html'
         form = DocumentTypeForm()
         return render(request, template_name, {'form': form})
-
-
 
     def post(self, request):
         pass
 
 
 class DocumentUploadView(LoginRequiredMixin, CreateView):
-
     permission_required = 'app.add_documentfiledetail'
     model = DocumentFileDetail
     template_name = 'upload_document.html'
@@ -273,17 +246,15 @@ class DocumentUploadView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('uploaded_documents')
 
 
-class UploadedDocumentsList(LoginRequiredMixin,ListView):
-
+class UploadedDocumentsList(LoginRequiredMixin, ListView):
     permission_required = 'app.view_documentfiledetail'
     model = DocumentFileDetail
     template_name = 'uploaded_documents_list.html'
 
 
-
-class DocumentTranscribe(LoginRequiredMixin,View):
-
+class DocumentTranscribe(LoginRequiredMixin, View):
     permission_required = 'app.add_documentfiledetail'
+
     def get(self, request, file_reference):
         # query documents belonging to this file & aggregate with its corresponding document type
         queryset = DocumentFileDetail.objects.filter(file_reference_id=file_reference)
@@ -294,26 +265,22 @@ class DocumentTranscribe(LoginRequiredMixin,View):
 
 
 @login_required
-
-
 def get_document_and_document_type(request, doc_id, file_type):
     document = get_object_or_404(DocumentFileDetail, pk=doc_id)
     document_type = DocumentType.objects.get(pk=file_type)
     form = JSONSchemaForm(schema=document_type.document_field_specs, options={"theme": "bootstrap3"})
     return render(request, 'transcription_lab.html', {'form': form, 'document': document})
 
+
 @login_required
-
-
 def update_document_content(request, doc_id):
     document = DocumentFileDetail.objects.get(id=doc_id)
     document.document_content = request.POST.get('json')
     document.save()
     return redirect('view_docs_in_file', document.file_reference_id)
 
+
 @login_required
-
-
 def validate_document_content(request, doc_id):
     document = DocumentFileDetail.objects.get(id=doc_id)
     content = document.document_content
@@ -321,9 +288,8 @@ def validate_document_content(request, doc_id):
                                                                   "table-hover\"")
     return render(request, 'validate.html', {'table_data': table_data, 'document': document})
 
+
 @login_required
-
-
 def pdfrender(request):
     return render(request, template_name='app/pdfrender.html')
 
@@ -353,7 +319,7 @@ def password_reset(request):
         if form.is_valid():
             form.save()
             u = request.user
-            print (u)
+            print(u)
             u.refresh_from_db()
             u.profile.first_Login = False
             u.save()
@@ -365,8 +331,6 @@ def password_reset(request):
 
 
 @login_required
-
-
 def add_group(request):
     form = GroupCreationForm(request.POST)
     if form.is_valid():
@@ -381,30 +345,25 @@ def add_group(request):
 
 
 class UserListView(LoginRequiredMixin, ListView):
-
-
     model = User
     template_name = 'users.html'
 
 
-
-
 class UserDetailView(LoginRequiredMixin, DetailView):
-
     permission_required = 'auth.view_user'
 
     model = User
     template_name = 'user_details.html'
 
 
-class GroupListView(LoginRequiredMixin,  ListView):
+class GroupListView(LoginRequiredMixin, ListView):
     permission_required = 'auth.view_user'
 
     model = Group
     template_name = 'groups.html'
 
 
-class UserUpdateView(LoginRequiredMixin,  UpdateView):
+class UserUpdateView(LoginRequiredMixin, UpdateView):
     permission_required = 'auth.change_user'
 
     model = User
@@ -432,11 +391,7 @@ class UserDeleteView(LoginRequiredMixin, DeleteView):
     template_name = ''
 
 
-
-
 @login_required
-
-
 def user_create(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
@@ -444,13 +399,13 @@ def user_create(request):
             id_no = form.cleaned_data.get('id_no')
             email = form.cleaned_data.get('email')
             username = id_no
-            password=id_no
+            password = id_no
             groups = form.cleaned_data.get('groups')
             is_superuser = request.POST.get('is_superuser')
-            user=None
+            user = None
             if is_superuser:
 
-                user=User.objects.create_superuser(username, email, password)
+                user = User.objects.create_superuser(username, email, password)
             else:
                 user = User.objects.create_user(username, email, password)
                 user.groups.set(groups)
@@ -471,15 +426,12 @@ def user_create(request):
 
 
 @login_required
-
-
 def group_create(request):
     return render(request, 'create_group.html')
 
 
 class GroupCreateView(LoginRequiredMixin, CreateView):
     model = Group
-
 
     permission_required = 'auth.view_group'
     permissions = Permission.objects.all()
@@ -488,12 +440,11 @@ class GroupCreateView(LoginRequiredMixin, CreateView):
     fields = ['name', 'permission']
     success_url = 'home'
 
-def registry_submit(request,batch_id):
-    batch=Batch.objects.get(pk=batch_id)
+
+def registry_submit(request, batch_id):
+    batch = Batch.objects.get(pk=batch_id)
     print(batch)
-    batch.state=DocumentState.objects.get(state_code=301)
+    batch.state = DocumentState.objects.get(state_code=301)
     batch.save()
-    messages.success(request,'Submitted successfully')
+    messages.success(request, 'Submitted successfully')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-

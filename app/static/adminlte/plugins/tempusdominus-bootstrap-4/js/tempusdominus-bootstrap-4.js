@@ -2377,7 +2377,7 @@ var TempusDominusBootstrap4 = function ($) {
                                 expanded.collapse('hide');
                                 closed.collapse('show');
                             } else {
-                                // otherwise just toggle in class on the two views
+                                // otherwise just toggle in class on the two view
                                 expanded.removeClass('show');
                                 closed.addClass('show');
                             }
