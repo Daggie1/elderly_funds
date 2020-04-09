@@ -21,9 +21,9 @@
             </ul>
              </li>
 
-        <li class="nav-item has-treeview  {% if request.resolver_match.url_name == 'list_file_types'  or request.resolver_match.url_name == 'create_file_type' %} menu-open {% endif %}" >
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'list_file_types'  or request.resolver_match.url_name == 'create_file_type' %} active {% endif %}">
-              <i class="nav-icon fas fa-file-word"></i>
+        <li class="nav-item has-treeview  {% if request.resolver_match.url_name == 'batch.index' or request.resolver_match.url_name == 'create_document_file' or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch.create' %} menu-open {% endif %}" >
+            <a href="#" class="nav-link  {% if request.resolver_match.url_name == 'batch.index' or request.resolver_match.url_name == 'create_document_file' or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch.create' %} active {% endif %}">
+              <i class="nav-icon fas fa-file-pdf"></i>
               <p>
                 Batches
                 <i class="right fas fa-angle-left"></i>
@@ -32,8 +32,8 @@
             <ul class="nav nav-treeview">
 
               <li class="nav-item">
-                <a href="{% url 'batch.index' %}" class="nav-link ">
-                  <i class="far fa-plus-circle nav-icon"></i>
+                <a href="{% url 'batch.index' %}" class="nav-link  {% if request.resolver_match.url_name == 'batch.index' or request.resolver_match.url_name == 'create_document_file' or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch.create' %} active{% endif %}">
+                  <i class="far fa-file-pdf nav-icon"></i>
                   <p>Batches</p>
                 </a>
               </li>
@@ -126,7 +126,7 @@
 {% endif %}
             {% if perms.app.add_documentfiledetail %}
                  <li class="nav-item">
-                <a href="{% url 'upload_document' %}" class="nav-link">
+                <a href="{% url 'get_file_to_upload_documents' %}" class="nav-link">
                   <i class="fas fa-file-upload nav-icon"></i>
                   <p>Upload Documents</p>
                 </a>

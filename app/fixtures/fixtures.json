@@ -24,6 +24,14 @@
     "content_type": 8
   }
 },
+   {
+  "model": "auth.permission",
+  "fields": {
+    "codename": "can_transcribe_file",
+    "name": "Can Transcribe File",
+    "content_type": 8
+  }
+},
     {
   "model": "auth.permission",
   "fields": {

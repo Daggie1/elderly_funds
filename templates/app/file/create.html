@@ -9,10 +9,10 @@
 {% endblock %}
 {% block content %}
      <div class="row">
-        <div class="col-6 offset-3">
+        <div class="col-6 ">
             <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">Batch Details</h3>
+              <h3 class="card-title">File Details</h3>
 
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -20,18 +20,70 @@
               </div>
             </div>
             <div class="card-body">
-              <form  method="POST" >
+              <form  method="POST" id="data_form"  >
                     {% csrf_token %}
-             {{ form|crispy }}
+{#             {{ form|crispy }}#}
+                  <div class="card-body">
+                  <div class="form-group">
+                    {{ form.file_type | as_crispy_field }}
+                  </div>
+                    <div class="form-group">
+                    {{ form.file_reference | as_crispy_field }}
+                  </div>
+
+                  <div class="form-group">
+                    {{ form.file_barcode | as_crispy_field }}
+                  </div>
+                </div>
                   <input type="hidden" value="">
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block">Save Group</button>
+                        <button type="submit" class="btn btn-primary btn-block">Add</button>
                     </div>
                 </form>
             </div>
             <!-- /.card-body -->
           </div>
         </div>
+     <div class="col-6 ">
+         <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Added Files</h3>
+
+               <div class="card-tools">
+                    <a href="" class="btn btn-warning">Submit File(s)</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>File Type</th>
+                  <th>File Reference</th>
+                  <th>File Barcode</th>
+
+                    <th style="width:150px; min-width:100px;" class="text-center text-danger"><i class="fa fa-bolt"> </i></th>
+                </tr>
+                    </thead>
+                    <tbody id="table_data">
+                    <tr>
+                         <td>
+                        78787878
+                    </td>
+                    <td>
+                        78787878
+                    </td>
+                        <td>
+                        78787878
+                    </td>
+                        <td>
+                        78787878
+                    </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+         </div>
+     </div>
  </div>
 {% endblock %}
 {% block js %}
@@ -45,6 +97,26 @@
     $('.select2bs4').select2({
       theme: 'bootstrap4'
     })
+
+     let form=document.getElementById('data_form')
+     form.addEventListener('submit', event => {
+         var fileList=[];
+         let filtype=form.elements['file_type'];
+         let fileRef=form.elements['file_reference'];
+         let fileBarCode=form.elements['file_barcode'];
+         let list=[];
+         list.push(
+             {"filtype":filtype.value},
+             {"fileRef":fileRef.value},
+             {"fileBarCode":fileBarCode.value},
+             );
+         list.forEach(obj=>{
+        console.log(obj)
+             var td=document.getElementsByTagName('table_data')
+
+         });
+
+     })
      })
     </script>
 {% endblock %}

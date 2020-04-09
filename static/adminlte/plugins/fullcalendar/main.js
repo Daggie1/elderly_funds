@@ -6348,7 +6348,7 @@ Docs & License: https://fullcalendar.io/
     // Computes what the title at the top of the calendar should be for this view
     function computeTitle(dateProfile, viewOptions) {
         var range;
-        // for views that span a large unit of time, show the proper interval, ignoring stray days before and after
+        // for view that span a large unit of time, show the proper interval, ignoring stray days before and after
         if (/^(year|month)$/.test(dateProfile.currentRangeUnit)) {
             range = dateProfile.currentRange;
         }
@@ -7033,13 +7033,13 @@ Docs & License: https://fullcalendar.io/
             }
         };
         // Given a duration singular unit, like "week" or "day", finds a matching view spec.
-        // Preference is given to views that have corresponding buttons.
+        // Preference is given to view that have corresponding buttons.
         Calendar.prototype.getUnitViewSpec = function (unit) {
             var component = this.component;
             var viewTypes = [];
             var i;
             var spec;
-            // put views that have buttons first. there will be duplicates, but oh
+            // put view that have buttons first. there will be duplicates, but oh
             if (component.header) {
                 viewTypes.push.apply(viewTypes, component.header.viewsWithButtons);
             }

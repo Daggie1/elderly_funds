@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .mixin import FirstTimeLoginMixing
+from .mixin import LoggedInRedirectMixin
 from django.utils import timezone
 from django.contrib.auth.views import LoginView, PasswordChangeForm
 from django.contrib import messages
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import DeleteView, CreateView, UpdateView
 from django.views.generic import ListView, DetailView
-from .forms import FileForm, DocumentTypeForm, DocumentForm, FileContentForm, LoginForm, UserRegistrationForm, \
-    PasswordResetForm, GroupCreationForm, BatchCreationForm
+
+# from .forms import FileForm, DocumentTypeForm, DocumentForm, FileContentForm, LoginForm, UserRegistrationForm, \
+from .forms import (FileForm, DocumentTypeForm, FileContentForm, LoginForm, UserRegistrationForm,
+
+    PasswordResetForm, GroupCreationForm, BatchCreationForm)
 from .models import DocumentFile, DocumentFileType, DocumentType, DocumentFileDetail, Batch, DocumentState
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
@@ -24,7 +27,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import Group, User, Permission
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
-from .decorators import unauthenticated_user, first_time_login
+
 
 from django.db.models import Q
 from django.shortcuts import render_to_response
@@ -32,7 +35,7 @@ from django.shortcuts import render_to_response
 from json2html import *
 
 
-# Create your views here.
+# Create your view here.
 def search_file(request):
     pass
 
@@ -62,25 +65,11 @@ def manage_documents(request, file_type):
     if file_type:
         file = get_object_or_404(DocumentFileType, pk=file_type)
         documents = DocumentFile.objects.filter(file_type=file_type)
-        form = DocumentForm()
+        form = None
+        # form = DOcumentForm()
         context = {'file': file, 'documents': documents, 'form': form}
         return render(request, 'upload_document.html', context)
 
-
-def add_document(request, file_type):
-    if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)
-        if form.is_valid():
-            newdoc = DocumentForm(docfile=request.FILES['document'])
-            newdoc.save()
-
-            return HttpResponseRedirect(reverse('upload'))
-        else:
-            form = DocumentForm()
-
-    form = DocumentForm()
-    documents = Document.objects.all()
-    return render(request, 'list.html', {'documents': documents, 'form': form})
 
 
 class AdminView(LoginRequiredMixin, View):
@@ -96,8 +85,10 @@ class BatchListView(LoginRequiredMixin, ListView):
     permission_required = 'app.view_batch'
     template_name = 'app/batch/index.html'
 
+
     def get_queryset(self):
         return Batch.objects.filter(created_by=self.request.user)
+
 
 
 @login_required
@@ -108,7 +99,9 @@ def create_batch(request):
         batch = Batch.objects.get(batch_no=form.cleaned_data.get('batch_no'))
         batch.refresh_from_db()
         batch.created_by = request.user
+
         batch.state = DocumentState.objects.get(state_code=300)
+
         batch.save()
         messages.success(request, f"Created successfully")
         return redirect('batch.index')
@@ -161,11 +154,15 @@ class DocumentCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'app/document/create.html'
     fields = ['document_barcode']
     success_message = 'Added created successfully'
-    success_url = reverse_lazy('list_file_types')
+
+    def get_success_url(self):
+        return reverse_lazy('document.create', kwargs={'file_ref_no': self.kwargs['file_ref_no']})
 
     def form_valid(self, form):
         form.instance.doc_created_by = self.request.user
+
         form.instance.state = DocumentState.objects.get(state_code=300)
+
         form.instance.file_reference = DocumentFile.objects.get(file_reference=self.kwargs['file_ref_no'])
         return super().form_valid(form)
 
@@ -189,8 +186,10 @@ class DocumentFileCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = DocumentFile
     template_name = 'app/file/create.html'
     fields = ['file_reference', 'file_type', 'file_barcode']
-    success_url = reverse_lazy('list_document_files')
     m = None
+    def get_success_url(self):
+
+        return reverse_lazy('create_document_file',kwargs={'batch_id':self.kwargs['batch_id']})
 
     def get(self, request, batch_id):
         # query documents belonging to this file & aggregate with its corresponding document type
@@ -201,7 +200,9 @@ class DocumentFileCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     def form_valid(self, form):
         form.instance.file_created_by = self.request.user
         form.instance.batch = Batch.objects.get(pk=DocumentFileCreate.m)
+
         form.instance.state = DocumentState.objects.get(state_code=300)
+
         return super().form_valid(form)
 
 
@@ -216,6 +217,7 @@ class FilesView(LoginRequiredMixin, ListView):
             'object_list': files,
             'batch_id': batch_id
         })
+
 
 
 class RequestersFilesView(LoginRequiredMixin, ListView):
@@ -236,6 +238,7 @@ class RequestersFilesView(LoginRequiredMixin, ListView):
             )
 
         return None
+
 
 
 class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
@@ -331,7 +334,7 @@ def pdfrender(request):
     return render(request, template_name='app/pdfrender.html')
 
 
-class Login(LoginView):
+class Login(LoggedInRedirectMixin, LoginView):
     template_name = 'login.html'
 
     def form_valid(self, form):
@@ -394,9 +397,12 @@ def password_reset(request, username):
 
         if form.is_valid():
             form.save()
+
             user.refresh_from_db()
             user.profile.first_Login = False
             user.save()
+
+
             logout(request)
             return redirect('login')
     else:
@@ -515,6 +521,7 @@ class GroupCreateView(LoginRequiredMixin, CreateView):
     success_url = 'home'
 
 
+
 @login_required
 def batch_submit(request, batch_id):
     batch = Batch.objects.get(pk=batch_id)
@@ -621,3 +628,12 @@ def file_submit(request, file_ref):
     else:
         return redirect('abort')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def registry_submit(request, batch_id):
+    batch = Batch.objects.get(pk=batch_id)
+    print(batch)
+    batch.state = DocumentState.objects.get(state_code=301)
+    batch.save()
+    messages.success(request, 'Submitted successfully')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+

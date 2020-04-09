@@ -1,10 +1,10 @@
-from django.forms import Form, SelectMultiple,NumberInput,HiddenInput,TextInput
+from django.forms import Form, SelectMultiple, NumberInput, HiddenInput, TextInput, ModelForm
 from django import forms
 from django_jsonforms.forms import JSONSchemaField
-from .models import DocumentFileType, DocumentType, DocumentFile, Profile
+from .models import DocumentFileType, DocumentType, DocumentFile, Profile, DocumentFileDetail
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
-from .models import Batch
+from .models import Batch, Filer
 
 
 class FileContentForm(Form):
@@ -25,43 +25,14 @@ class DocumentTypeForm(forms.ModelForm):
         fields = ['document_name', 'document_description']
 
 
-class DocumentForm(forms.Form):
-    file_barcode = forms.CharField(label="Read Document Barcode", max_length=40)
-    docfile = forms.FileField(
-        label='Select a file',
-        help_text='max. 42 megabytes'
-    )
-
-
-class BirthCertificateForm(Form):
-    name = forms.CharField(label="Full Names")
-    fathers_name = forms.CharField(label="Father's Name")
-    mothers_name = forms.CharField(label="Mother's Name")
-    birth_entry_no = forms.CharField(label="Birth Entry No")
-    date_of_birth = forms.CharField(label="date of birth")
-    location = forms.CharField(label="District of Birth")
-    gender = forms.CharField(label="Gender")
-
-
-class NationalIDForm(Form):
-    id_no = forms.IntegerField(label='ID Card Number')
-    full_names = forms.CharField(label='Full Names')
-    date_of_birth = forms.DateTimeField(label='Date of Birth')
-    gender = forms.Select(choices=['Male', 'Female'])
-    district = forms.CharField(label='District')
-    division = forms.CharField(label='Division')
-    location = forms.CharField(label='Location')
-    sub_location = forms.CharField(label='Sub Location')
-
-
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
-    phone=forms.CharField(required=True, max_length=25, min_length=8)
+    phone = forms.CharField(required=True, max_length=25, min_length=8)
     password1 = forms.CharField(widget=HiddenInput())
     password2 = forms.CharField(widget=HiddenInput())
-    username=forms.CharField(widget=HiddenInput)
-    full_name=forms.CharField(widget=TextInput())
-    id_no=forms.IntegerField(widget=NumberInput(attrs={'required':True,}))
+    username = forms.CharField(widget=HiddenInput)
+    full_name = forms.CharField(widget=TextInput())
+    id_no = forms.IntegerField(widget=NumberInput(attrs={'required': True, }))
 
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
@@ -69,16 +40,15 @@ class UserRegistrationForm(UserCreationForm):
         self.fields['password2'].required = False
         self.fields['username'].required = False
 
-
     class Meta:
         model = User
-        fields = ['full_name', 'email', 'groups','phone','id_no']
+        fields = ['full_name', 'email', 'groups', 'phone', 'id_no']
         widgets = {'groups': SelectMultiple(attrs={'required': 'true',
-                                                        'class': 'form-control select2',
-                                                        'data-dropdown-css-class': 'select2-primary',
-                                                        'multiple': 'multiple',
-                                                        'data-placeholder': 'Select  Roles',
-                                                        'style': 'width: 100%;'})}
+                                                   'class': 'form-control select2',
+                                                   'data-dropdown-css-class': 'select2-primary',
+                                                   'multiple': 'multiple',
+                                                   'data-placeholder': 'Select  Roles',
+                                                   'style': 'width: 100%;'})}
 
 
 class GroupCreationForm(forms.ModelForm):
@@ -101,11 +71,12 @@ class GroupCreationForm(forms.ModelForm):
 
                                                         'style': 'width: 100%;'})}
 
-class BatchCreationForm(forms.ModelForm):
 
+class BatchCreationForm(forms.ModelForm):
     class Meta:
         model = Batch
         fields = ['batch_no', 'name']
+
 
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()
@@ -131,3 +102,9 @@ class PasswordResetForm(PasswordChangeForm):
     class Meta:
         model = User
         fields = ['new_password1', 'new_password2']
+
+
+class StorageForm(forms.ModelForm):
+    class Meta:
+        model = Filer
+        fields = ('filepond',)

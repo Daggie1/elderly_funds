@@ -1,5 +1,7 @@
 from django.contrib.auth.views import LogoutView,PasswordChangeView
 from django.urls import path, re_path
+from app.view.scanner import upload_documents_to_file,get_file_to_upload_documents
+from app.view.transcribe import get_files_from_storage
 
 from .views import (
     BatchListView, create_batch, batch_submit, FilesView, request_file, RequestersFilesView,
@@ -44,8 +46,9 @@ urlpatterns = [
     # document upload and viewing
     path('file/<file_ref_no>/documents', DocumentView.as_view(), name='document.view'),
     path('file/<file_ref_no>/create_document/', DocumentCreate.as_view(), name='document.create'),
-    path('upload_document', DocumentUploadView.as_view(), name='upload_document'),
     path('uploaded_documents', UploadedDocumentsList.as_view(), name='uploaded_documents'),
+    path('files/upload/select',get_file_to_upload_documents, name='get_file_to_upload_documents'),
+    path('upload/to/file/<str:file_reference>',upload_documents_to_file, name='upload_document'),
 
 
     # transcribe urls
@@ -55,6 +58,8 @@ urlpatterns = [
     path('validate_doc_content/<int:doc_id>', validate_document_content, name='validate_doc_content'),
     path('search_file', search_file, name='search_file'),
     path('pdf_render', pdfrender, name='pdf_render'),
+
+    path('file/document/storage/<str:file_reference>', get_files_from_storage, name='get_files_from_storage'),
 
     # Auth
     path('users/', UserListView.as_view(), name='users.index'),
