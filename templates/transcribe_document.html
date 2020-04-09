@@ -32,16 +32,11 @@
 
                          <div class="form-group">
                         <label>Barcode</label>
-                        <select class="form-control">
-                          <option>option 1</option>
-                          <option>option 2</option>
-                          <option>option 3</option>
-                          <option>option 4</option>
-                          <option>option 5</option>
+                        <select id="barcode" class="form-control">
                         </select>
                       </div>
                          <div class="form-group">
-                             <button class="btn btn-default bg-gradient-gray-dark">Update Document</button>
+                             <button id="updatedoc" class="btn btn-default bg-gradient-gray-dark">Update Document</button>
                          </div>
                       </div>
 
@@ -56,18 +51,35 @@
 {% endblock content %}
 
 {% block js %}
+    <script src="{% static 'jquery.popSelectOptions.min.js' %}"></script>
     <script>
-         $(function(){
-        var documents = {{ scanned_documents | safe }};
+       var documents = {{ scanned_documents | safe }};
         var document_barcodes  = {{ digital_documents | safe }};
-        $('#pdf').append("<embed id='pdf' src= 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf#toolbar=0' width= '100%' height= '800'>")
+
+        console.log(document_barcodes);
+         $(function(){
+             count = 0
+        $('#pdf').append("<embed id='pdf' src= 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf#toolbar=0' width= '100%' height= '800'>");
+        $('#barcode').popSelectOptions({
+            'options':document_barcodes
+        })
         $('#clicky').click(function(){
             var pdfsource = "http://www.africau.edu/images/default/sample.pdf"+"#toolbar=0"
             $('#pdf').empty()
             {#$('#pdf').replaceWith("<embed id='pdf' src= "+ pdfsource +" width= '100%' height= '800'>")#}
             $('#pdf').append("<embed id='pdf' src= "+ pdfsource +" width= '100%' height= '800'>")
-            console.log(pdfsource)
+            console.log(documents[count].id);
+            count = count + 1;
+
         });
+
+        $('#updatedoc').click(function(){
+            updateStorageAndDocument()
+        })
+
+        function updateStorageAndDocument(){
+            {#an ajax request to the server to update the documents#}
+        }
 
 
     })

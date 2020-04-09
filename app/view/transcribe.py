@@ -4,6 +4,16 @@ from django.shortcuts import render
 from app.models import Filer, DocumentFile, DocumentFileDetail
 
 
+def map_keys_to_value_digital(dict_list):
+    selectors = []
+    for item in dict_list:
+        value = item['id']
+        label = item['file_barcode']
+        dict = {'value': value, 'label': label}
+        selectors.append(dict)
+    return selectors
+
+
 def get_files_from_storage(request, file_reference):
     scanned_documents = Filer.objects.filter(file_reference=file_reference).values()
 
@@ -11,7 +21,8 @@ def get_files_from_storage(request, file_reference):
 
     file = DocumentFile.objects.get(pk=file_reference)
 
-    context = {'scanned_documents': list(scanned_documents), 'digital_documents': list(digital_documents), 'file': file}
+    context = {'scanned_documents': list(scanned_documents),
+               'digital_documents': map_keys_to_value_digital(digital_documents), 'file': file}
 
     return render(request, 'transcribe_document.html', context=context)
 

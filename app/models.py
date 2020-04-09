@@ -79,7 +79,7 @@ class DocumentFile(models.Model):
     file_type = models.ForeignKey(DocumentFileType, on_delete=models.CASCADE)
     document = models.FileField(upload_to='documents')
     file_status = models.CharField(max_length=100, null=True)
-    batch = models.OneToOneField(Batch, on_delete=models.CASCADE, null=True, blank=True)
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True, blank=True)
     file_created_by = models.ForeignKey(User, null=True, blank=True,
                                         on_delete=models.DO_NOTHING,
                                         related_name='file_created_by')
@@ -179,7 +179,7 @@ class Profile(models.Model):
     phone = models.CharField(null=True, max_length=25)
     full_name = models.CharField(null=True, max_length=25)
     first_login = models.BooleanField(default=True)
-    image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+    image = models.ImageField(default='default.jpg', upload_to='profile_pics', null=True)
 
     def __str__(self):
         return f'{self.user.username} Profile'
@@ -198,10 +198,11 @@ class Profile(models.Model):
 def document_directory_path(instance, filename):
     basename = os.path.basename(filename)
     name, ext = os.path.splitext(basename)
+    folder = instance.file_reference.file_reference
     file_type = ""
 
     file_type = "others"
-    path = 'media/uploads/%Y/%m/%d/{}/{}{}'.format(file_type, name, ext)
+    path = 'media/uploads/%Y/%d/{}/{}/{}{}'.format(folder,file_type, name, ext)
     print(path)
     return datetime.now().strftime(path)
 
@@ -213,7 +214,7 @@ class Filer(models.Model):
     """
     filepond = models.FileField(upload_to=document_directory_path)
     file_reference = models.ForeignKey(DocumentFile,related_name='documents', on_delete=models.CASCADE)
-    # document_reference = models.CharField(null=True, max_length=40)
+    document_reference = models.CharField(null=True, max_length=40)
 
     def filename(self):
         return os.path.basename(self.filepond.name)
