@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .mixin import FirstTimeLoginMixing
 from django.utils import timezone
-from django.contrib.auth.views import LoginView,PasswordChangeForm
+from django.contrib.auth.views import LoginView, PasswordChangeForm
 from django.contrib import messages
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import DeleteView, CreateView, UpdateView
@@ -279,7 +279,7 @@ class DocumentUploadView(LoginRequiredMixin, CreateView):
     permission_required = 'app.add_documentfiledetail'
     model = DocumentFileDetail
     template_name = 'upload_document.html'
-    fields = ['file_reference', 'document_barcode', 'document_name', 'document_file_path']
+    fields = ['file_reference', 'document_barcode', 'document_type', 'document_file_path']
     success_url = reverse_lazy('uploaded_documents')
 
 
@@ -290,7 +290,7 @@ class UploadedDocumentsList(LoginRequiredMixin, ListView):
 
 
 class DocumentTranscribe(LoginRequiredMixin, View):
-    permission_required = 'app.add_documentfiledetail'
+
 
     def get(self, request, file_reference):
         # query documents belonging to this file & aggregate with its corresponding document type
@@ -333,15 +333,18 @@ def pdfrender(request):
 
 class Login(LoginView):
     template_name = 'login.html'
+
     def form_valid(self, form):
         print(form.get_user())
         # form is valid (= correct password), now check if user requires to set own password
         if form.get_user().profile.first_login:
 
-            return redirect( reverse_lazy('user.changepass',kwargs={'username':form.get_user().username}))
+            return redirect(reverse_lazy('user.changepass', kwargs={'username': form.get_user().username}))
         else:
             auth_login(self.request, form.get_user())
             return redirect(self.get_success_url())
+
+
 # def login(request):
 #     if request.method == 'POST':
 #         form = LoginForm(data=request.POST)
@@ -357,12 +360,12 @@ class Login(LoginView):
 #     else:
 #         form = LoginForm()
 #     return render(request, 'login.html', {'form': form})
-def change_password(request,username):
-    user=User.objects.get(username=username)
+def change_password(request, username):
+    user = User.objects.get(username=username)
     print(f'user{user.password}')
 
     if request.method == 'POST':
-        #user=authenticate(username=user.username, password=request.POST.get('old_password'))
+        # user=authenticate(username=user.username, password=request.POST.get('old_password'))
         form = PasswordChangeForm(data=request.POST, user=user)
 
         if form.is_valid():
@@ -371,20 +374,21 @@ def change_password(request,username):
             user.refresh_from_db()
             user.profile.first_login = False
             user.save()
-            messages.success(request,'Password Changed Successfully,')
+            messages.success(request, 'Password Changed Successfully,')
             return redirect(reverse('users.index'))
         else:
             messages.error(request, form.error_messages)
-            return redirect(reverse('user.changepass', kwargs={'username':user.username}))
+            return redirect(reverse('user.changepass', kwargs={'username': user.username}))
     else:
         form = PasswordChangeForm(user=user)
 
         args = {'form': form}
         return render(request, 'reset_password.html', args)
 
+
 @login_required
-def password_reset(request,username):
-    user=User.objects.get(username=username)
+def password_reset(request, username):
+    user = User.objects.get(username=username)
     if request.method == 'POST':
         form = PasswordResetForm(user=user, data=request.POST)
 
@@ -512,31 +516,35 @@ class GroupCreateView(LoginRequiredMixin, CreateView):
 
 
 @login_required
-def registry_submit(request, batch_id):
+def batch_submit(request, batch_id):
     batch = Batch.objects.get(pk=batch_id)
-    if batch.state.group == request.user.groups.first():
-        state = batch.state.state_code
+    if batch and request.user.has_perm(batch.state.permission):
+
         try:
-            if batch:
-                files = DocumentFile.objects.filter(batch=batch)
-                print(f'passed batch{files}')
-                if files:
-                    for file in files:
-                        DocumentFileDetail.objects.filter(file_reference=file).update(
-                            state=DocumentState.objects.get(state_code=int(state) + 1))
-                    print('passed batch')
-                    files.update(state=DocumentState.objects.get(state_code=int(state) + 1))
-                    batch.state = DocumentState.objects.get(state_code=int(state) + 1)
+
+            files = DocumentFile.objects.filter(batch=batch)
+            docs = DocumentFileDetail.objects.filter(file_reference__in=files)
+
+            if files and docs:
+                new_state = DocumentState.objects.get(state_code=int(batch.state.state_code) + 1)
+                if not batch.received_by:
+                    docs.update(state=new_state, )
+                    files.update(state=new_state)
+                    batch.state = new_state
+                    batch.received_by = request.user
+                    batch.received_on = timezone.now()
                     batch.save()
                     messages.success(request, 'Submitted successfully')
-                else:
+            else:
 
-                    messages.error(request, 'Empty batch or file')
+                messages.error(request, 'Empty batch or file')
         except AttributeError as e:
             messages.error(request, ' something wrong happened')
     else:
         return redirect('abort')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
 
 
 @login_required
@@ -556,5 +564,60 @@ def request_file(request):
         messages.warning(request, 'No files Available')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 def abort(request):
-    return render(request,'app/others/lock_screen.html')
+    return render(request, 'app/others/lock_screen.html')
+def file_submit(request, file_ref):
+    file = DocumentFile.objects.get(file_reference=file_ref)
+    if file and request.user.has_perm(file.state.permission):
+
+        try:
+
+            docs = DocumentFileDetail.objects.filter(file_reference=file)
+
+            if docs:
+                new_state = DocumentState.objects.get(state_code=int(file.state.state_code) + 1)
+                if file.state.state_code==6:
+                    docs.update(state=new_state,
+                                transcribed_on=timezone.now()
+                                )
+                    file.update(state=new_state,
+                                file_transcribed_by=request.user,
+                                transcribed_on=timezone.now())
+                if not file.file_scanned_by:
+                    docs.update(state=new_state,
+                                doc_scanned_by=request.user,
+                                scanned_on=timezone.now()
+                                )
+                    file.update(state=new_state,
+                                file_scanned_by=request.user,
+                                scanned_on=timezone.now())
+
+
+
+                elif not file.file_qa_by:
+                    docs.update(state=new_state,
+                                doc_qa_by=request.user,
+                                aq_on=timezone.now()
+                                )
+                    file.update(state=new_state,
+                                file_qa_by=request.user,
+                                qa_on=timezone.now())
+                elif not file.file_validated_by:
+                        docs.update(state=new_state,
+                                    doc_validated__by=request.user,
+                                    validated__on=timezone.now()
+                                    )
+                        file.update(state=new_state,
+                                    file_validated__by=request.user,
+                                    validated_on=timezone.now())
+                messages.success(request, 'Submitted successfully')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            else:
+
+                messages.error(request, 'Empty batch or file')
+        except AttributeError as e:
+            messages.error(request, ' something wrong happened')
+    else:
+        return redirect('abort')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

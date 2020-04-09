@@ -3,7 +3,7 @@ from enum import Enum
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.utils import timezone
-from django.contrib.auth.models import User,Group
+from django.contrib.auth.models import User,Group, Permission
 from PIL import Image
 
 
@@ -29,7 +29,7 @@ class StateOptions(Enum):
 class DocumentState(models.Model):
     state_code = models.CharField(max_length=255,primary_key=True)
     state_name = models.CharField(max_length=255)
-    group=models.ForeignKey(Group,on_delete=models.DO_NOTHING)
+    permission=models.ForeignKey(Permission,on_delete=models.DO_NOTHING)
     state_parameter = models.CharField(max_length=255)
 
     state = models.CharField(max_length=255,
@@ -119,6 +119,7 @@ class DocumentFile(models.Model):
 class DocumentFileDetail(models.Model):
     file_reference = models.ForeignKey(DocumentFile,  db_column="file_reference",on_delete=models.CASCADE,null=True)
     document_barcode = models.CharField(max_length=255)
+    document_name=models.CharField(max_length=255,blank=True)
     document_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE,null=True)
     document_content = JSONField(null=True)
     document_file_path = models.FileField(upload_to='documents')

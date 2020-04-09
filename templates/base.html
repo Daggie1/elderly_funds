@@ -264,12 +264,15 @@
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
+
       timer: 3000
 
     });
+    
       Toast.fire({
         type: "{{ message.tags }}",
-        title: "{{ message }}"
+        title: "{{ message }}",
+
       }) ;
       });
 

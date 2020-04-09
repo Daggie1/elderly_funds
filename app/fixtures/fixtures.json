@@ -1,9 +1,43 @@
 [
+    {
+  "model": "auth.permission",
+  "fields": {
+    "codename": "can_register_batch",
+    "name": "Can Register Batch",
+    "content_type": 7
+  }
+},
   {
   "model": "auth.permission",
   "fields": {
-    "name": "can scan",
-    "content_type": 14
+    "codename": "can_receive_batch",
+    "name": "Can Receive Batch",
+    "content_type": 7
+  }
+},
+
+  {
+  "model": "auth.permission",
+  "fields": {
+    "codename": "can_scan_file",
+    "name": "Can Scan File",
+    "content_type": 8
+  }
+},
+    {
+  "model": "auth.permission",
+  "fields": {
+    "codename": "can_qa_file",
+    "name": "Can Qa File",
+    "content_type": 8
+  }
+},
+    {
+  "model": "auth.permission",
+  "fields": {
+    "codename": "can_validate_file",
+    "name": "Can Validate File",
+    "content_type": 8
   }
 }
 ]

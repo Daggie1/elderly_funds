@@ -2,22 +2,22 @@ from django.contrib.auth.views import LogoutView,PasswordChangeView
 from django.urls import path, re_path
 
 from .views import (
-    BatchListView,create_batch,registry_submit,FilesView,request_file,RequestersFilesView,
-    DocumentCreate,DocumentView, search_file, AdminView, edit_file,
+    BatchListView, create_batch, batch_submit, FilesView, request_file, RequestersFilesView,
+    DocumentCreate, DocumentView, search_file, AdminView, edit_file,
     manage_documents, FileTypeDelete, FileTypeCreate,
     FileTypeList, DocumentFileCreate, DocumentFileList,
     DocumentTypeCreate, DocumentTypeList, DocumentUploadView,
     UploadedDocumentsList, DocumentTranscribe,
     get_document_and_document_type, pdfrender,
     UserListView, UserDetailView, UserUpdateView,
-    UserDeleteView, GroupListView, GroupUpdateView, user_create,Login,change_password,
-    password_reset, add_group,  update_document_content,
+    UserDeleteView, GroupListView, GroupUpdateView, user_create, Login, change_password,
+    password_reset, add_group, update_document_content,
     validate_document_content, abort)
 
 urlpatterns = [
     path('', AdminView.as_view(), name='home'),
     #submits
-    path('submit/<int:batch_id>', registry_submit, name='submit.registry'),
+    path('submit/<int:batch_id>', batch_submit, name='submit.registry'),
 
     # request file
     path('file_request',request_file,name='file.request'),
