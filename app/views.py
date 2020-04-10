@@ -5,7 +5,7 @@ from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import DeleteView, CreateView, UpdateView
 from django.views.generic import ListView, DetailView
 from .forms import FileForm, DocumentTypeForm, FileContentForm, LoginForm, UserRegistrationForm, \
-    PasswordResetForm, GroupCreationForm, BatchCreationForm
+    PasswordResetForm, GroupCreationForm, BatchCreationForm, DocumentDetailForm, DocumentBarCodeFormSet
 from .models import DocumentFile, DocumentFileType, DocumentType, DocumentFileDetail, Batch, DocumentState
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
@@ -28,6 +28,8 @@ from django.db.models import Q
 from django.shortcuts import render_to_response
 
 from json2html import *
+
+from django.db import transaction
 
 
 # Create your view here.
@@ -64,7 +66,6 @@ def manage_documents(request, file_type):
         # form = DOcumentForm()
         context = {'file': file, 'documents': documents, 'form': form}
         return render(request, 'upload_document.html', context)
-
 
 
 class AdminView(LoginRequiredMixin, View):
@@ -142,15 +143,33 @@ class FileTypeDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
 class DocumentCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     permission_required = 'app.add_documentfiledetails'
     model = DocumentFileDetail
+    form_class = DocumentDetailForm
     template_name = 'app/document/create.html'
-    fields = ['document_barcode']
     success_message = 'Added created successfully'
     success_url = reverse_lazy('list_file_types')
 
+
+    def get_context_data(self, **kwargs):
+        context = super(DocumentCreate, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = DocumentBarCodeFormSet(self.request.POST)
+        else:
+            context['formset'] = DocumentBarCodeFormSet()
+        return context
+
     def form_valid(self, form):
-        form.instance.doc_created_by = self.request.user
-        form.instance.file_reference = DocumentFile.objects.get(file_reference=self.kwargs['file_ref_no'])
-        return super().form_valid(form)
+        context = self.get_context_data()
+        documents = context['formset']
+        with transaction.atomic():
+            form.instance.doc_created_by = self.request.user
+            form.instance.file_reference = DocumentFile.objects.get(file_reference=self.kwargs['file_ref_no'])
+            # self.object = form.save()
+            if documents.is_valid():
+                documents.save()
+        return super(DocumentCreate, self).form_valid(form)
+
+    def form_invalid(self, form):
+        print(form)
 
 
 class DocumentView(LoginRequiredMixin, ListView):

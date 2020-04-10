@@ -5,6 +5,7 @@ from .models import DocumentFileType, DocumentType, DocumentFile, Profile, Docum
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
 from .models import Batch, Filer
+from django.forms.models import formset_factory, modelformset_factory
 
 
 class FileContentForm(Form):
@@ -23,6 +24,15 @@ class DocumentTypeForm(forms.ModelForm):
     class Meta:
         model = DocumentType
         fields = ['document_name', 'document_description']
+
+
+class DocumentDetailForm(ModelForm):
+    class Meta:
+        model = DocumentFileDetail
+        fields = ()
+
+
+DocumentBarCodeFormSet = modelformset_factory(DocumentFileDetail, fields=('document_barcode',))
 
 
 class UserRegistrationForm(UserCreationForm):

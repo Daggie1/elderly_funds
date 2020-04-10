@@ -9,10 +9,10 @@
 {% endblock %}
 {% block content %}
      <div class="row">
-        <div class="col-6 offset-3">
+        <div class="col-6">
             <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">Batch Details</h3>
+              <h3 class="card-title">Add Document Barcodes To File</h3>
 
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -20,12 +20,18 @@
               </div>
             </div>
             <div class="card-body">
+
               <form  method="POST" >
                     {% csrf_token %}
-             {{ form|crispy }}
-                  <input type="hidden" value="">
+
+
+                      <div class="form-set">
+                        {{ formset|crispy }}
+                      </div>
+
+
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block">Save Group</button>
+                        <button type="submit" class="btn btn-primary btn-block">Save Documents  </button>
                     </div>
                 </form>
             </div>
@@ -36,15 +42,20 @@
 {% endblock %}
 {% block js %}
 <script src="{% static 'adminlte/plugins/select2/js/select2.full.min.js' %}"></script>
+    <script src="{% static 'jquery-form.js' %}"></script>
     <script>
  $(function () {
     //Initialize Select2 Elements
-    $('.select2').select2()
+    $('.select2').select2();
 
     //Initialize Select2 Elements
     $('.select2bs4').select2({
       theme: 'bootstrap4'
-    })
+    });
+     $('.form-set').formset({
+        addText: 'Add Document',
+        deleteText: 'remove'
+    });
      })
     </script>
 {% endblock %}
