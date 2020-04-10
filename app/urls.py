@@ -14,7 +14,7 @@ from .views import (
     UserListView, UserDetailView, UserUpdateView,
     UserDeleteView, GroupListView, GroupUpdateView, user_create, Login, change_password,
     password_reset, add_group, update_document_content,
-    validate_document_content, abort)
+    validate_document_content, file_submit,abort)
 
 urlpatterns = [
     path('', AdminView.as_view(), name='home'),
@@ -78,6 +78,8 @@ urlpatterns = [
     path('login/', Login.as_view(), name='login'),
     path('logout/', LogoutView.as_view(template_name='logout.html'), name='logout'),
     path('abort',abort ,name='abort'),
+
+    path('change_status/<file_ref>/', file_submit, name='file_submit'),
 
 ]
 

@@ -551,8 +551,20 @@ def batch_submit(request, batch_id):
         return redirect('abort')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+def file_or_files(request,file_ref=None,**kwargs):
+
+    if not file_ref==None:
+        file = DocumentFile.objects.get(file_reference=file_ref)
+
+        if file and request.user.has_perm(file.state.permission):
+            return file
+    if kwargs.get('batch',False):
+        return DocumentFile.objects.filter(batch=kwargs['batch'])
 
 
+def doc_or_docs(request, file):
+
+        return DocumentFileDetail.objects.filter(file_reference=file)
 
 @login_required
 def request_file(request):
@@ -575,59 +587,74 @@ def request_file(request):
 def abort(request):
     return render(request, 'app/others/lock_screen.html')
 def file_submit(request, file_ref):
-    file = DocumentFile.objects.get(file_reference=file_ref)
-    if file and request.user.has_perm(file.state.permission):
-
-        try:
-
-            docs = DocumentFileDetail.objects.filter(file_reference=file)
-
-            if docs:
-                new_state = DocumentState.objects.get(state_code=int(file.state.state_code) + 1)
-                if file.state.state_code==6:
-                    docs.update(state=new_state,
-                                transcribed_on=timezone.now()
-                                )
-                    file.update(state=new_state,
-                                file_transcribed_by=request.user,
-                                transcribed_on=timezone.now())
-                if not file.file_scanned_by:
-                    docs.update(state=new_state,
-                                doc_scanned_by=request.user,
-                                scanned_on=timezone.now()
-                                )
-                    file.update(state=new_state,
-                                file_scanned_by=request.user,
-                                scanned_on=timezone.now())
-
-
-
-                elif not file.file_qa_by:
-                    docs.update(state=new_state,
-                                doc_qa_by=request.user,
-                                aq_on=timezone.now()
-                                )
-                    file.update(state=new_state,
-                                file_qa_by=request.user,
-                                qa_on=timezone.now())
-                elif not file.file_validated_by:
-                        docs.update(state=new_state,
-                                    doc_validated__by=request.user,
-                                    validated__on=timezone.now()
-                                    )
-                        file.update(state=new_state,
-                                    file_validated__by=request.user,
-                                    validated_on=timezone.now())
-                messages.success(request, 'Submitted successfully')
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-            else:
-
-                messages.error(request, 'Empty batch or file')
-        except AttributeError as e:
-            messages.error(request, ' something wrong happened')
-    else:
-        return redirect('abort')
+    file=file_or_files(request,file_ref)
+    print(file)
+    docs=doc_or_docs(request,file)
+    print(docs)
+    desc=None
+    if request.POST.get('reject_check')=='on':
+       desc=request.POST.get('desc')
+    change_state(request, file,docs,False,desc)
+    messages.success(request,'Updated Successfull')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+def change_state(request ,file=None,docs=None,is_reject=None,desc=None):
+    file= file
+    docs=docs
+
+    if file and docs:
+        curren_state=int(file.state.state_code)
+        desc=None
+        new_state=None
+        print(f'changes {file.state.state_code} and {docs}')
+        if  is_reject:
+            new_state = DocumentState.objects.get(state_code=int(file.state.state_code) + 100)
+            desc=desc
+        else:
+            new_state = DocumentState.objects.get(state_code=int(file.state.state_code) + 1)
+
+        if curren_state == 302:
+
+            docs.update(state=new_state,
+                        scanned_on=timezone.now()
+                        )
+            file.state=new_state
+            file. file_scanned_by=request.user
+            file.scanned_on=timezone.now()
+            file.save()
+        elif curren_state == 303:
+            docs.update(state=new_state,
+                        transcribed_on=timezone.now(),
+                        rejection_by_transcriber_dec=desc
+                        )
+            file.state=new_state
+            file.transcribed_by=request.user
+            file.transcribed_on=timezone.now()
+            file.rejection_by_transcriber_dec = desc
+            file.save()
+
+        elif curren_state == 304:
+            docs.update(state=new_state,
+                        qa_on=timezone.now(),
+                        rejection_by_qa_dec=desc
+                        )
+            file.state=new_state
+            file.file_qa_by=request.user
+            file.qa_on=timezone.now()
+            file.rejection_by_qa_dec = desc
+            file.save()
+        elif curren_state == 305:
+            docs.update(state=new_state,
+                        validated_on=timezone.now(),
+                        rejection_by_validation_dec=desc
+                        )
+            file.state=new_state
+            file.file_validated_by=request.user
+            file.validated_on=timezone.now()
+            
+            file.rejection_by_validation_dec = desc
+            file.save()
+
+
 
 def registry_submit(request, batch_id):
     batch = Batch.objects.get(pk=batch_id)
