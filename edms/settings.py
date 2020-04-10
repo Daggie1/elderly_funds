@@ -83,11 +83,12 @@ if DOCKER:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'edms4',
-            'USER': os.environ.get('django_project_username'),
+            'NAME': 'work',
+            'USER': 'postgres',
             'HOST': 'localhost',
             'PORT': '5432',
-            'PASSWORD': os.environ.get('django_project_password'),
+
+            'PASSWORD': 'password'
         }
     }
 
@@ -95,11 +96,11 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'edms4',
-            'USER': os.environ.get('django_project_username'),
+            'NAME': 'work',
+            'USER': 'postgres',
             'HOST': 'localhost',
             'PORT': '5432',
-            'PASSWORD': os.environ.get('django_project_password'),
+            'PASSWORD': 'password'
         }
     }
 
@@ -137,7 +138,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-LOGIN_REDIRECT_URL='users.index'
 STATIC_URL = '/static/'
 STATIC_ROOT =  os.path.join(BASE_DIR, 'static')
 LOGIN_URL = 'login'
