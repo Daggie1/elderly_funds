@@ -4,21 +4,25 @@ from app.view.scanner import upload_documents_to_file,get_file_to_upload_documen
 from app.view.transcribe import get_files_from_storage
 
 from .views import (
-    BatchListView,create_batch,registry_submit,FilesView,DocumentCreate,DocumentView, search_file, AdminView, edit_file,
+    BatchListView, create_batch, batch_submit, FilesView, request_file, RequestersFilesView,
+    DocumentCreate, DocumentView, search_file, AdminView, edit_file,
     manage_documents, FileTypeDelete, FileTypeCreate,
     FileTypeList, DocumentFileCreate, DocumentFileList,
     DocumentTypeCreate, DocumentTypeList, DocumentUploadView,
     UploadedDocumentsList, DocumentTranscribe,
     get_document_and_document_type, pdfrender,
     UserListView, UserDetailView, UserUpdateView,
-    UserDeleteView, GroupListView, GroupUpdateView, user_create,
-    password_reset, add_group, login, update_document_content,
-    validate_document_content)
+    UserDeleteView, GroupListView, GroupUpdateView, user_create, Login, change_password,
+    password_reset, add_group, update_document_content,
+    validate_document_content, abort)
 
 urlpatterns = [
     path('', AdminView.as_view(), name='home'),
     #submits
-    path('submit/<int:batch_id>', registry_submit, name='submit.registry'),
+    path('submit/<int:batch_id>', batch_submit, name='submit.registry'),
+
+    # request file
+    path('file_request',request_file,name='file.request'),
 
     # batches
     path('batches/', BatchListView.as_view(), name='batch.index'),
@@ -32,6 +36,7 @@ urlpatterns = [
     # physical file urls
     path('batch/<int:batch_id>/files', FilesView.as_view(), name='files.view'),
     path('batch/<int:batch_id>/create_file/', DocumentFileCreate.as_view(), name='create_document_file'),
+    path('myfiles/', RequestersFilesView.as_view(), name='file.myfiles'),
     path('list_document_files', DocumentFileList.as_view(), name='list_document_files'),
 
     # Document Types
@@ -62,7 +67,7 @@ urlpatterns = [
     path('users/create/', user_create, name='users.create'),
     path('users/<int:pk>/', UserDetailView.as_view(), name='users.detail'),
     path('users/update/<int:pk>/', UserUpdateView.as_view(), name='user.update'),
-    path('users/password_reset/', PasswordChangeView.as_view( template_name='reset_password.html'), name='user.changepass'),
+    path('users/password_change/<str:username>', change_password, name='user.changepass'),
 
     path('user/delete/<int:pk>/', UserDeleteView.as_view(), name='user.delete'),
     # groups
@@ -70,8 +75,9 @@ urlpatterns = [
     path('roles/create/', add_group, name='roles.create'),
     path('roles/update/<int:pk>/', GroupUpdateView.as_view(), name='groups.update'),
     #
-    path('login/', login, name='login'),
+    path('login/', Login.as_view(), name='login'),
     path('logout/', LogoutView.as_view(template_name='logout.html'), name='logout'),
+    path('abort',abort ,name='abort'),
 
 ]
 

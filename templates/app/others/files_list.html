@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.css' %}">
+{% endblock %}
+{% block content %}
+
+         <div class="row">
+        <div class="col-12">
+    <div class="card">
+           <div class="card-header">
+                <h3 class="card-title">All Batches</h3>
+
+                <div class="card-tools">
+                    <a href="{% url 'file.request' %}" class="btn btn-primary">Request File</a>
+                </div>
+              </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Barcode</th>
+
+                    <th style="width:150px; min-width:100px;" class="text-center text-danger"><i class="fa fa-bolt"> </i></th>
+                </tr>
+                </thead>
+                <tbody>
+            {% for obj in object_list %}
+                <tr>
+                <td>{{ obj.file_reference }}</td>
+                    <td>{{ obj.file_barcode }}</td>
+
+                <td>{% if request.user.groups.first.name == 'Transcribers' %}
+                    <a href="#" title="transcribe">
+                                        <button class="btn btn-info btn-icon sq-32" type="button">
+                                            Transcribe
+                                        </button>
+                                    </a>
+                    {% elif  request.user.groups.first.name == 'Scanners'%}
+                   <a href="#" title="transcribe">
+                                        <button class="btn btn-info btn-icon sq-32" type="button">
+                                            <span class="fa fa-angle-double-up"></span>
+                                        </button>
+                                    </a>
+                    {% else %}
+                    <button class="btn btn-info btn-icon sq-32" type="button" disabled="true">
+                                            <span class="fa fa-lock"></span>
+                                        </button>
+                    {% endif %}
+
+
+
+                                </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                 <th>#</th>
+                  <th>Ref</th>
+                    <th style="width:150px; min-width:50px;" class="text-center text-danger"><i class="fa fa-bolt"> </i></th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'adminlte/plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="{% static 'adminlte/plugins/datatables/jquery.dataTables.js' %}"></script>
+
+    <script>
+  $(function () {
+    $("#example1").DataTable();
+  });
+</script>
+{% endblock %}
