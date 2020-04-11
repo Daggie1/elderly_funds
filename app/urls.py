@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LogoutView,PasswordChangeView
 from django.urls import path, re_path
 from app.view.scanner import upload_documents_to_file,get_file_to_upload_documents
-from app.view.transcribe import get_files_from_storage
+from app.view.transcribe import get_files_from_storage, update_document_file_detail
 
 from .views import (
     BatchListView,create_batch,registry_submit,FilesView,DocumentCreate,DocumentView, search_file, AdminView, edit_file,
@@ -55,6 +55,7 @@ urlpatterns = [
     path('pdf_render', pdfrender, name='pdf_render'),
 
     path('file/document/storage/<str:file_reference>', get_files_from_storage, name='get_files_from_storage'),
+    path('update/document/<int:document>',update_document_file_detail, name='update_document_file_detail'),
 
     # Auth
     path('users/', UserListView.as_view(), name='users.index'),
