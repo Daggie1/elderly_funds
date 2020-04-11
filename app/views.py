@@ -290,6 +290,10 @@ def get_document_and_document_type(request, doc_id, file_type):
     form = JSONSchemaForm(schema=document_type.document_field_specs, options={"theme": "bootstrap3"})
     return render(request, 'transcription_lab.html', {'form': form, 'document': document})
 
+def get_document_list(request, file_reference):
+    documents = DocumentFileDetail.objects.filter(file_reference = file_reference);
+
+    return render(request, 'files_list.html', {'documents':documents})
 
 @login_required
 def update_document_content(request, doc_id):

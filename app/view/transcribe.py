@@ -23,6 +23,8 @@ def get_files_from_storage(request, file_reference):
     document_type = DocumentType.objects.all().values('document_name')
     file = DocumentFile.objects.get(pk=file_reference)
 
+
+
     context = {'scanned_documents': list(scanned_documents),
                'digital_documents': map_keys_to_value_digital(digital_documents), 'file': file,
                'document_type': list(document_type)}
