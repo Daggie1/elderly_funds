@@ -78,19 +78,11 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-            {% if perms.app.add_documenttype %}
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Create Document File</p>
-                </a>
-              </li>
-                {% endif %}
                 {% if perms.app.view_documenttype %}
                  <li class="nav-item">
                 <a href="{% url 'list_document_files' %}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>View Document Files</p>
+                  <p>View Files</p>
                 </a>
               </li>
 
