@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load render_table from django_tables2 %}
+{% block content %}
+
+         <div class="row">
+        <div class="col-12">
+    <div class="card">
+           <div class="card-header">
+                <h3 class="card-title">All Batches</h3>
+
+                <div class="card-tools">
+                    <a href="{% url 'batch_create' %}" class="btn btn-primary">Add Batch</a>
+                </div>
+              </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              {% render_table table %}
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+{% endblock %}
