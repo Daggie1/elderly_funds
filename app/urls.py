@@ -14,7 +14,7 @@ from .views import (
     UserListView, UserDetailView, UserUpdateView,
     UserDeleteView, GroupListView, GroupUpdateView, user_create, Login, change_password,
     password_reset, add_group, update_document_content,
-    validate_document_content, file_submit,abort)
+    validate_document_content, file_submit,start_receive,start_scanning,start_qa,start_validate,abort)
 
 urlpatterns = [
     path('', AdminView.as_view(), name='home'),
@@ -80,6 +80,11 @@ urlpatterns = [
     path('abort',abort ,name='abort'),
 
     path('change_status/<file_ref>/', file_submit, name='file_submit'),
+
+    path('receive/<int:batch_id>/', start_receive, name='start_receive'),
+    path('scan/<file_ref>/', start_scanning, name='start_scan'),
+    path('qa/<file_ref>/', start_qa, name='start_qa'),
+    path('validate/<file_ref>/', start_validate, name='start_validate'),
 
 ]
 

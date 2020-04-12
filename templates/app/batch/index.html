@@ -48,10 +48,12 @@
                 <td>
                         <a href="{% url 'files.view' obj.id %}" class="btn btn-info btn-icon sq-32" title="open">
 
-                                            <span class="fa fa-eye"></span>
+                                            <span class="fa fa-eye">
+                                                </span>
+
 
                                     </a>
-                {% if obj.state.permission.name in  perms %}
+                {% if obj.state.permission.codename in  perms %}
                                     <a href="{% url 'submit.registry' obj.id %}"
 
                                        title="submit" >
@@ -65,7 +67,7 @@
                                                 <span class="fa fa-lock"></span>
                     </button>
                                             {% endif %}
-{% if obj.state.permission.name in  perms.all %}
+{% if obj.state.permission.codename in  perms %}
                                     <a title="delete" href="{% url 'user.delete' obj.id %}"><button class="btn btn-danger btn-icon sq-32 btnDelete"
                                             type="button">
                                         <span class="fa fa-trash-alt"></span>

@@ -62,13 +62,6 @@ class Batch(models.Model):
     received_by = models.ForeignKey(User, null=True, blank=True,
                                     on_delete=models.DO_NOTHING,
                                     related_name='received_by')
-
-    receive_state = models.ForeignKey(DocumentState,null=True,blank=True,
-                                    on_delete=models.DO_NOTHING,
-                                    related_name='received_state')
-    return_state = models.ForeignKey(DocumentState,null=True,blank=True,
-                                    on_delete=models.DO_NOTHING,
-                                    related_name='return_state')
     state=models.ForeignKey(DocumentState,null=True,on_delete=models.DO_NOTHING)
     rejection_by_receiver_dec=models.TextField(null=True,blank=True)
     def __str__(self):

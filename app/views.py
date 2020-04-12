@@ -521,34 +521,48 @@ class GroupCreateView(LoginRequiredMixin, CreateView):
     success_url = 'home'
 
 
-
+#receive and registry
 @login_required
 def batch_submit(request, batch_id):
     batch = Batch.objects.get(pk=batch_id)
-    if batch and request.user.has_perm(batch.state.permission):
+    if batch.state.state_code <=301:
+        if batch and not request.user.has_perm(batch.state.permission):
 
-        try:
+            try:
 
-            files = DocumentFile.objects.filter(batch=batch)
-            docs = DocumentFileDetail.objects.filter(file_reference__in=files)
+                files = DocumentFile.objects.filter(batch=batch)
+                docs = DocumentFileDetail.objects.filter(file_reference__in=files)
 
-            if files and docs:
-                new_state = DocumentState.objects.get(state_code=int(batch.state.state_code) + 1)
-                if not batch.received_by:
-                    docs.update(state=new_state, )
-                    files.update(state=new_state)
-                    batch.state = new_state
-                    batch.received_by = request.user
-                    batch.received_on = timezone.now()
-                    batch.save()
-                    messages.success(request, 'Submitted successfully')
-            else:
+                if files and docs:
+                    new_state=None
+                    desc=None
+                    current_state=DocumentState.objects.get(state_code=int(batch.state.state_code))
+                    if request.POST.get('reject_check')=='on':
+                        new_state=current_state+100
+                        desc=request.POST.get('idesc')
 
-                messages.error(request, 'Empty batch or file')
-        except AttributeError as e:
-            messages.error(request, ' something wrong happened')
-    else:
-        return redirect('abort')
+                    else:
+                        new_state = current_state+1
+                    if current_state==300:
+                        docs.update(state=new_state, )
+                        files.update(state=new_state)
+                        batch.state = new_state
+                        batch.rejection_by_receiver_dec=desc
+                        batch.save()
+                    elif current_state==301 and not batch.received_by:
+                        docs.update(state=new_state, )
+                        files.update(state=new_state)
+                        batch.state = new_state
+                        batch.received_on = timezone.now()
+                        batch.save()
+                        messages.success(request, 'Submitted successfully')
+                else:
+
+                    messages.error(request, 'Empty batch or file')
+            except AttributeError as e:
+                messages.error(request, ' something wrong happened')
+        else:
+            return redirect('abort')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def file_or_files(request,file_ref=None,**kwargs):
@@ -568,19 +582,21 @@ def doc_or_docs(request, file):
 
 @login_required
 def request_file(request):
-    group = request.user.groups.first()
-    state = DocumentState.objects.get(group=group)
-    file = DocumentFile.objects.filter(state=state, file_transcribed_by=None).first()
-    if file:
-        try:
-            file.file_transcribed_by = request.user
-            file.save()
-            messages.success(request, 'New File Given')
+    state = DocumentState.objects.get(state_code=303)
+    if request.user.has_perm(state.permission):
 
-        except AttributeError as e:
-            messages.error(request, ' something wrong happened')
-    else:
-        messages.warning(request, 'No files Available')
+        file = DocumentFile.objects.filter(state=state, file_transcribed_by=None).first()
+        if file:
+            try:
+                file.file_transcribed_by = request.user
+                file.save()
+                messages.success(request, 'New File Given')
+
+            except AttributeError as e:
+                messages.error(request, ' something wrong happened')
+        else:
+            messages.warning(request, 'No files Available')
+    messages.error(request, ' something wrong happened')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -653,9 +669,59 @@ def change_state(request ,file=None,docs=None,is_reject=None,desc=None):
             
             file.rejection_by_validation_dec = desc
             file.save()
+def start_receive(request,batch_id):
+    batch=Batch.objects.get(pk=batch_id)
+    if batch and not batch.received_by:
+        batch.received_by=request.user
+        batch.save()
+        #return receive page
+def start_scanning(request,file_ref):
+    file = file_or_files(request, file_ref)
+    if file and file.state.state_code ==303 and not file.file_scanned_by:
+        docs = doc_or_docs(request, file)
+        try:
+            docs.update(
+                doc_scanned_by=request.user
+            )
+
+            file.file_scanned_by=request.user
+        except AttributeError as e:
+            messages.error(request, ' something wrong happened')
+    # return to scanning page
+    else:
+        messages.error(request, ' something wrong happened')
 
 
+def start_qa(request, file_ref):
+    file = file_or_files(request, file_ref)
+    if file and file.state.state_code ==304 and not file.file_qa_by :
+        docs = doc_or_docs(request, file)
+        try:
+            docs.update(
+                doc_qa_by=request.user
+            )
 
+            file.file_qa_by = request.user
+        except AttributeError as e:
+            messages.error(request, ' something wrong happened')
+    # return to scanning page
+    else:
+        messages.error(request, ' something wrong happened')
+def start_validate(request, file_ref):
+    file = file_or_files(request, file_ref)
+    if file and file.state.state_code ==305 and not file.file_validated_by :
+        docs = doc_or_docs(request, file)
+        try:
+            docs.update(
+                doc_qa_by=request.user
+            )
+
+            file.file_validated_by = request.user
+        except AttributeError as e:
+            messages.error(request, ' something wrong happened')
+    # return to scanning page
+    else:
+        messages.error(request, ' something wrong happened')
 def registry_submit(request, batch_id):
     batch = Batch.objects.get(pk=batch_id)
     print(batch)
