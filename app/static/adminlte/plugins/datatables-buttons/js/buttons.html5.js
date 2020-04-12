@@ -53,14 +53,14 @@ DataTable.Buttons.pdfMake = function (_) {
 		return _pdfMake();
 	}
 	pdfmake = m_ake;
-}
+};
 
 DataTable.Buttons.jszip = function (_) {
 	if ( ! _ ) {
 		return _jsZip();
 	}
 	jszip = _;
-}
+};
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

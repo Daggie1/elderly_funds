@@ -1,11 +1,12 @@
-from django.forms import Form, SelectMultiple, NumberInput, HiddenInput, TextInput, ModelForm
 from django import forms
-from django_jsonforms.forms import JSONSchemaField
-from .models import DocumentFileType, DocumentType, DocumentFile, Profile, DocumentFileDetail
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
+from django.forms import Form, SelectMultiple, NumberInput, HiddenInput, TextInput, ModelForm
+from django.forms.models import modelformset_factory
+from django_jsonforms.forms import JSONSchemaField
+
 from .models import Batch, Filer
-from django.forms.models import formset_factory, modelformset_factory
+from .models import DocumentFileType, DocumentType, Profile, DocumentFileDetail
 
 
 class FileContentForm(Form):

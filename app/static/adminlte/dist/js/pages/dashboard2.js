@@ -1,6 +1,6 @@
 $(function () {
 
-  'use strict'
+  'use strict';
 
   /* ChartJS
    * -------
@@ -12,7 +12,7 @@ $(function () {
   //-----------------------
 
   // Get context with jQuery - using jQuery's .get() method.
-  var salesChartCanvas = $('#salesChart').get(0).getContext('2d')
+  var salesChartCanvas = $('#salesChart').get(0).getContext('2d');
 
   var salesChartData = {
     labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -40,7 +40,7 @@ $(function () {
         data                : [65, 59, 80, 81, 56, 55, 40]
       },
     ]
-  }
+  };
 
   var salesChartOptions = {
     maintainAspectRatio : false,
@@ -60,7 +60,7 @@ $(function () {
         }
       }]
     }
-  }
+  };
 
   // This will get the first returned node in the jQuery collection.
   var salesChart = new Chart(salesChartCanvas, { 
@@ -68,7 +68,7 @@ $(function () {
       data: salesChartData, 
       options: salesChartOptions
     }
-  )
+  );
 
   //---------------------------
   //- END MONTHLY SALES CHART -
@@ -78,7 +78,7 @@ $(function () {
   //- PIE CHART -
   //-------------
   // Get context with jQuery - using jQuery's .get() method.
-    var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+    var pieChartCanvas = $('#pieChart').get(0).getContext('2d');
     var pieData        = {
       labels: [
           'Chrome', 
@@ -94,19 +94,19 @@ $(function () {
           backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
         }
       ]
-    }
+    };
     var pieOptions     = {
       legend: {
         display: false
       }
-    }
+    };
     //Create pie or douhnut chart
     // You can switch between pie and douhnut using the method below.
     var pieChart = new Chart(pieChartCanvas, {
       type: 'doughnut',
       data: pieData,
       options: pieOptions      
-    })
+    });
 
   //-----------------
   //- END PIE CHART -
@@ -264,4 +264,4 @@ $(function () {
   //   ]
   // })
 
-})
+});
