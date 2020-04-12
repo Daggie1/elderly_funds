@@ -1,18 +1,20 @@
-from django.contrib.auth.views import LogoutView,PasswordChangeView
-from django.urls import path, re_path
-from app.view.scanner import upload_documents_to_file,get_file_to_upload_documents
-from app.view.transcribe import get_files_from_storage, update_document_file_detail
+from django.contrib.auth.views import LogoutView, PasswordChangeView
+from django.urls import path
 
+from app.view.batch import BatchListView, create_batch
+from app.view.document import DocumentCreate, DocumentView, UploadedDocumentsList
+from app.view.document_type import DocumentTypeCreate, DocumentTypeList
+from app.view.file import FilesView, DocumentFileCreate, DocumentFileList
+from app.view.file_type import FileTypeCreate, FileTypeList
+from app.view.scanner import upload_documents_to_file, get_file_to_upload_documents
+from app.view.transcribe import get_files_from_storage, update_document_file_detail
 from .views import (
-    BatchListView,create_batch,registry_submit,FilesView,DocumentCreate,DocumentView, search_file, AdminView, edit_file,
-    manage_documents, FileTypeDelete, FileTypeCreate,
-    FileTypeList, DocumentFileCreate, DocumentFileList,
-    DocumentTypeCreate, DocumentTypeList, DocumentUploadView,
-    UploadedDocumentsList, DocumentTranscribe,
-    get_document_and_document_type, pdfrender,
+    registry_submit, AdminView, FileTypeDelete,
+    DocumentTranscribe,
+    get_document_and_document_type,
     UserListView, UserDetailView, UserUpdateView,
     UserDeleteView, GroupListView, GroupUpdateView, user_create,
-    password_reset, add_group, login, update_document_content,
+    add_group, login, update_document_content,
     validate_document_content)
 
 urlpatterns = [
@@ -51,8 +53,6 @@ urlpatterns = [
     path('transcription_lab/<int:doc_id>/<str:file_type>',get_document_and_document_type, name='transcription_lab'),
     path('update_doc_content/<int:doc_id>', update_document_content, name='update_doc_content' ),
     path('validate_doc_content/<int:doc_id>', validate_document_content, name='validate_doc_content'),
-    path('search_file', search_file, name='search_file'),
-    path('pdf_render', pdfrender, name='pdf_render'),
 
     path('file/document/storage/<str:file_reference>', get_files_from_storage, name='get_files_from_storage'),
     path('update/document/<int:document>',update_document_file_detail, name='update_document_file_detail'),

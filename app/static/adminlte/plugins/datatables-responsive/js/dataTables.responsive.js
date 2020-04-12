@@ -904,7 +904,7 @@ $.extend( Responsive.prototype, {
 
 		// A position absolute table would take the table out of the flow of
 		// our container element, bypassing the height and width (Scroller)
-		$( clonedTable ).css( 'position', 'relative' )
+		$( clonedTable ).css( 'position', 'relative' );
 		
 		var inserted = $('<div/>')
 			.css( {

@@ -25,8 +25,8 @@ $('document').ready(function() {
         // Get the DOM Element
         var element = $(this).get(0);
 
-        var options_text = $(this).attr('options')
-        var schema_text = $(this).attr('schema')
+        var options_text = $(this).attr('options');
+        var schema_text = $(this).attr('schema');
 
         var schema = process(schema_text);
         var options = process(options_text);
@@ -36,7 +36,7 @@ $('document').ready(function() {
         var initial = $(hidden_identifier).val();
 
         // Check if editor is within form
-        var form = $(this).closest('form')
+        var form = $(this).closest('form');
 
         //Wait for any ajax requests to complete
         $.when(schema, options).done(function(schemaresult, optionsresult) {
@@ -61,4 +61,4 @@ $('document').ready(function() {
             }
         })
     });
-})
+});

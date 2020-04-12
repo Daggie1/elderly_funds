@@ -6567,7 +6567,7 @@ var FontFaceObject = (function FontFaceObjectClosure() {
       for (var i in data) {
         this[i] = data[i];
       }
-      return;
+
     }
   }
   FontFaceObject.prototype = {
