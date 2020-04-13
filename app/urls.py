@@ -13,7 +13,12 @@ from .views import (
     DocumentTranscribe,
     get_document_and_document_type,
     UserListView, UserDetailView, UserUpdateView,
+
     UserDeleteView, GroupListView, GroupUpdateView, user_create, Login,
+
+
+    UserDeleteView, GroupListView, GroupUpdateView, user_create, Login,
+
     password_reset, add_group, update_document_content,
     validate_document_content, file_submit,start_receive,start_scanning,start_qa,start_validate,abort)
 
@@ -76,7 +81,9 @@ urlpatterns = [
     path('roles/create/', add_group, name='roles.create'),
     path('roles/update/<int:pk>/', GroupUpdateView.as_view(), name='groups.update'),
     #
+
     path('login/', Login, name='login'),
+
     path('logout/', LogoutView.as_view(template_name='logout.html'), name='logout'),
 
     path('change_status/<file_ref>/', file_submit, name='file_submit'),

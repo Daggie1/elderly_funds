@@ -4,12 +4,16 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.contrib.auth.views import LoginView
+
 from django.contrib.auth.models import Group, User, Permission
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
+
 from .mixin import LoggedInRedirectMixin
+
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
@@ -116,6 +120,7 @@ def validate_document_content(request, doc_id):
     return render(request, 'validate.html', {'table_data': table_data, 'document': document})
 
 
+
 class Login(LoggedInRedirectMixin, LoginView):
     template_name = 'login.html'
 
@@ -128,6 +133,7 @@ class Login(LoggedInRedirectMixin, LoginView):
         else:
             auth_login(self.request, form.get_user())
             return redirect(self.get_success_url())
+
 
 
 
@@ -433,6 +439,7 @@ def start_scanning(request,file_ref):
         messages.error(request, ' something wrong happened')
 
 
+
 def start_qa(request, file_ref):
     file = file_or_files(request, file_ref)
     if file and file.state.state_code ==304 and not file.file_qa_by :
@@ -442,12 +449,15 @@ def start_qa(request, file_ref):
                 doc_qa_by=request.user
             )
 
+
             file.file_qa_by = request.user
         except AttributeError as e:
             messages.error(request, ' something wrong happened')
     # return to scanning page
     else:
         messages.error(request, ' something wrong happened')
+
+
 def start_validate(request, file_ref):
     file = file_or_files(request, file_ref)
     if file and file.state.state_code ==305 and not file.file_validated_by :
@@ -456,6 +466,7 @@ def start_validate(request, file_ref):
             docs.update(
                 doc_qa_by=request.user
             )
+
 
             file.file_validated_by = request.user
         except AttributeError as e:
