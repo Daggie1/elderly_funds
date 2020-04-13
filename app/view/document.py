@@ -22,8 +22,9 @@ class DocumentCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             context['formset'] = DocumentBarCodeFormSet(self.request.POST)
         else:
             context['formset'] = DocumentBarCodeFormSet()
-            print(context['formset'])
         return context
+
+
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -71,13 +72,18 @@ def create_document(request, file_ref_no):
         formset = DocFormset(request.GET or None)
     elif request.method == 'POST':
         formset = DocFormset(request.POST)
+
         if formset.is_valid():
             for form in formset:
+                file_reference = DocumentFile.objects.get(pk=file_ref_no)
                 document_barcode = form.cleaned_data.get('document_barcode')
                 if document_barcode:
-                    DocumentFileDetail(document_barcode = document_barcode).save()
+                    DocumentFileDetail(document_barcode = document_barcode, file_reference=file_reference).save()
             return redirect('list_file_types')
     return render(request, template_name, {
         'formset': formset,
         'heading': heading_message,
     })
+
+# TODO Restrict characters in File Reference or Deal With Special Characters
+# TODO Show update Files, Validate Files Before Mapping

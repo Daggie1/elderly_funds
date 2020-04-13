@@ -15,7 +15,7 @@ class DocumentFileCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     permission_required = 'app.add_documentfile'
     success_message = 'Added created successfully'
     model = DocumentFile
-    template_name = 'app/file/../../templates/file/create.html'
+    template_name = 'file/create.html'
     fields = ['file_reference', 'file_type', 'file_barcode']
     success_url = reverse_lazy('list_document_files')
     m = None
