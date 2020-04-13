@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.views import PasswordChangeForm
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,7 +15,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from .mixin import LoggedInRedirectMixin
 
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 from django.views.generic.edit import DeleteView, CreateView, UpdateView
@@ -134,6 +135,31 @@ class Login(LoggedInRedirectMixin, LoginView):
             auth_login(self.request, form.get_user())
             return redirect(self.get_success_url())
 
+def change_password(request, username):
+    user = User.objects.get(username=username)
+    print(f'user{user.password}')
+
+    if request.method == 'POST':
+        #user=authenticate(username=user.username, password=request.POST.get('old_password'))
+        print(user)
+        form = PasswordChangeForm(data=request.POST, user=user)
+
+        if form.is_valid():
+
+            form.save()
+            user.refresh_from_db()
+            user.profile.first_login = False
+            user.save()
+            messages.success(request, 'Password Changed Successfully,')
+            return redirect(reverse('login'))
+        else:
+            messages.error(request, form.error_messages)
+            return redirect(reverse('user.changepass', kwargs={'username': user.username}))
+    else:
+        form = PasswordChangeForm(user=user)
+
+        args = {'form': form}
+        return render(request, 'reset_password.html', args)
 
 
 
@@ -143,14 +169,17 @@ def password_reset(request):
         form = PasswordResetForm(user=request.user, data=request.POST)
 
         if form.is_valid():
+
             form.save()
-            u = request.user
+            u = user
             print(u)
             u.refresh_from_db()
             u.profile.first_Login = False
             u.save()
             logout(request)
             return redirect('login')
+        else:
+           print(form.error_messages)
     else:
         form = PasswordResetForm(user=request.user)
     return render(request, 'reset_password.html', {'form': form, })

@@ -20,11 +20,9 @@ from .views import (
     UserDeleteView, GroupListView, GroupUpdateView, user_create, Login,
 
     password_reset, add_group, update_document_content,
-    validate_document_content, file_submit,start_receive,start_scanning,start_qa,start_validate,abort)
+    validate_document_content, file_submit,start_receive,start_scanning,start_qa,start_validate,change_password)
 
-    # UserDeleteView, GroupListView, GroupUpdateView, user_create,
-    # add_group, login, update_document_content,
-    # validate_document_content)
+
 
 
 urlpatterns = [
@@ -73,7 +71,7 @@ urlpatterns = [
     path('users/create/', user_create, name='users.create'),
     path('users/<int:pk>/', UserDetailView.as_view(), name='users.detail'),
     path('users/update/<int:pk>/', UserUpdateView.as_view(), name='user.update'),
-    path('users/password_reset/', PasswordChangeView.as_view( template_name='reset_password.html'), name='user.changepass'),
+    path('users/password_reset/<username>', change_password, name='user.changepass'),
 
     path('user/delete/<int:pk>/', UserDeleteView.as_view(), name='user.delete'),
     # groups
@@ -82,7 +80,7 @@ urlpatterns = [
     path('roles/update/<int:pk>/', GroupUpdateView.as_view(), name='groups.update'),
     #
 
-    path('login/', Login, name='login'),
+    path('login/', Login.as_view(), name='login'),
 
     path('logout/', LogoutView.as_view(template_name='logout.html'), name='logout'),
 

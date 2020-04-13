@@ -99,7 +99,7 @@ else:
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-            'NAME': 'edms5',
+            'NAME': 'edms6',
 
 
             'USER': 'postgres',
@@ -147,6 +147,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT =  os.path.join(BASE_DIR, 'static')
 LOGIN_URL = 'login'
 MEDIA_URL = '/media/'
+LOGIN_REDIRECT_URL = 'users.index'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

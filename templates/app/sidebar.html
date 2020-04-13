@@ -20,17 +20,12 @@
 
             </ul>
              </li>
-<<<<<<< HEAD
+
     {% if "can_register_batch" in perms %}'
         <li class="nav-item has-treeview  {% if request.resolver_match.url_name == 'batch.index' or request.resolver_match.url_name == 'create_document_file' or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch.create' %} menu-open {% endif %}" >
             <a href="#" class="nav-link  {% if request.resolver_match.url_name == 'batch.index' or request.resolver_match.url_name == 'create_document_file' or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch.create' %} active {% endif %}">
               <i class="nav-icon fas fa-file-pdf"></i>
-=======
 
-        <li class="nav-item has-treeview  {% if request.resolver_match.url_name == 'list_file_types'  or request.resolver_match.url_name == 'create_file_type' %} menu-open {% endif %}" >
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'list_file_types'  or request.resolver_match.url_name == 'create_file_type' %} active {% endif %}">
-              <i class="nav-icon fas fa-file-word"></i>
->>>>>>> f95055ac9c22ab25c5c2e16e45d555e14111dd85
               <p>
                 Batches
                 <i class="right fas fa-angle-left"></i>
