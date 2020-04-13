@@ -2,7 +2,7 @@ from django.contrib.auth.views import LogoutView, PasswordChangeView
 from django.urls import path
 
 from app.view.batch import BatchListView, create_batch
-from app.view.document import DocumentCreate, DocumentView, UploadedDocumentsList
+from app.view.document import DocumentCreate, DocumentView, UploadedDocumentsList, create_document
 from app.view.document_type import DocumentTypeCreate, DocumentTypeList
 from app.view.file import FilesView, DocumentFileCreate, DocumentFileList
 from app.view.file_type import FileTypeCreate, FileTypeList
@@ -31,8 +31,8 @@ urlpatterns = [
     path('submit/<int:batch_id>', registry_submit, name='submit.registry'),
 
     # batches
-    path('batches/', BatchListView.as_view(), name='batch.index'),
-    path('create_batch/',create_batch,name='batch.create'),
+    path('batches/', BatchListView.as_view(), name='batch_index'),
+    path('create_batch/',create_batch,name='batch_create'),
 
     # file type urls
     path('create_file_type/', FileTypeCreate.as_view(), name='create_file_type'),
@@ -50,7 +50,7 @@ urlpatterns = [
 
     # document upload and viewing
     path('file/<file_ref_no>/documents', DocumentView.as_view(), name='document.view'),
-    path('file/<file_ref_no>/create_document/', DocumentCreate.as_view(), name='document.create'),
+    path('file/<file_ref_no>/create_document/', create_document, name='document.create'),
     path('uploaded_documents', UploadedDocumentsList.as_view(), name='uploaded_documents'),
     path('files/upload/select',get_file_to_upload_documents, name='get_file_to_upload_documents'),
     path('upload/to/file/<str:file_reference>',upload_documents_to_file, name='upload_document'),

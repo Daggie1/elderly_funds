@@ -9,7 +9,7 @@
 {% endblock %}
 {% block content %}
      <div class="row">
-        <div class="col-6 offset-3">
+        <div class="col-6">
             <div class="card card-primary">
             <div class="card-header">
               <h3 class="card-title">Batch Details</h3>
@@ -24,7 +24,7 @@
                     {% csrf_token %}
              {{ form|crispy }}
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block">Save Group</button>
+                        <button type="submit" class="btn btn-primary btn-block">Save Batch</button>
                     </div>
 
                 </form>

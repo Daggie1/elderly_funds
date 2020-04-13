@@ -69,13 +69,13 @@ class FileTypeDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         else:
             return True
 
-    class FilesView(LoginRequiredMixin, ListView):
+class FilesView(LoginRequiredMixin, ListView):
 
-        permission_required = 'app.add_documentfile'
-        template_name = 'app/file/index.html'
+    permission_required = 'app.add_documentfile'
+    template_name = 'file/index.html'
 
-        def get_queryset(self):
-            return DocumentFile.objects.filter(batch=Batch.objects.get(pk=self.kwargs['batch_id']))
+    def get_queryset(self):
+        return DocumentFile.objects.filter(batch=Batch.objects.get(pk=self.kwargs['batch_id']))
 
 
 class DocumentTranscribe(LoginRequiredMixin, View):

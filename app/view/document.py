@@ -1,16 +1,16 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, FormView
 
-from app.forms import DocumentDetailForm, DocumentBarCodeFormSet
+from app.forms import DocumentDetailForm, DocumentBarCodeFormSet, DocFormset
 from app.models import DocumentFileDetail, DocumentFile
 
 
 class DocumentCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     permission_required = 'app.add_documentfiledetails'
-    model = DocumentFileDetail
     form_class = DocumentDetailForm
     template_name = 'app/document/create.html'
     success_message = 'Added created successfully'
@@ -22,15 +22,13 @@ class DocumentCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             context['formset'] = DocumentBarCodeFormSet(self.request.POST)
         else:
             context['formset'] = DocumentBarCodeFormSet()
+            print(context['formset'])
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
         documents = context['formset']
         with transaction.atomic():
-            form.instance.doc_created_by = self.request.user
-            form.instance.file_reference = DocumentFile.objects.get(file_reference=self.kwargs['file_ref_no'])
-            # self.object = form.save()
             if documents.is_valid():
                 documents.save()
         return super(DocumentCreate, self).form_valid(form)
@@ -64,3 +62,22 @@ class UploadedDocumentsList(LoginRequiredMixin, ListView):
     permission_required = 'app.view_documentfiledetail'
     model = DocumentFileDetail
     template_name = 'uploaded_documents_list.html'
+
+
+def create_document(request, file_ref_no):
+    template_name = 'app/document/create.html'
+    heading_message = 'Create Document'
+    if request.method == 'GET':
+        formset = DocFormset(request.GET or None)
+    elif request.method == 'POST':
+        formset = DocFormset(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                document_barcode = form.cleaned_data.get('document_barcode')
+                if document_barcode:
+                    DocumentFileDetail(document_barcode = document_barcode).save()
+            return redirect('list_file_types')
+    return render(request, template_name, {
+        'formset': formset,
+        'heading': heading_message,
+    })

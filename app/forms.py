@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
-from django.forms import Form, SelectMultiple, NumberInput, HiddenInput, TextInput, ModelForm
-from django.forms.models import modelformset_factory
+from django.forms.models import ModelForm
+from django.forms import Form, SelectMultiple, NumberInput, HiddenInput, TextInput
+from django.forms.models import modelformset_factory, formset_factory
 from django_jsonforms.forms import JSONSchemaField
 
 from .models import Batch, Filer
@@ -33,7 +34,13 @@ class DocumentDetailForm(ModelForm):
         fields = ()
 
 
-DocumentBarCodeFormSet = modelformset_factory(DocumentFileDetail, fields=('document_barcode',))
+DocumentBarCodeFormSet = modelformset_factory(DocumentFileDetail, fields=('document_barcode',), can_delete=False)
+
+class DocForm(forms.Form):
+    document_barcode = forms.CharField(max_length=200)
+
+
+DocFormset = formset_factory(DocForm, extra=1)
 
 
 class UserRegistrationForm(UserCreationForm):
