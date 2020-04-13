@@ -588,7 +588,7 @@
 
                 // Return the modified object
                 return target;
-            };
+            }
 
             function inArray(item, arr, fromIndex) {
                 for (var i = fromIndex || 0; i < arr[LEXICON.l]; i++)
@@ -599,13 +599,13 @@
             
             function isFunction(obj) {
                 return _type(obj) == TYPES.f;
-            };
+            }
 
             function isEmptyObject(obj) {
                 for (var name in obj )
                     return false;
                 return true;
-            };
+            }
 
             function isPlainObject(obj) {
                 if (!obj || _type(obj) != TYPES.o)
@@ -625,7 +625,7 @@
                 for (key in obj) { /**/ }
 
                 return _type(key) == TYPES.u || hasOwnProperty.call(obj, key);
-            };
+            }
 
             function each(obj, callback) {
                 var i = 0;
@@ -644,7 +644,7 @@
                 }
 
                 return obj;
-            };
+            }
 
             function isArrayLike(obj) {
                 var length = !!obj && [LEXICON.l] in obj && obj[LEXICON.l];
@@ -918,7 +918,7 @@
                 }
 
                 return base;
-            };
+            }
 
             FakejQuery[LEXICON.p] = {
 
@@ -2308,7 +2308,7 @@
                     var collected = type(eventNames) == TYPES.a && type(listener) == TYPES.a;
                     var method = remove ? 'removeEventListener' : 'addEventListener';
                     var onOff = remove ? 'off' : 'on';
-                    var events = collected ? false : eventNames.split(_strSpace)
+                    var events = collected ? false : eventNames.split(_strSpace);
                     var i = 0;
 
                     if(collected) {
@@ -2646,7 +2646,7 @@
                                 }
                             }
                             return doUpdate;
-                        }
+                        };
 
                         _mutationObserverHost = new mutationObserver(_mutationObserverHostCallback);
                         _mutationObserverContent = new mutationObserver(_mutationObserverContentCallback);
@@ -4193,7 +4193,7 @@
                  * @returns {*} A object which contains the changed options.
                  */
                 function setOptions(newOptions) {
-                    var validatedOpts = _pluginsOptions._validate(newOptions, _pluginsOptions._template, true, _currentOptions)
+                    var validatedOpts = _pluginsOptions._validate(newOptions, _pluginsOptions._template, true, _currentOptions);
 
                     _currentOptions = extendDeep({}, _currentOptions, validatedOpts._default);
                     _currentPreparedOptions = extendDeep({}, _currentPreparedOptions, validatedOpts._prepared);
@@ -6176,7 +6176,7 @@
                         changePropertyName('h', _strHeight); //change h to height
                         delete extended.c; //delete c (the 'changed' prop)
                         return extended;
-                    };
+                    }
                     var obj = {
                         destroyed: !!prepare(_destroyed),
                         sleeping: !!prepare(_sleeping),

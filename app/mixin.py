@@ -1,10 +1,10 @@
 from django.shortcuts import redirect
 
 
-class LoggedInRedirectMixin:
+class FirstTimeLoginMixing:
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect('users.index')
+        if self.request.user.profile.first_login:
+            return redirect('user.changepass')
         else:
             return super().dispatch(request, *args, **kwargs)

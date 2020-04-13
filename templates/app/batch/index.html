@@ -53,7 +53,11 @@
 
 
                                     </a>
+<<<<<<< HEAD
                 {% if obj.state.permission.codename in  perms %}
+=======
+                {% if obj.state.group in  request.user.groups.all %}
+>>>>>>> f95055ac9c22ab25c5c2e16e45d555e14111dd85
                                     <a href="{% url 'submit.registry' obj.id %}"
 
                                        title="submit" >
@@ -63,22 +67,17 @@
                                         </button>
                                     </a>
                     {% else %}
-                    <button class="btn btn-info btn-icon sq-32" type="button" disabled="true">
                                                 <span class="fa fa-lock"></span>
-                    </button>
                                             {% endif %}
+<<<<<<< HEAD
 {% if obj.state.permission.codename in  perms %}
+=======
+
+>>>>>>> f95055ac9c22ab25c5c2e16e45d555e14111dd85
                                     <a title="delete" href="{% url 'user.delete' obj.id %}"><button class="btn btn-danger btn-icon sq-32 btnDelete"
                                             type="button">
                                         <span class="fa fa-trash-alt"></span>
-                                    </button></a>
-                    {% else %}
-                    <button class="btn btn-danger btn-icon sq-32 btnDelete"
-                                            type="button" disabled="true">
-                                        <span class="fa fa-trash-alt"></span>
                 </button></a>
-                                            {% endif %}
-
 
 
                                 </td>

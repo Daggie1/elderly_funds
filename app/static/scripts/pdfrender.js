@@ -4,7 +4,7 @@
   let cursorIndex = Math.floor(currentPageIndex / pageMode);
   let pdfInstance = null;
   let totalPagesCount = 0;
-  let zoom = 1
+  let zoom = 1;
 
   const viewport = document.querySelector("#viewport");
   window.initPDFViewer = function(pdfURL) {
@@ -41,13 +41,13 @@
     }
 
     if(action === 'zoom_in'){
-      console.log('zooming')
-      zoom += 1
+      console.log('zooming');
+      zoom += 1;
       render()
     }
 
     if(action === "zoom_out"){
-      zoom -= 1
+      zoom -= 1;
       render()
     }
   }
