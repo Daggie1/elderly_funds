@@ -9,8 +9,10 @@
 
         </div>
     <div class="col-md-4">
-         <div class="row">
-                <button id="clicky" class="btn btn-info">Next Document</button>
+         <div class="row m-2">
+                <button id="clicky" class="btn btn-info m-1">Previous Document</button>
+                <button id="clicky" class="btn bg-gradient-fuchsia m-1">Next Document</button>
+
          </div>
 {#        search its barcode here#}
 {#        select the document type here#}
@@ -22,12 +24,8 @@
             <div class="card-body">
                      <div class="form-group">
                         <label>Select Document Type</label>
-                        <select class="form-control">
-                          <option>option 1</option>
-                          <option>option 2</option>
-                          <option>option 3</option>
-                          <option>option 4</option>
-                          <option>option 5</option>
+                        <select id="documenttype" class="form-control">
+
                         </select>
 
                          <div class="form-group">
@@ -55,31 +53,63 @@
     <script>
        var documents = {{ scanned_documents | safe }};
         var document_barcodes  = {{ digital_documents | safe }};
-
-        console.log(document_barcodes);
+        var document_types = {{ document_type | safe }};
+        var doctypes = [];
+        for(let i = 0; i < document_types.length; i++){
+            let value = i;
+            let label = document_types[i].document_name;
+            let dict = {'value':value, 'label':label};
+            doctypes.push(dict)
+        }
+        var document_type = '';
+        var document = '';
          $(function(){
-             count = 0
-        $('#pdf').append("<embed id='pdf' src= 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf#toolbar=0' width= '100%' height= '800'>");
+             let count = 0;
+             let uri = "http://127.0.0.1:9000/media/" + documents[count].filepond + "#toolbar=0";
+             let url = encodeURI(uri);
+
+        $('#pdf').append("<embed id='pdf' src=" + url +"  width= '100%' height= '800'>");
         $('#barcode').popSelectOptions({
             'options':document_barcodes
-        })
-        $('#clicky').click(function(){
-            var pdfsource = "http://www.africau.edu/images/default/sample.pdf"+"#toolbar=0"
-            $('#pdf').empty()
-            {#$('#pdf').replaceWith("<embed id='pdf' src= "+ pdfsource +" width= '100%' height= '800'>")#}
-            $('#pdf').append("<embed id='pdf' src= "+ pdfsource +" width= '100%' height= '800'>")
-            console.log(documents[count].id);
-            count = count + 1;
-
+        });
+        $('#barcode').change(function(){
+            document_id = $('#barcode option:selected').val();
+            console.log(document_id)
+        });
+        $('#documenttype').popSelectOptions({
+            'options': doctypes
+        });
+        $('#documenttype').change(function(){
+            document_type = $('#barcode option:selected').val()
         });
 
-        $('#updatedoc').click(function(){
-            updateStorageAndDocument()
-        })
 
-        function updateStorageAndDocument(){
-            {#an ajax request to the server to update the documents#}
-        }
+        $('#clicky').click(function(){
+            count = count + 1;
+             let uri = "http://127.0.0.1:9000/media/" + documents[count].filepond + "#toolbar=0";
+             let url = encodeURI(uri);
+            $('#pdf').empty();
+            $('#pdf').append("<embed id='pdf' src= "+ url +" width= '100%' height= '800'>")
+        });
+
+
+        $('#updatedoc').click(function(){
+            let document_id = $('#barcode option:selected').val();
+            console.log(document_id);
+            let data = {
+                document_path: documents[count].filepond,
+                document_type: $('#documenttype option:selected').text()
+            };
+            let urlMask = "{% url 'update_document_file_detail' 87 %}".replace(/87/, document_id.toString());
+            console.log(urlMask);
+           $.ajax({
+              type: "POST",
+              url: urlMask,
+              data: data,
+              success: console.log('received a result'),
+              dataType: 'json'
+            });
+        })
 
 
     })

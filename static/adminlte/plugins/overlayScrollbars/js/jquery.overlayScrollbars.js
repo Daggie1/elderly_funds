@@ -1226,7 +1226,7 @@
                     var collected = type(eventNames) == TYPES.a && type(listener) == TYPES.a;
                     var method = remove ? 'removeEventListener' : 'addEventListener';
                     var onOff = remove ? 'off' : 'on';
-                    var events = collected ? false : eventNames.split(_strSpace)
+                    var events = collected ? false : eventNames.split(_strSpace);
                     var i = 0;
 
                     if(collected) {
@@ -1564,7 +1564,7 @@
                                 }
                             }
                             return doUpdate;
-                        }
+                        };
 
                         _mutationObserverHost = new mutationObserver(_mutationObserverHostCallback);
                         _mutationObserverContent = new mutationObserver(_mutationObserverContentCallback);
@@ -3111,7 +3111,7 @@
                  * @returns {*} A object which contains the changed options.
                  */
                 function setOptions(newOptions) {
-                    var validatedOpts = _pluginsOptions._validate(newOptions, _pluginsOptions._template, true, _currentOptions)
+                    var validatedOpts = _pluginsOptions._validate(newOptions, _pluginsOptions._template, true, _currentOptions);
 
                     _currentOptions = extendDeep({}, _currentOptions, validatedOpts._default);
                     _currentPreparedOptions = extendDeep({}, _currentPreparedOptions, validatedOpts._prepared);
@@ -5094,7 +5094,7 @@
                         changePropertyName('h', _strHeight); //change h to height
                         delete extended.c; //delete c (the 'changed' prop)
                         return extended;
-                    };
+                    }
                     var obj = {
                         destroyed: !!prepare(_destroyed),
                         sleeping: !!prepare(_sleeping),

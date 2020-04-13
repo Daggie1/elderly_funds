@@ -2843,7 +2843,7 @@
         var source = getTranfserIdFromHeader(header);
         if (source) {
           info.source = source;
-          continue;
+
         }
       }
     } catch (err) {
