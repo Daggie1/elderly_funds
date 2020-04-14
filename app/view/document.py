@@ -4,7 +4,7 @@ from django.db import transaction
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, FormView
-
+from django.utils import timezone
 from app.forms import DocumentDetailForm, DocumentBarCodeFormSet, DocFormset
 from app.models import DocumentFileDetail, DocumentFile
 
@@ -78,7 +78,7 @@ def create_document(request, file_ref_no):
                 file_reference = DocumentFile.objects.get(pk=file_ref_no)
                 document_barcode = form.cleaned_data.get('document_barcode')
                 if document_barcode:
-                    DocumentFileDetail(document_barcode = document_barcode, file_reference=file_reference).save()
+                    DocumentFileDetail(document_barcode = document_barcode, file_reference=file_reference, state_id='300', doc_created_by=request.user, created_on=timezone.now()).save()
             return redirect('list_file_types')
     return render(request, template_name, {
         'formset': formset,
