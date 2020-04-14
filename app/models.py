@@ -43,7 +43,7 @@ class DocumentState(models.Model):
 
 
     def __str__(self):
-        return self.state
+        return self.state_name
 
 
 class Batch(models.Model):

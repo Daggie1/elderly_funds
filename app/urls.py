@@ -13,14 +13,11 @@ from .views import (
     DocumentTranscribe,
     get_document_and_document_type,
     UserListView, UserDetailView, UserUpdateView,
-
     UserDeleteView, GroupListView, GroupUpdateView, user_create, Login,
-
-
-    UserDeleteView, GroupListView, GroupUpdateView, user_create, Login,
-
-    password_reset, add_group, update_document_content,
-    validate_document_content, file_submit,start_receive,start_scanning,start_qa,start_validate,change_password)
+     add_group, update_document_content,
+    validate_document_content,
+    registry_batch_submit,receiver_batch_submit,
+    file_submit,start_receive,start_scanning,start_qa,start_validate,change_password)
 
 
 
@@ -85,6 +82,9 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(template_name='logout.html'), name='logout'),
 
     path('change_status/<file_ref>/', file_submit, name='file_submit'),
+
+    path('registry_submit_batch/<int:batch_id>/', registry_batch_submit, name='registry_submit_batch'),
+    path('receiver_submit_batch/<int:batch_id>/', receiver_batch_submit, name='receiver_submit_batch'),
 
     path('receive/<int:batch_id>/', start_receive, name='start_receive'),
     path('scan/<file_ref>/', start_scanning, name='start_scan'),

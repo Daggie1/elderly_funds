@@ -9,8 +9,7 @@ class BatchTable(tables.Table):
         template_name = "django_tables2/bootstrap.html"
         fields = ("batch_no", "name", "created_on", "state")
 
-    view = TemplateColumn(template_name='batch/view_column.html')
-    delete = TemplateColumn(template_name='batch/delete_column.html')
+    actions = TemplateColumn(template_name='batch/view_column.html')
 
 class DocumentFileTable(tables.Table):
     class Meta:
@@ -18,8 +17,8 @@ class DocumentFileTable(tables.Table):
         template_name = "django_tables2/bootstrap.html"
         fields = ("file_reference", "file_type", "file_status", "captured_by", "file_barcode", "created_on")
 
-    map = TemplateColumn(template_name='app/file_action_column.html')
-    transcribe = TemplateColumn(template_name='app/document_action_column.html')
+    action = TemplateColumn(template_name='file/view_column.html')
+    # transcribe = TemplateColumn(template_name='app/document_action_column.html')
 
 
 class DocumentTable(tables.Table):

@@ -42,7 +42,7 @@ class DocumentView(LoginRequiredMixin, ListView):
     template_name = 'app/document/index.html'
 
     def get_queryset(self):
-        return DocumentFileDetail.objects.filter(file_reference=DocumentFile.objects.get(pk=self.kwargs['file_ref_no']))
+        return DocumentFileDetail.objects.filter(file_reference_id=self.kwargs['file_ref_no'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
