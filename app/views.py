@@ -403,12 +403,12 @@ def change_state(request ,file=None,docs=None,is_reject=None,desc=None):
 
     if file and docs:
         current_state_code=int(file.state.state_code)
-        desc=None
+        desc=desc
         new_state=None
         print(f'changes {file.state.state_code} and {docs}')
         if  is_reject:
             new_state = DocumentState.objects.get(state_code=int(file.state.state_code) + 100)
-            desc=desc
+
         else:
             new_state = DocumentState.objects.get(state_code=int(file.state.state_code) + 1)
 
@@ -454,7 +454,7 @@ def change_state(request ,file=None,docs=None,is_reject=None,desc=None):
             file.save()
 def start_receive(request,batch_id):
     batch=Batch.objects.get(pk=batch_id)
-    if batch and batch.state.state_code ==301 and not batch.received_by:
+    if batch and batch.state.state_code =='301' and batch.received_by==None:
         try:
             batch.received_by=request.user
             batch.save()
@@ -464,7 +464,8 @@ def start_receive(request,batch_id):
     return False
 def start_scanning(request,file_ref):
     file = get_file(request, file_ref)
-    if file and file.state.state_code ==302 and not file.file_scanned_by:
+    print(file.file_scanned_by )
+    if file and file.state.state_code =='302' and file.file_scanned_by == None:
         docs = get_doc(request, file)
         try:
             docs.update(
@@ -472,6 +473,7 @@ def start_scanning(request,file_ref):
             )
 
             file.file_scanned_by=request.user
+            file.save()
             return True
         except AttributeError as e:
             messages.error(request, ' something wrong happened')
@@ -484,7 +486,7 @@ def start_scanning(request,file_ref):
 
 def start_qa(request, file_ref):
     file = get_file(request, file_ref)
-    if file and file.state.state_code ==304 and not file.file_qa_by :
+    if file and file.state.state_code =='304' and  file.file_qa_by==None :
         docs = get_doc(request, file)
         try:
             docs.update(
@@ -493,6 +495,7 @@ def start_qa(request, file_ref):
 
 
             file.file_qa_by = request.user
+            file.save()
             return True
         except AttributeError as e:
                 messages.error(request, ' something wrong happened')
@@ -500,15 +503,16 @@ def start_qa(request, file_ref):
 
 def start_validate(request, file_ref):
     file = get_file(request, file_ref)
-    if file and file.state.state_code ==305 and not file.file_validated_by :
+    if file and file.state.state_code =='305' and file.file_validated_by==None :
         docs = get_doc(request, file)
         try:
             docs.update(
-                doc_qa_by=request.user
+                doc_validated_by=request.user
             )
 
 
             file.file_validated_by = request.user
+            file.save()
             return True
         except AttributeError as e:
             messages.error(request, ' something wrong happened')

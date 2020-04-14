@@ -1,9 +1,10 @@
 
-<a class="btn btn-info btn-sm" href="{% url 'files.view' record.id %}">View</a>
+
     {% if 'can_register_batch' in perms %}
+    <a class="btn btn-info btn-sm" href="{% url 'files.view' record.id %}">View</a>
         <a class="btn btn-info btn-sm" href="{% url 'registry_submit_batch' record.id  %}">submit</a>
         <a class="btn btn-danger btn-sm" href="#"><i class="fas fa-trash"></i></a>
-        {% elif 'can_receive_batch' in perms %}
-        <a class="btn btn-warning btn-sm" href="{% url 'registry_submit_batch' record.id  %}">Select</a>
+    {% elif 'can_receive_batch' in perms  %}
+        <a class="btn btn-info btn-sm" href="{% url 'start_receive' record.id %}">Select</a>
     {% endif %}
 

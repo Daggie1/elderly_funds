@@ -9,11 +9,13 @@ Methods: Lookup a file by ref no to upload to, lookup(params: File Reference No)
 import pathlib
 import urllib.parse
 from django.db.models import Q
-from django.http import JsonResponse
+
+from django.http import HttpResponseRedirect
 from django.template.defaultfilters import pprint
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
+from  app.views import start_scanning
 from app.forms import StorageForm
 from app.models import DocumentFile, DocumentFileDetail, Filer
 from django.shortcuts import render, render_to_response, redirect
@@ -30,15 +32,20 @@ def upload_documents_to_file(request, file_reference):
     print(file_ref)
     file = DocumentFile.objects.get(pk=file_ref)
 
-    form = StorageForm(request.POST, request.FILES)
-    if form.is_valid():
-        new_file = form.save(commit=False)
-        new_file.file_reference = file
-        new_file.save()
-    else:
-        print(form.errors)
 
-    return render(request, 'upload_document.html', {'file': file})
+
+    form = StorageForm(request.POST, request.FILES)
+    if start_scanning(request ,file_reference):
+        if form.is_valid():
+
+            new_file = form.save(commit=False)
+            new_file.file_reference = file
+            new_file.save()
+        else:
+            print(form.errors)
+
+        return render(request, 'upload_document.html', {'file': file})
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def get_file_to_upload_documents(request):

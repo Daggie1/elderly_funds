@@ -1,12 +1,13 @@
 
 
 
-
+<a class="btn btn-info btn-sm" href="{% url 'document.view' record.file_reference %}">View</a>
     {% if 'can_transcribe_file' in perms %}
+     <a class="btn btn-info btn-sm" href="{% url 'document.view' record.file_reference %}">View</a>
         <a class="btn btn-info btn-sm" href="#">Transcribe</a>
         {% elif 'can_qa_file' in perms %}
         <a class="btn btn-info btn-sm" href="#">Select</a>
         {% elif 'can_validate_file' in perms %}
         <a class="btn btn-info btn-sm" href="#">Select</a>
-    <a class="btn btn-info btn-sm" href="{% url 'document.view' record.file_reference %}">View</a>
+
     {% endif %}
