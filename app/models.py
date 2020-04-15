@@ -32,7 +32,7 @@ class DocumentState(models.Model):
     state_code = models.CharField(max_length=255, primary_key=True)
     state_name = models.CharField(max_length=255)
 
-    permission=models.ForeignKey(Permission,on_delete=models.DO_NOTHING)
+    permission = models.ForeignKey(Permission, on_delete=models.DO_NOTHING)
 
     state_parameter = models.CharField(max_length=255)
 
@@ -58,8 +58,9 @@ class Batch(models.Model):
     received_by = models.ForeignKey(User, null=True, blank=True,
                                     on_delete=models.DO_NOTHING,
                                     related_name='received_by')
-    state=models.ForeignKey(DocumentState,null=True,on_delete=models.DO_NOTHING)
-    rejection_by_receiver_dec=models.TextField(null=True,blank=True)
+    state = models.ForeignKey(DocumentState, null=True, on_delete=models.DO_NOTHING)
+    rejection_by_receiver_dec = models.TextField(null=True, blank=True)
+
     def __str__(self):
         return self.batch_no
 
@@ -87,10 +88,10 @@ class DocumentFile(models.Model):
     document = models.FileField(upload_to='documents')
     file_status = models.CharField(max_length=100, null=True)
 
-    batch = models.ForeignKey(Batch, on_delete=models.CASCADE,null=True,blank=True)
-    file_created_by=models. ForeignKey(User,null=True,blank=True,
-                                    on_delete=models.DO_NOTHING,
-                                    related_name='file_created_by')
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True, blank=True)
+    file_created_by = models.ForeignKey(User, null=True, blank=True,
+                                        on_delete=models.DO_NOTHING,
+                                        related_name='file_created_by')
 
     created_on = models.DateTimeField(auto_now_add=timezone.now)
     file_scanned_by = models.ForeignKey(User, null=True, blank=True,
@@ -112,9 +113,9 @@ class DocumentFile(models.Model):
     file_barcode = models.CharField(null=True, max_length=255)
     rejection_by_scanner_dec = models.TextField(null=True, blank=True)
 
-    rejection_by_transcriber_dec = models.TextField(null=True,blank=True)
-    rejection_by_aq_dec = models.TextField(null=True,blank=True)
-    rejection_by_validation_dec = models.TextField(null=True,blank=True)
+    rejecdatetion_by_transcriber_dec = models.TextField(null=True, blank=True)
+    rejection_by_aq_dec = models.TextField(null=True, blank=True)
+    rejection_by_validation_dec = models.TextField(null=True, blank=True)
     state = models.ForeignKey(DocumentState, null=True, on_delete=models.DO_NOTHING)
     file_path = models.CharField(null=True, max_length=100)
 
@@ -133,8 +134,8 @@ class DocumentFileDetail(models.Model):
     file_reference = models.ForeignKey(DocumentFile, db_column="file_reference", on_delete=models.CASCADE, null=True)
     document_barcode = models.CharField(max_length=255)
 
-    document_name=models.CharField(max_length=255,blank=True)
-    document_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE,null=True)
+    document_name = models.CharField(max_length=255, blank=True)
+    document_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE, null=True)
 
 
     document_content = JSONField(null=True)
@@ -161,10 +162,11 @@ class DocumentFileDetail(models.Model):
     validated_on = models.DateTimeField(null=True)
     rejection_by_scanner_dec = models.TextField(null=True, blank=True)
 
-    rejection_by_transcriber_dec = models.TextField(null=True,blank=True)
-    rejection_by_aq_dec = models.TextField(null=True,blank=True)
-    rejection_by_validation_dec = models.TextField(null=True,blank=True)
-    state=models.ForeignKey(DocumentState,null=True,on_delete=models.DO_NOTHING)
+    rejection_by_transcriber_dec = models.TextField(null=True, blank=True)
+    rejection_by_aq_dec = models.TextField(null=True, blank=True)
+    rejection_by_validation_dec = models.TextField(null=True, blank=True)
+    state = models.ForeignKey(DocumentState, null=True, on_delete=models.DO_NOTHING)
+
     def __str__(self):
         return self.document_barcode
 
@@ -229,7 +231,7 @@ def document_directory_path(instance, filename):
     file_type = ""
 
     file_type = "others"
-    path = 'media/uploads/%Y/%d/{}/{}/{}{}'.format(folder,file_type, name, ext)
+    path = 'media/uploads/%Y/%d/{}/{}/{}{}'.format(folder, file_type, name, ext)
     print(path)
     return datetime.now().strftime(path)
 

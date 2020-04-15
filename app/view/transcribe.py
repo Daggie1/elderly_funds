@@ -41,7 +41,7 @@ def update_document_file_detail(request, document):
     document_type = request.POST.get('document_type')
     document_type_instance = DocumentType.objects.get(pk=document_type)
     document.document_type = document_type_instance
-    document.filepond = document_path
+    document.document_file_path = document_path
     document.save()
     results = {'success': True}
     return JsonResponse(results)
