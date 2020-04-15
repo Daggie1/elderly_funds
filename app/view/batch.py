@@ -1,10 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, render
 
 from django_tables2 import SingleTableMixin
-from django.urls import reverse
+from django.urls import reverse,reverse_lazy
 
 from app.forms import BatchCreationForm
 from app.models import Batch,DocumentState
@@ -46,9 +46,10 @@ def create_batch(request):
         form = BatchCreationForm()
     return render(request, 'batch/create.html', {'form': form})
 
-class BatchDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class BatchDeleteView(LoginRequiredMixin,SuccessMessageMixin, UserPassesTestMixin, DeleteView):
     model = Batch
-    success_url = '/'
+    success_url = reverse_lazy('batch_index')
+    success_message = 'Batch Deleted Successfully'
     template_name ='batch/delete_confirm.html'
 
     def test_func(self):
