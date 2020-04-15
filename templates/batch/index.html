@@ -8,10 +8,11 @@
     <div class="card">
            <div class="card-header">
                 <h3 class="card-title">All Batches</h3>
-
+                {% if "app.can_register_batch" in perms %}
                 <div class="card-tools">
                     <a href="{% url 'batch_create' %}" class="btn btn-primary">Add Batch</a>
                 </div>
+               {% endif %}
               </div>
             <!-- /.card-header -->
             <div class="card-body">

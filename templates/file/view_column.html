@@ -1,13 +1,25 @@
 
 
 
-<a class="btn btn-info btn-sm" href="{% url 'document.view' record.file_reference %}">View</a>
-    {% if 'can_transcribe_file' in perms %}
-     <a class="btn btn-info btn-sm" href="{% url 'document.view' record.file_reference %}">View</a>
-        <a class="btn btn-info btn-sm" href="#">Transcribe</a>
-        {% elif 'can_qa_file' in perms %}
-        <a class="btn btn-info btn-sm" href="#">Select</a>
-        {% elif 'can_validate_file' in perms %}
+<a class="btn btn-info btn-sm" href="{% url 'view_docs_in_file'  record.file_reference%}">View</a>
+ {% if 'app.can_scan_file' in perms  %}
+        {% if record.file_scanned_by_id == request.user.pk %}
+            <a class="btn btn-info btn-sm" href="{% url 'upload_document' record.file_reference %}">View</a>
+            {% else %}
+              <a class="btn btn-info btn-sm" href="{% url 'start_scan' record.file_reference %}">Select</a>
+            {% endif %}
+
+    {% elif 'app.can_transcribe_file' in perms %}
+    <a class="btn btn-info btn-sm" href="{% url 'get_files_from_storage' record.file_reference %}">Map Documents </a>
+     <a class="btn btn-warning btn-sm" href="{% url 'view_docs_in_file'  record.file_reference %}">Transcribe</a>
+        {% elif 'app.can_qa_file' in perms %}
+     {% if record.file_qa_by_id != None %}
+           <a class="btn btn-info btn-sm" href="{% url 'view_docs_in_file'  record.file_reference %}">View</a>
+            {% else %}
+              <a class="btn btn-info btn-sm" href="{% url 'start_qa' record.file_reference %}">Select</a>
+            {% endif %}
+
+        {% elif 'app.can_validate_file' in perms %}
         <a class="btn btn-info btn-sm" href="#">Select</a>
 
     {% endif %}

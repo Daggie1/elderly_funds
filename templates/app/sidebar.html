@@ -21,7 +21,7 @@
             </ul>
              </li>
 
-    {% if "can_register_batch" in perms %}'
+    {% if "app.can_register_batch" in perms or "app.can_receive_batch" in perms  %}
         <li class="nav-item has-treeview  {% if request.resolver_match.url_name == 'batch.index' or request.resolver_match.url_name == 'create_document_file' or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch.create' %} menu-open {% endif %}" >
             <a href="#" class="nav-link  {% if request.resolver_match.url_name == 'batch.index' or request.resolver_match.url_name == 'create_document_file' or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch.create' %} active {% endif %}">
               <i class="nav-icon fas fa-file-pdf"></i>
@@ -43,7 +43,7 @@
         </li>
         {% endif %}
 
-                {% if 'can_register_batch' in perms %}
+                {% if 'app.can_register_batch' in perms %}
             <li class="nav-item has-treeview">
             <a href="#" class="nav-link {% if request.resolver_match.url_name == 'create_document_type'  or request.resolver_match.url_name == 'view_document_types' %} active {% endif %}">
               <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -53,7 +53,7 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-                {% if 'can_register_batch' in perms %}
+                {% if 'app.can_register_batch' in perms %}
               <li class="nav-item">
                 <a href="{% url 'create_document_type' %}" class="nav-link">
                   <i class="fas fa-plus-circle nav-icon"></i>
@@ -67,10 +67,11 @@
               </li>
 {% endif %}
 
-{% endif %}
+
         </ul>
                 </li>
-            {% if 'can_register_batch' in perms %}
+        {% endif %}
+            {% if 'app.can_register_batch' in perms %}
             <li class="nav-item has-treeview  {% if request.resolver_match.url_name == 'list_file_types'  or request.resolver_match.url_name == 'create_file_type' %} menu-open {% endif %}" >
             <a href="#" class="nav-link {% if request.resolver_match.url_name == 'list_file_types'  or request.resolver_match.url_name == 'create_file_type' %} active {% endif %}">
               <i class="nav-icon fas fa-file-word"></i>
@@ -80,7 +81,7 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-                {% if 'can_register_batch' in perms %}
+                {% if 'app.can_register_batch' in perms %}
               <li class="nav-item">
                 <a href="{% url 'create_file_type' %}" class="nav-link {% if request.resolver_match.url_name == 'create_file_type' %} active {% endif %}">
                   <i class="far fa-circle nav-icon"></i>
@@ -89,7 +90,7 @@
               </li>
 
             {% endif %}
-            {% if 'can_register_file' in batch %}
+            {% if 'app.can_register_file' in batch %}
                  <li class="nav-item">
                 <a href="{% url 'list_file_types' %}" class="nav-link {% if request.resolver_match.url_name == 'list_file_types' %} active {% endif %}">
                   <i class="far fa-circle nav-icon"></i>
@@ -100,7 +101,7 @@
             </ul>
           </li>
         {% endif %}
-        {% if 'can_scan_file' in perms or 'can_transcribe_file' in perms  or 'can_qa_file' in perms or 'can_validate_file' in perms %}
+        {% if 'app.can_scan_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
                   <li class="nav-item has-treeview ">
             <a href="#" class="nav-link {% if request.resolver_match.url_name == 'upload_document' or request.resolver_match.url_name == 'uploaded_documents' %} active {% endif %} ">
               <i class="nav-icon fas fa-folder-open"></i>
@@ -110,7 +111,7 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-                {% if 'can_scan_file' in perms or 'can_transcribe_file' in perms  or 'can_qa_file' in perms or 'can_validate_file' in perms %}
+                {% if 'app.can_scan_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
                  <li class="nav-item">
                 <a href="{% url 'list_document_files' %}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -122,7 +123,7 @@
 
             </ul>
 {% endif %}
-                {% if 'can_scan_file' in perms or 'can_transcribe_file' in perms  or 'can_qa_file' in perms or 'can_validate_file' in perms %}
+                {% if 'app.can_scan_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
             <li class="nav-item has-treeview">
             <a href="#" class="nav-link {% if request.resolver_match.url_name == 'create_document_type'  or request.resolver_match.url_name == 'view_document_types' %} active {% endif %}">
               <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -133,7 +134,7 @@
             </a>
             <ul class="nav nav-treeview">
 
-            {% if 'can_scan_file' in perms %}
+            {% if 'app.can_scan_file' in perms %}
                  <li class="nav-item">
                 <a href="{% url 'get_file_to_upload_documents' %}" class="nav-link">
                   <i class="fas fa-file-upload nav-icon"></i>
@@ -141,7 +142,7 @@
                 </a>
               </li>
                 {% endif %}
-            {% if  'can_transcribe_file' in perms  %}
+            {% if  'app.can_transcribe_file' in perms  %}
                   <li class="nav-item">
                 <a href="{% url 'list_document_files' %}" class="nav-link">
                   <i class="fas fa-glasses nav-icon"></i>
@@ -152,6 +153,7 @@
         </ul>
                 </li>
         {% endif %}
+        {% if 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
              <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-microscope"></i>
@@ -161,23 +163,25 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-
+{% if 'app.can_qa_file' in perms %}
                  <li class="nav-item">
                 <a href="{% url 'list_document_files' %}" class="nav-link">
                   <i class="fas fa-gavel nav-icon"></i>
                   <p>Verify Quality</p>
                 </a>
               </li>
+    {% endif %}
+    {% if 'app.can_validate_file' in perms %}
                   <li class="nav-item">
                 <a href="{% url 'list_document_files' %}" class="nav-link">
                   <i class="fas fa-check-double nav-icon"></i>
                   <p>Validate Documents</p>
                 </a>
               </li>
-
+{% endif %}
             </ul>
             </li>
-
+{% endif %}
             {% if perms.auth %}
             <li class="nav-item has-treeview">
             <a href="#" class="nav-link ">

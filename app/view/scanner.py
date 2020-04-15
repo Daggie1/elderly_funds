@@ -32,20 +32,19 @@ def upload_documents_to_file(request, file_reference):
     print(file_ref)
     file = DocumentFile.objects.get(pk=file_ref)
 
-
+    print(file)
 
     form = StorageForm(request.POST, request.FILES)
-    if start_scanning(request ,file_reference):
-        if form.is_valid():
+    if form.is_valid():
 
             new_file = form.save(commit=False)
             new_file.file_reference = file
             new_file.save()
-        else:
+    else:
             print(form.errors)
 
-        return render(request, 'upload_document.html', {'file': file})
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return render(request, 'upload_document.html', {'file': file})
+
 
 
 def get_file_to_upload_documents(request):

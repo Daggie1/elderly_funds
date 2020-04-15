@@ -18,19 +18,15 @@ class DocumentFileCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = DocumentFile
     template_name = 'file/create.html'
     fields = ['file_reference', 'file_type', 'file_barcode']
-    success_url = reverse_lazy('list_document_files' )
-    m = None
 
-    def get(self, request, batch_id):
-        # query documents belonging to this file & aggregate with its corresponding document type
-        DocumentFileCreate.m = batch_id
-        print(DocumentFileCreate.m)
-        return super().get(request)
+
+
+
 
     def form_valid(self, form):
         form.instance.file_created_by = self.request.user
-        form.instance.state = DocumentState.objects.get(pk=300)
-        form.instance.batch = Batch.objects.get(pk=DocumentFileCreate.m)
+        form.instance.state_id = 300
+        form.instance.batch_id = self.kwargs['batch_id']
         # file=form.save()
         # print(file.file_reference)
         return super().form_valid(form)
@@ -70,13 +66,25 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     template_name = 'view_document_files.html'
 
     def get_queryset(self):
-        if self.request.user.has_perm(Permission.objects.get(codename='can_scan_file')):
-            return DocumentFile.objects.filter(state=DocumentState.objects.get(pk=302))
-        elif self.request.user.has_perm(Permission.objects.get(codename='can_transcribe_file')):
-            return DocumentFile.objects.filter(state=DocumentState.objects.get(pk=303))
-        elif self.request.user.has_perm(Permission.objects.get(codename='can_qa_file')):
-            return DocumentFile.objects.filter(state=DocumentState.objects.get(pk=304))
-        elif self.request.user.has_perm(Permission.objects.get(codename='can_validate_file')):
-            return DocumentFile.objects.filter(state=DocumentState.objects.get(pk=305))
+        if self.request.user.has_perm('app.can_scan_file'):
+            filter = DocumentFile.objects.filter(state_id=302)
+            list_isNull = filter.filter(file_scanned_by__isnull=True)
+            list_filled = filter.filter(file_scanned_by=self.request.user)
+            return list_isNull.union(list_filled)
+
+        elif self.request.user.has_perm('app.can_transcribe_file'):
+            return DocumentFile.objects.filter(state_id=303 ).filter(file_transcribed_by=self.request.user)
+
+        elif self.request.user.has_perm('app.can_qa_file'):
+            filter=DocumentFile.objects.filter(state_id=304)
+            list_isNull=filter.filter( file_qa_by__isnull=True )
+            list_filled=filter.filter(file_qa_by=self.request.user)
+            return list_isNull.union(list_filled)
+
+        elif self.request.user.has_perm('app.can_validate_file'):
+            filter = DocumentFile.objects.filter(state_id=305)
+            list_isNull = filter.filter(file_validated_by__isnull=True)
+            list_filled = filter.filter(file_validated_by=self.request.user)
+            return list_isNull.union(list_filled)
 
     filterset_class = DocumentFileFilter

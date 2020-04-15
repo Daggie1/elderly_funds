@@ -7,7 +7,7 @@ from django.contrib.postgres.fields import JSONField
 from django.utils import timezone
 from django.contrib.auth.models import User, Permission
 from PIL import Image
-
+from django.urls import reverse
 
 # Create your models here.
 class StateOptions(Enum):
@@ -65,6 +65,8 @@ class Batch(models.Model):
 
 
 
+
+
 class DocumentFileType(models.Model):
     file_type = models.CharField(max_length=100, null=False, primary_key=True)
     file_description = models.CharField(max_length=255)
@@ -118,6 +120,11 @@ class DocumentFile(models.Model):
 
     def __str__(self):
         return self.file_reference
+
+
+
+    def get_absolute_url(self):
+        return reverse('view_docs_in_file', kwargs={'file_reference': self.pk})
 
 
 

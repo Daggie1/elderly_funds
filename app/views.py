@@ -5,7 +5,7 @@ from django.contrib.auth.views import PasswordChangeForm
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+import urllib.parse
 from django.contrib.auth.views import LoginView
 
 from django.contrib.auth.models import Group, User, Permission
@@ -87,7 +87,9 @@ class DocumentTranscribe(LoginRequiredMixin, View):
         print(queryset)
         # file = get_object_or_404(DocumentFile, pk=file_reference)
         table = DocumentTable(queryset)
-        return render(request, 'file_documents_list.html', {'table': table})
+        return render(request, 'file_documents_list.html', {'table': table,
+                                                            'file_ref_no':file_reference
+                                                            })
 
 
 @login_required
@@ -310,7 +312,7 @@ def registry_batch_submit(request, batch_id):
                 files.update(state_id=new_state)
                 batch.state_id = new_state
                 batch.save()
-                messages.warning(request, 'Submitted successfully')
+                messages.success(request, 'Submitted successfully')
             except AttributeError as e:
                 messages.error(request, ' something wrong happened')
 
@@ -351,8 +353,10 @@ def get_file(request,file_ref=None):
 
     if not file_ref==None:
         file = DocumentFile.objects.get(file_reference=file_ref)
-
-        if file and request.user.has_perm(file.state.permission):
+        print(file)
+        print("app." + file.state.permission.codename)
+        if file and request.user.has_perm("app."+file.state.permission.codename):
+            print("app." + file.state.permission.codename)
             return file
 
     return None
@@ -364,21 +368,22 @@ def get_doc(request, file):
 
 @login_required
 def request_file(request):
-    state = DocumentState.objects.get(state_code=303)
-    if request.user.has_perm(state.permission):
 
-        file = DocumentFile.objects.filter(state=state, file_transcribed_by=None).first()
+    if request.user.has_perm('app.can_transcribe_file'):
+
+        file = DocumentFile.objects.filter(state_id=303, file_transcribed_by=None).first()
         if file:
             try:
                 file.file_transcribed_by = request.user
                 file.save()
-                messages.success(request, 'New File Given')
+                messages.success(request, 'New file given')
 
             except AttributeError as e:
                 messages.error(request, ' something wrong happened')
         else:
             messages.warning(request, 'No files Available')
-    messages.error(request, ' something wrong happened')
+    else:
+        messages.error(request, "Don't have this permission")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -386,11 +391,11 @@ def abort(request):
     return render(request, 'app/others/lock_screen.html')
 def file_submit(request, file_ref):
     file=get_file(request,file_ref)
-    print(file)
+
     docs=get_doc(request,file)
     print(docs)
     desc=None
-    if request.POST.get('desc') !='':
+    if request.POST.get('desc') !=None:
         desc=request.POST.get('desc')
         change_state(request, file,docs,True,desc)
     else:
@@ -400,8 +405,9 @@ def file_submit(request, file_ref):
 def change_state(request ,file=None,docs=None,is_reject=None,desc=None):
     file= file
     docs=docs
-
-    if file and docs:
+    print(f'changes {file.state.state_code} and {docs}')
+    if file :
+        #file and docs
         current_state_code=int(file.state.state_code)
         desc=desc
         new_state=None
@@ -412,15 +418,17 @@ def change_state(request ,file=None,docs=None,is_reject=None,desc=None):
         else:
             new_state = DocumentState.objects.get(state_code=int(file.state.state_code) + 1)
 
-        if current_state_code == 302 and not file.file_scanned_by:
+        if current_state_code == 302 and  file.file_scanned_by == request.user:
 
-            docs.update(state=new_state,
+            docs.update(state_id=303,
                         scanned_on=timezone.now()
                         )
-            file.state=new_state
-            file. file_scanned_by=request.user
+            print( f'state{new_state}')
+            file.state_id=303
             file.scanned_on=timezone.now()
             file.save()
+            messages.success(request,'File Updated successfully')
+            return redirect(request,'list_document_files')
         elif current_state_code == 303 and  file.file_transcribed_by==request.user:
             docs.update(state=new_state,
                         transcribed_on=timezone.now(),
@@ -452,19 +460,26 @@ def change_state(request ,file=None,docs=None,is_reject=None,desc=None):
             
             file.rejection_by_validation_dec = desc
             file.save()
+
+    else:
+        messages.warning(request,'Empty file not allowed')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 def start_receive(request,batch_id):
     batch=Batch.objects.get(pk=batch_id)
+
     if batch and batch.state.state_code =='301' and batch.received_by==None:
         try:
             batch.received_by=request.user
             batch.save()
-            return True
+            return redirect(redirect('files.view',kwargrs={'batch_id':batch_id}))
         except AttributeError as e:
             messages.error(request, ' something wrong happened')
-    return False
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 def start_scanning(request,file_ref):
-    file = get_file(request, file_ref)
-    print(file.file_scanned_by )
+    file = get_file(request, urllib.parse.unquote(file_ref))
+    print(file)
+
     if file and file.state.state_code =='302' and file.file_scanned_by == None:
         docs = get_doc(request, file)
         try:
@@ -474,54 +489,52 @@ def start_scanning(request,file_ref):
 
             file.file_scanned_by=request.user
             file.save()
-            return True
+            return render(request, 'upload_document.html', {'file': file})
         except AttributeError as e:
             messages.error(request, ' something wrong happened')
-    return False
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+def start_qa(request,file_ref):
+    file = get_file(request, urllib.parse.unquote(file_ref))
+    print(file)
 
-
-
-
-def start_qa(request, file_ref):
-    file = get_file(request, file_ref)
-    if file and file.state.state_code =='304' and  file.file_qa_by==None :
+    if file and file.state.state_code =='304' and file.file_qa_by == None:
         docs = get_doc(request, file)
         try:
             docs.update(
                 doc_qa_by=request.user
             )
 
-
-            file.file_qa_by = request.user
+            file.file_qa_by=request.user
             file.save()
-            return True
+            return render(request, 'upload_document.html', {'file': file})
         except AttributeError as e:
-                messages.error(request, ' something wrong happened')
-    return False
+            messages.error(request, ' something wrong happened')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+def start_validate(request,file_ref):
+    file = get_file(request, urllib.parse.unquote(file_ref))
+    print(file)
 
-def start_validate(request, file_ref):
-    file = get_file(request, file_ref)
-    if file and file.state.state_code =='305' and file.file_validated_by==None :
+    if file and file.state.state_code =='305' and file.file_validated_by == None:
         docs = get_doc(request, file)
         try:
             docs.update(
                 doc_validated_by=request.user
             )
 
-
-            file.file_validated_by = request.user
+            file.file_validated_by=request.user
             file.save()
-            return True
+            return render(request, 'upload_document.html', {'file': file})
         except AttributeError as e:
             messages.error(request, ' something wrong happened')
-    return False
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 def registry_submit(request, batch_id):
     batch = Batch.objects.get(pk=batch_id)
     print(batch)
-    batch.state = DocumentState.objects.get(state_code=301)
+    batch.state_id =301
     batch.save()
     messages.success(request, 'Submitted successfully')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

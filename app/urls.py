@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LogoutView, PasswordChangeView
 from django.urls import path
 
-from app.view.batch import BatchListView, create_batch
+from app.view.batch import BatchListView, create_batch,BatchDeleteView
 from app.view.document import DocumentCreate, DocumentView, UploadedDocumentsList, create_document
 from app.view.document_type import DocumentTypeCreate, DocumentTypeList
 from app.view.file import FilesView, DocumentFileCreate, DocumentFileList
@@ -9,7 +9,7 @@ from app.view.file_type import FileTypeCreate, FileTypeList
 from app.view.scanner import upload_documents_to_file, get_file_to_upload_documents
 from app.view.transcribe import get_files_from_storage, update_document_file_detail
 from .views import (
-    registry_submit, AdminView, FileTypeDelete,
+    registry_submit, AdminView, FileTypeDelete,request_file,
     DocumentTranscribe,
     get_document_and_document_type,
     UserListView, UserDetailView, UserUpdateView,
@@ -30,6 +30,7 @@ urlpatterns = [
     # batches
     path('batches/', BatchListView.as_view(), name='batch_index'),
     path('create_batch/',create_batch,name='batch_create'),
+    path('batch/<int:pk>/delete/', BatchDeleteView.as_view(), name='batch_delete'),
 
     # file type urls
     path('create_file_type/', FileTypeCreate.as_view(), name='create_file_type'),
@@ -91,5 +92,6 @@ urlpatterns = [
     path('qa/<file_ref>/', start_qa, name='start_qa'),
     path('validate/<file_ref>/', start_validate, name='start_validate'),
 
+    path('request_file', request_file, name='request_file')
 ]
 
