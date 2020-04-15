@@ -431,7 +431,7 @@ def change_state(request ,file=None,docs=None,is_reject=None,desc=None):
             file.scanned_on=timezone.now()
             file.save()
             messages.success(request,'File Updated successfully')
-            return redirect(request,'list_document_files')
+
         elif current_state_code == 303 and  file.file_transcribed_by==request.user:
             docs.update(state=new_state,
                         transcribed_on=timezone.now(),
@@ -441,6 +441,7 @@ def change_state(request ,file=None,docs=None,is_reject=None,desc=None):
             file.transcribed_on=timezone.now()
             file.rejection_by_transcriber_dec = desc
             file.save()
+            messages.success(request, 'File Updated successfully')
 
         elif current_state_code == 304 and not file.file_qa_by:
             docs.update(state=new_state,
@@ -511,7 +512,7 @@ def start_qa(request,file_ref):
 
             file.file_qa_by=request.user
             file.save()
-            return render(request, 'upload_document.html', {'file': file})
+            return redirect(reverse('view_docs_in_file',kwargs={'file_reference':file_ref}))
         except AttributeError as e:
             messages.error(request, ' something wrong happened')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
