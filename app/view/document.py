@@ -1,8 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
 from django.views.generic import CreateView, ListView, FormView
 from django.utils import timezone
 from app.forms import DocumentDetailForm, DocumentBarCodeFormSet, DocFormset
@@ -79,7 +80,8 @@ def create_document(request, file_ref_no):
                 document_barcode = form.cleaned_data.get('document_barcode')
                 if document_barcode:
                     DocumentFileDetail(document_barcode = document_barcode, file_reference=file_reference, state_id='300', doc_created_by=request.user, created_on=timezone.now()).save()
-            return redirect('list_file_types')
+            messages.success(request,'Document (s) created successfully')
+            return redirect(reverse('view_docs_in_file', kwargs={'file_reference':file_ref_no}))
     return render(request, template_name, {
         'formset': formset,
         'heading': heading_message,

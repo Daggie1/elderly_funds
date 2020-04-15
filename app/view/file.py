@@ -66,7 +66,9 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     template_name = 'view_document_files.html'
 
     def get_queryset(self):
-        if self.request.user.has_perm('app.can_scan_file'):
+        if self.request.user.is_superuser:
+            return DocumentFile.objects.all()
+        elif self.request.user.has_perm('app.can_scan_file'):
             filter = DocumentFile.objects.filter(state_id=302)
             list_isNull = filter.filter(file_scanned_by__isnull=True)
             list_filled = filter.filter(file_scanned_by=self.request.user)

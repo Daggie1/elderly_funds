@@ -1,6 +1,6 @@
 
 
-    {% if 'app.can_register_batch' in perms %} batch_delete
+    {% if 'app.can_register_batch' in perms %}
     <a class="btn btn-info btn-sm" href="{% url 'files.view' record.id %}">View </a>
         <a class="btn btn-info btn-sm" href="{% url 'registry_submit_batch' record.id  %}">submit</a>
     <a class="btn btn-danger btn-sm" href="{% url 'batch_delete' record.id %}"><i class="fas fa-trash"></i></a>

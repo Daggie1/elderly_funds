@@ -318,7 +318,7 @@ def registry_batch_submit(request, batch_id):
 
         else:
             messages.warning(request, 'Empty batch or files ')
-    return redirect('batch_index')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required
 def receiver_batch_submit(request, batch_id):
@@ -471,7 +471,7 @@ def start_receive(request,batch_id):
         try:
             batch.received_by=request.user
             batch.save()
-            return redirect(redirect('files.view',kwargrs={'batch_id':batch_id}))
+            return redirect(reverse_lazy('files.view', kwargrs={'batch_id':batch_id}))
         except AttributeError as e:
             messages.error(request, ' something wrong happened')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
