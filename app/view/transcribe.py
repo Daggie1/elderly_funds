@@ -43,5 +43,6 @@ def update_document_file_detail(request, document):
     document.document_type = document_type_instance
     document.document_file_path = document_path
     document.save()
+    # if succes return 200 if failed return 500
     results = {'success': True}
     return JsonResponse(results)

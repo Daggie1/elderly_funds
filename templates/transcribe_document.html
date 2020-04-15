@@ -11,13 +11,12 @@
 
               <div class="info-box-content">
                 <span class="info-box-text">Documents Mapped</span>
-                <span class="info-box-number">40 of </span>
+                <span class="info-box-number" id="statistics"></span>
 
                 <div class="progress">
                   <div class="progress-bar" style="width: 10%"></div>
                 </div>
-                <span class="progress-description">
-                  120 more to go
+                <span class="progress-description" id="list">
                 </span>
               </div>
               <!-- /.info-box-content -->
@@ -32,9 +31,13 @@
 
         </div>
     <div class="col-md-4">
+        <div class="row">
+             <p class="text-justify m-1" id="page">Page 4</p>
+        </div>
          <div class="row m-2">
                 <button id="clicky" class="btn btn-info m-1">Previous Document</button>
-                <button id="clicky" class="btn bg-gradient-fuchsia m-1">Next Document</button>
+
+                <button id="next" class="btn bg-gradient-fuchsia m-1">Next Document</button>
 
          </div>
 {#        search its barcode here#}
@@ -74,13 +77,14 @@
 {% block js %}
     <script src="{% static 'jquery.popSelectOptions.min.js' %}"></script>
     <script>
-       var documents = {{ scanned_documents | safe }};
-       var noOfDocuments = documents.length
-       console.log(noOfDocuments)
+        var documents = {{ scanned_documents | safe }};
+        var noOfDocuments = documents.length;
         var document_barcodes  = {{ digital_documents | safe }};
         var document_types = {{ document_type | safe }};
         var doctypes = [];
-        var progress = 0;
+        var matched = [];
+
+
         for(let i = 0; i < document_types.length; i++){
             let value = i;
             let label = document_types[i].document_name;
@@ -89,12 +93,23 @@
         }
         var document_type = '';
         var document = '';
+
+        {#jquery code#}
          $(function(){
-             let count = 0;
-             let uri = "http://127.0.0.1:9000/media/" + documents[count].filepond + "#toolbar=0";
-             let url = encodeURI(uri);
+               let page = 1;
+        let pageText = "page <block>" + page +"</block>";
+         let statistics = matched.length + " of " + noOfDocuments;
+         let list = noOfDocuments - matched.length + " more to go";
+         let count = 0;
+         let uri = "http://127.0.0.1:9000/media/" + documents[count].filepond + "#toolbar=0";
+         let url = encodeURI(uri);
 
         $('#pdf').append("<embed id='pdf' src=" + url +"  width= '100%' height= '800'>");
+
+        $('#statistics').html(statistics);
+
+        $('#list').html(list);
+        $('#page').html(pageText);
 
          $('#states').append("<div class='progress'>\n" +
         "  <div class='progress-bar progress-bar-striped' role='progressbar' style='width:30%' aria-valuenow='10' aria-valuemin='0' aria-valuemax='100'></div>\n" +
@@ -116,9 +131,34 @@
 
 
         $('#clicky').click(function(){
-            count = count + 1;
+            let pageText = "page <block>" + page +"</block>";
+            if(count === 0){
+                count = 0
+                page = 1
+            }else{
+                count = count - 1;
+                page = page - 1
+            }
+            let uri = "http://127.0.0.1:9000/media/" + documents[count].filepond + "#toolbar=0";
+            let url = encodeURI(uri);
+              $('#page').html(pageText);
+            $('#pdf').empty();
+            $('#pdf').append("<embed id='pdf' src= "+ url +" width= '100%' height= '800'>")
+        });
+
+        $('#next').click(function(){
+            let pageText = "page <block>" + page +"</block>";
+             if(count <= documents.length){
+                count = count +1
+                page = page + 1
+
+            }else{
+                count = count;
+                page = page
+            }
              let uri = "http://127.0.0.1:9000/media/" + documents[count].filepond + "#toolbar=0";
              let url = encodeURI(uri);
+              $('#page').html(pageText);
             $('#pdf').empty();
             $('#pdf').append("<embed id='pdf' src= "+ url +" width= '100%' height= '800'>")
         });
@@ -127,6 +167,7 @@
         $('#updatedoc').click(function(){
             let document_id = $('#barcode option:selected').val();
             console.log(document_id);
+            matched.push(document_id);
             let data = {
                 document_path: documents[count].filepond,
                 document_type: $('#documenttype option:selected').text()

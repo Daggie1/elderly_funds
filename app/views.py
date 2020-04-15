@@ -20,7 +20,9 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 from django.views.generic.edit import DeleteView, CreateView, UpdateView
 from django_jsonforms.forms import JSONSchemaForm
+import urllib
 from json2html import *
+
 
 from .decorators import unauthenticated_user
 from .forms import LoginForm, UserRegistrationForm, \
@@ -352,6 +354,7 @@ def receiver_batch_submit(request, batch_id):
 def get_file(request,file_ref=None):
 
     if not file_ref==None:
+        file_ref = urllib.parse.unquote(file_ref)
         file = DocumentFile.objects.get(file_reference=file_ref)
         print(file)
         print("app." + file.state.permission.codename)
