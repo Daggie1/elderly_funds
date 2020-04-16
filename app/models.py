@@ -9,6 +9,7 @@ from django.contrib.auth.models import User, Permission
 from PIL import Image
 from django.urls import reverse
 
+
 # Create your models here.
 class StateOptions(Enum):
     REGISTRY = 'Registry'  # 300
@@ -41,7 +42,6 @@ class DocumentState(models.Model):
                              default=StateOptions.REGISTRY
                              )
 
-
     def __str__(self):
         return self.state_name
 
@@ -65,21 +65,22 @@ class Batch(models.Model):
         return self.batch_no
 
 
-
-
-
 class DocumentFileType(models.Model):
     file_type = models.CharField(max_length=100, null=False, primary_key=True)
     file_description = models.CharField(max_length=255)
+
     def __str__(self):
         return self.file_type
+
 
 class DocumentType(models.Model):
     document_name = models.CharField(max_length=255, primary_key=True)
     document_field_specs = JSONField()
     document_description = models.CharField(max_length=255)
+
     def __str__(self):
         return self.document_name
+
 
 #
 class DocumentFile(models.Model):
@@ -122,12 +123,8 @@ class DocumentFile(models.Model):
     def __str__(self):
         return self.file_reference
 
-
-
     def get_absolute_url(self):
         return reverse('view_docs_in_file', kwargs={'file_reference': self.pk})
-
-
 
 
 class DocumentFileDetail(models.Model):
@@ -136,7 +133,6 @@ class DocumentFileDetail(models.Model):
 
     document_name = models.CharField(max_length=255, blank=True)
     document_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE, null=True)
-
 
     document_content = JSONField(null=True)
     document_file_path = models.CharField(null=True, max_length=100)
@@ -224,15 +220,14 @@ class Profile(models.Model):
             img.thumbnail(output_size)
             img.save(self.image.path)
 
+
 def document_directory_path(instance, filename):
     basename = os.path.basename(filename)
     name, ext = os.path.splitext(basename)
     folder = instance.file_reference.file_reference
-    file_type = ""
+    batch = instance.file_reference.batch
 
-    file_type = "others"
-    path = 'media/uploads/%Y/%d/{}/{}/{}{}'.format(folder, file_type, name, ext)
-    print(path)
+    path = 'media/%d/{}/{}/{}{}'.format(batch, folder, name, ext)
     return datetime.now().strftime(path)
 
 
@@ -242,7 +237,7 @@ class Filer(models.Model):
     create a new folder if it has more than 2000 files inside it
     """
     filepond = models.FileField(upload_to=document_directory_path)
-    file_reference = models.ForeignKey(DocumentFile,related_name='documents', on_delete=models.CASCADE)
+    file_reference = models.ForeignKey(DocumentFile, related_name='documents', on_delete=models.CASCADE)
     document_reference = models.CharField(null=True, max_length=40)
 
     def filename(self):

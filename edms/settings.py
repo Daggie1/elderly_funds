@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_jsonforms',
     'django_tables2',
     'django_filters',
+    'rest_framework',
 
 ]
 JSONFORMS_SCHEMA_DIR = '/static/'

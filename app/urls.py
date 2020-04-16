@@ -8,6 +8,7 @@ from app.view.file import FilesView, DocumentFileCreate, DocumentFileList
 from app.view.file_type import FileTypeCreate, FileTypeList
 from app.view.scanner import upload_documents_to_file, get_file_to_upload_documents
 from app.view.transcribe import get_files_from_storage, update_document_file_detail
+from app.view.api import ApiViewSet
 from .views import (
     registry_submit, AdminView, FileTypeDelete,request_file,
     DocumentTranscribe,
@@ -92,6 +93,9 @@ urlpatterns = [
     path('qa/<file_ref>/', start_qa, name='start_qa'),
     path('validate/<file_ref>/', start_validate, name='start_validate'),
 
-    path('request_file', request_file, name='request_file')
+    path('request_file', request_file, name='request_file'),
+
+    # api endpoints
+    # path('api/v1/',ApiViewSet.as_view(), name='api'),
 ]
 
