@@ -23,9 +23,13 @@ class FileForm(forms.ModelForm):
 
 
 class DocumentTypeForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['document_field_specs'].widget.attrs.update({'id': 'editor_holder'})
+
     class Meta:
         model = DocumentType
-        fields = ['document_name', 'document_description']
+        fields = ['document_name', 'document_description', 'document_field_specs']
 
 
 class DocumentDetailForm(ModelForm):
@@ -35,6 +39,7 @@ class DocumentDetailForm(ModelForm):
 
 
 DocumentBarCodeFormSet = modelformset_factory(DocumentFileDetail, fields=('document_barcode',), can_delete=False)
+
 
 class DocForm(forms.Form):
     document_barcode = forms.CharField(max_length=200)

@@ -15,15 +15,111 @@
               <form role="form" action="" method="post">
                   {% csrf_token %}
                 <div class="card-body">
+                    <button class='btn btn-primary btn-block' id='setschema'>Update Schema</button>
                     <div class="form-group">
                         {{ form | crispy }}
                     </div>
 
+                </div>
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
               </form>
             </div>
-          </div>
+            </div>
+
+            <div class="col-md-6">
+
+                   <div id="json-editor-form"></div>
+
+
+            </div>
     </div>
 {% endblock content %}
+{% block js %}
+<script src="{% static 'jsoneditor.min.js' %}"></script>
+   <script>
+   $(function(){
+        data = {}
+    let jsoneditor = null
+
+    const defaultSchema = {
+        'title': 'Document Title',
+        'type': 'object',
+        'required': [
+            'name',
+        ],
+        'properties': {
+            'name': {
+                'type': 'string',
+                'description': 'First and Last name',
+                'minLength': 4,
+                'default': 'Jeremy Dorn'
+            },
+        }
+    }
+
+    let defaultOptions = {
+        iconlib: 'fontawesome5',
+        object_layout: 'normal',
+        schema: defaultSchema,
+        show_errors: 'interaction',
+        theme: 'bootstrap4'
+    }
+    const jsonEditorForm = document.querySelector('#json-editor-form');
+    const schemaTextarea = document.querySelector('#editor_holder');
+    const setSchema = document.querySelector('#setschema')
+    const initJsoneditor = () => {
+        // destroy old JSONEditor instance if exists
+        if (jsoneditor) {
+            jsoneditor.destroy()
+        }
+
+        // new instance of JSONEditor
+        jsoneditor = new window.JSONEditor(jsonEditorForm, defaultOptions)
+
+        // listen for changes
+        // jsoneditor.on('change', function () {
+        //     // output
+        //     let json = jsoneditor.getValue()
+        //     outputTextarea.value = JSON.stringify(json, null, 2)
+        //
+        //     // validate
+        //     let validationErrors = jsoneditor.validate()
+        //     if (validationErrors.length) {
+        //         validateTextarea.value = JSON.stringify(validationErrors, null, 2)
+        //     } else {
+        //         validateTextarea.value = 'valid'
+        //     }
+        // })
+    }
+
+    setSchema.addEventListener('click', function () {
+        try {
+            data.options.schema = JSON.parse(schemaTextarea.value)
+        } catch (e) {
+            alert('Invalid Schema: ' + e.message)
+            return
+        }
+        refreshUI()
+    })
+
+    const mergeOptions = () => {
+        data.options = Object.assign(defaultOptions, data.options)
+        refreshUI()
+    }
+
+    const refreshUI = () => {
+        // schema
+        schemaTextarea.value = JSON.stringify(data.options.schema, null, 2)
+
+        initJsoneditor()
+
+    }
+    mergeOptions()
+
+   })
+
+
+</script>
+{% endblock %}

@@ -11,10 +11,9 @@ from app.models import DocumentType
 
 class DocumentTypeCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     permission_required = 'app.add_documenttype'
-    model = DocumentType
+    form_class = DocumentTypeForm
     success_message = 'Added created successfully'
     template_name = 'add_document_type.html'
-    fields = ['document_name', 'document_description', 'document_field_specs']
     success_url = reverse_lazy('list_document_types')
 
 
