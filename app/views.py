@@ -23,6 +23,7 @@ from django_jsonforms.forms import JSONSchemaForm
 import urllib
 from json2html import *
 
+
 from .decorators import unauthenticated_user
 from .forms import LoginForm, UserRegistrationForm, \
     PasswordResetForm, GroupCreationForm
@@ -70,8 +71,8 @@ class FileTypeDelete(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         else:
             return True
 
-
 class FilesView(LoginRequiredMixin, ListView):
+
     permission_required = 'app.add_documentfile'
     template_name = 'file/index.html'
 
@@ -124,6 +125,7 @@ def validate_document_content(request, doc_id):
     return render(request, 'validate.html', {'table_data': table_data, 'document': document})
 
 
+
 class Login(LoggedInRedirectMixin, LoginView):
     template_name = 'login.html'
 
@@ -163,6 +165,7 @@ def change_password(request, username):
 
         args = {'form': form}
         return render(request, 'reset_password.html', args)
+
 
 
 @login_required
@@ -305,7 +308,7 @@ def registry_batch_submit(request, batch_id):
         files = DocumentFile.objects.filter(batch=batch)
         docs = DocumentFileDetail.objects.filter(file_reference__in=files)
 
-        new_state = 301
+        new_state=301
         if files and docs:
             try:
                 docs.update(state_id=new_state, )
@@ -320,7 +323,6 @@ def registry_batch_submit(request, batch_id):
             messages.warning(request, 'Empty batch or files ')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
 @login_required
 def receiver_batch_submit(request, batch_id):
     batch = Batch.objects.get(pk=batch_id)
@@ -329,32 +331,35 @@ def receiver_batch_submit(request, batch_id):
         docs = DocumentFileDetail.objects.filter(file_reference__in=files)
 
         new_state = 302
-        desc = None
+        desc=None
         if request.POST.get('desc') != '':
             new_state = 401
             desc = request.POST.get('desc')
 
         try:
-            docs.update(state_id=new_state, )
-            files.update(state_id=new_state)
-            batch.state_id = new_state
-            batch.rejection_by_receiver_dec = desc
-            batch.received_on = timezone.now()
-            batch.save()
-            messages.success(request, 'Submitted successfully')
+                docs.update(state_id=new_state, )
+                files.update(state_id=new_state)
+                batch.state_id = new_state
+                batch.rejection_by_receiver_dec = desc
+                batch.received_on=timezone.now()
+                batch.save()
+                messages.success(request, 'Submitted successfully')
         except AttributeError as e:
-            messages.error(request, ' something wrong happened')
+                messages.error(request, ' something wrong happened')
+
 
     return redirect('batch_index')
 
 
-def get_file(request, file_ref=None):
-    if not file_ref == None:
+
+def get_file(request,file_ref=None):
+
+    if not file_ref==None:
         file_ref = urllib.parse.unquote(file_ref)
         file = DocumentFile.objects.get(file_reference=file_ref)
         print(file)
         print("app." + file.state.permission.codename)
-        if file and request.user.has_perm("app." + file.state.permission.codename):
+        if file and request.user.has_perm("app."+file.state.permission.codename):
             print("app." + file.state.permission.codename)
             return file
 
@@ -362,11 +367,12 @@ def get_file(request, file_ref=None):
 
 
 def get_doc(request, file):
-    return DocumentFileDetail.objects.filter(file_reference=file)
 
+        return DocumentFileDetail.objects.filter(file_reference=file)
 
 @login_required
 def request_file(request):
+
     if request.user.has_perm('app.can_transcribe_file'):
 
         file = DocumentFile.objects.filter(state_id=303, file_transcribed_by=None).first()
@@ -387,57 +393,56 @@ def request_file(request):
 
 def abort(request):
     return render(request, 'app/others/lock_screen.html')
-
-
 def file_submit(request, file_ref):
-    file = get_file(request, file_ref)
+    file=get_file(request,file_ref)
 
-    docs = get_doc(request, file)
+    docs=get_doc(request,file)
     print(docs)
-    desc = None
-    if request.POST.get('desc') != None:
-        desc = request.POST.get('desc')
-        change_state(request, file, docs, True, desc)
+    desc=None
+    if request.POST.get('desc') !=None:
+        desc=request.POST.get('desc')
+        change_state(request, file,docs,True,desc)
     else:
         change_state(request, file, docs, False, desc)
-    messages.success(request, 'Updated Successfull')
+    messages.success(request,'Updated Successfull')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def change_state(request, file=None, docs=None, is_reject=None, desc=None):
-    file = file
-    docs = docs
+def change_state(request ,file=None,docs=None,is_reject=None,desc=None):
+    file= file
+    docs=docs
     print(f'changes {file.state.state_code} and {docs}')
-    if file:
-        # file and docs
-        current_state_code = int(file.state.state_code)
-        desc = desc
-        new_state = None
+    if file :
+        #file and docs
+        current_state_code=int(file.state.state_code)
+        desc=desc
+        new_state=None
         print(f'changes {file.state.state_code} and {docs}')
-        if is_reject:
+        if  is_reject:
             new_state = DocumentState.objects.get(state_code=int(file.state.state_code) + 100)
 
         else:
             new_state = DocumentState.objects.get(state_code=int(file.state.state_code) + 1)
 
-        if current_state_code == 302 and file.file_scanned_by == request.user:
+        if current_state_code == 302 and  file.file_scanned_by == request.user:
 
             docs.update(state_id=303,
                         scanned_on=timezone.now()
                         )
-            print(f'state{new_state}')
-            file.state_id = 303
-            file.scanned_on = timezone.now()
+            print( f'state{new_state}')
+            file.state_id=303
+            file.scanned_on=timezone.now()
             file.save()
             messages.success(request, 'File Updated successfully')
             return redirect(request, 'list_document_files')
         elif current_state_code == 303 and file.file_transcribed_by == request.user:
+            messages.success(request,'File Updated successfully')
+
+        elif current_state_code == 303 and  file.file_transcribed_by==request.user:
             docs.update(state=new_state,
                         transcribed_on=timezone.now(),
                         rejection_by_transcriber_dec=desc
                         )
-            file.state = new_state
-            file.transcribed_on = timezone.now()
+            file.state=new_state
+            file.transcribed_on=timezone.now()
             file.rejection_by_transcriber_dec = desc
             file.save()
 
@@ -446,9 +451,9 @@ def change_state(request, file=None, docs=None, is_reject=None, desc=None):
                         qa_on=timezone.now(),
                         rejection_by_qa_dec=desc
                         )
-            file.state = new_state
-            file.file_qa_by = request.user
-            file.qa_on = timezone.now()
+            file.state=new_state
+            file.file_qa_by=request.user
+            file.qa_on=timezone.now()
             file.rejection_by_qa_dec = desc
             file.save()
         elif current_state_code == 305 and not file.file_validated_by:
@@ -456,43 +461,40 @@ def change_state(request, file=None, docs=None, is_reject=None, desc=None):
                         validated_on=timezone.now(),
                         rejection_by_validation_dec=desc
                         )
-            file.state = new_state
-            file.file_validated_by = request.user
-            file.validated_on = timezone.now()
-
+            file.state=new_state
+            file.file_validated_by=request.user
+            file.validated_on=timezone.now()
+            
             file.rejection_by_validation_dec = desc
             file.save()
 
     else:
-        messages.warning(request, 'Empty file not allowed')
+        messages.warning(request,'Empty file not allowed')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+def start_receive(request,batch_id):
+    batch=Batch.objects.get(pk=batch_id)
 
-
-def start_receive(request, batch_id):
-    batch = Batch.objects.get(pk=batch_id)
-
-    if batch and batch.state.state_code == '301' and batch.received_by == None:
+    if batch and batch.state.state_code =='301' and batch.received_by==None:
         try:
-            batch.received_by = request.user
+            batch.received_by=request.user
             batch.save()
-            return redirect(reverse_lazy('files.view', kwargrs={'batch_id': batch_id}))
+            return redirect(reverse_lazy('files.view', kwargrs={'batch_id':batch_id}))
         except AttributeError as e:
             messages.error(request, ' something wrong happened')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
-def start_scanning(request, file_ref):
+def start_scanning(request,file_ref):
     file = get_file(request, urllib.parse.unquote(file_ref))
     print(file)
 
-    if file and file.state.state_code == '302' and file.file_scanned_by == None:
+    if file and file.state.state_code =='302' and file.file_scanned_by == None:
         docs = get_doc(request, file)
         try:
             docs.update(
                 doc_scanned_by=request.user
             )
 
-            file.file_scanned_by = request.user
+            file.file_scanned_by=request.user
             file.save()
             return render(request, 'upload_document.html', {'file': file})
         except AttributeError as e:
@@ -500,37 +502,35 @@ def start_scanning(request, file_ref):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def start_qa(request, file_ref):
+def start_qa(request,file_ref):
     file = get_file(request, urllib.parse.unquote(file_ref))
     print(file)
 
-    if file and file.state.state_code == '304' and file.file_qa_by == None:
+    if file and file.state.state_code =='304' and file.file_qa_by == None:
         docs = get_doc(request, file)
         try:
             docs.update(
                 doc_qa_by=request.user
             )
 
-            file.file_qa_by = request.user
+            file.file_qa_by=request.user
             file.save()
             return render(request, 'upload_document.html', {'file': file})
         except AttributeError as e:
             messages.error(request, ' something wrong happened')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def start_validate(request, file_ref):
+def start_validate(request,file_ref):
     file = get_file(request, urllib.parse.unquote(file_ref))
     print(file)
 
-    if file and file.state.state_code == '305' and file.file_validated_by == None:
+    if file and file.state.state_code =='305' and file.file_validated_by == None:
         docs = get_doc(request, file)
         try:
             docs.update(
                 doc_validated_by=request.user
             )
 
-            file.file_validated_by = request.user
+            file.file_validated_by=request.user
             file.save()
             return render(request, 'upload_document.html', {'file': file})
         except AttributeError as e:
@@ -541,7 +541,7 @@ def start_validate(request, file_ref):
 def registry_submit(request, batch_id):
     batch = Batch.objects.get(pk=batch_id)
     print(batch)
-    batch.state_id = 301
+    batch.state_id =301
     batch.save()
     messages.success(request, 'Submitted successfully')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
