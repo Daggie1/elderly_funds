@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load render_table from django_tables2 %}
+{% load bootstrap4 %}
 {% block content %}
 
   <div class="row">
@@ -55,6 +56,17 @@
                 </form>
                 </div>
             </div>
+                {% if filter %}
+                <form action="" method="get" class="form form-inline">
+                    {% bootstrap_form filter.form layout='inline' %}
+                    {% bootstrap_button 'Search' %}
+                </form>
+                    {% for obj in filter.qs %}
+        {{ obj.document_file_path }}<br />
+    {% endfor %}
+                {% endif %}
+
+
               {% render_table table %}
             </div>
             <!-- /.card-body -->

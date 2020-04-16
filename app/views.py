@@ -29,6 +29,7 @@ from .forms import LoginForm, UserRegistrationForm, \
     PasswordResetForm, GroupCreationForm
 from .models import DocumentFile, DocumentFileType, DocumentType, DocumentFileDetail, Batch, DocumentState
 from .tables import DocumentTable
+from .filters import DocumentFilter
 
 
 @login_required
@@ -83,14 +84,16 @@ class FilesView(LoginRequiredMixin, ListView):
 class DocumentTranscribe(LoginRequiredMixin, View):
     permission_required = 'app.add_documentfiledetail'
 
+
     def get(self, request, file_reference):
         # query documents belonging to this file & aggregate with its corresponding document type
         queryset = DocumentFileDetail.objects.filter(file_reference_id=file_reference)
-        print(queryset)
         # file = get_object_or_404(DocumentFile, pk=file_reference)
         table = DocumentTable(queryset)
+        filter = DocumentFilter(request.GET, DocumentFileDetail.objects.filter(file_reference_id=file_reference))
         return render(request, 'file_documents_list.html', {'table': table,
-                                                            'file_ref_no': file_reference
+                                                            'file_ref_no': file_reference,
+                                                            'filter':filter,
                                                             })
 
 
