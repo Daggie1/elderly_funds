@@ -18,6 +18,8 @@
   <link rel="stylesheet" href="{% static 'adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
   <!-- JQVMap -->
   <link rel="stylesheet" href="{% static 'adminlte/plugins/jqvmap/jqvmap.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'summernote-bs4.min.js' %}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'adminlte/dist/css/adminlte.min.css' %}">
   <!-- overlayScrollbars -->
@@ -226,6 +228,7 @@
 <script src="{% static 'adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
 <!-- AdminLTE App -->
 <script src="{% static 'adminlte/dist/js/adminlte.js' %}"></script>
+<script src="{% static 'summernote-bs4.min.js' %}"></script>
 
 <script src="{% static 'adminlte/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
 <script src="{% static 'adminlte/plugins/toastr/toastr.min.js' %}"></script>
@@ -250,6 +253,13 @@
                 {{ message }}
             {% endfor %}
           {% endif %}
+<script>
+    $('#summernote').summernote({
+        placeholder: 'Neatly Format The Issues Found',
+        tabsize: 2,
+        height: 100
+      });
+</script>
 {% block js %}
 {% endblock %}
 </body>
