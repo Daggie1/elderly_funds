@@ -8,7 +8,7 @@ from app.view.file import FilesView, DocumentFileCreate, DocumentFileList
 from app.view.file_type import FileTypeCreate, FileTypeList
 from app.view.scanner import upload_documents_to_file, get_file_to_upload_documents
 from app.view.transcribe import get_files_from_storage, update_document_file_detail
-from app.view.api import ApiViewSet
+from app.view.user import profile
 from .views import (
     registry_submit, AdminView, FileTypeDelete,request_file,
     DocumentTranscribe,
@@ -95,6 +95,7 @@ urlpatterns = [
 
     path('request_file', request_file, name='request_file'),
 
+    path('profile/', profile, name='profile'),
     # api endpoints
     # path('api/v1/',ApiViewSet.as_view(), name='api'),
 ]
