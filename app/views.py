@@ -12,6 +12,8 @@ from django.contrib.auth.models import Group, User, Permission
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
+from django_filters.views import FilterView
+from django_tables2.views import SingleTableMixin
 
 from .mixin import LoggedInRedirectMixin
 
@@ -81,20 +83,24 @@ class FilesView(LoginRequiredMixin, ListView):
         return DocumentFile.objects.filter(batch=Batch.objects.get(pk=self.kwargs['batch_id']))
 
 
-class DocumentTranscribe(LoginRequiredMixin, View):
+class DocumentTranscribe(LoginRequiredMixin, SingleTableMixin, FilterView):
     permission_required = 'app.add_documentfiledetail'
+    table_class = DocumentTable
+    template_name = 'file_documents_list.html'
+    filterset_class = DocumentFilter
 
+    def get_queryset(self):
+        queryset = DocumentFileDetail.objects.filter(file_reference_id= self.kwargs['file_reference'])
+        self.table = DocumentTable(queryset)
+        self.filter = DocumentFilter(self.request.GET, DocumentFileDetail.objects.filter(file_reference_id=self.kwargs['file_reference']))
+        self.table = DocumentTable(self.filter.qs)
 
-    def get(self, request, file_reference):
-        # query documents belonging to this file & aggregate with its corresponding document type
-        queryset = DocumentFileDetail.objects.filter(file_reference_id=file_reference)
-        # file = get_object_or_404(DocumentFile, pk=file_reference)
-        table = DocumentTable(queryset)
-        filter = DocumentFilter(request.GET, DocumentFileDetail.objects.filter(file_reference_id=file_reference))
-        return render(request, 'file_documents_list.html', {'table': table,
-                                                            'file_ref_no': file_reference,
-                                                            'filter':filter,
-                                                            })
+    def get_context_data(self, **kwargs):
+        context  = super().get_context_data()
+        context['table'] = self.table
+        context['filter'] = self.filter
+        context['file_ref_no']  = self.kwargs['file_reference']
+        return context
 
 
 @login_required

@@ -11,4 +11,4 @@ class DocumentFileFilter(django_filters.FilterSet):
 class DocumentFilter(django_filters.FilterSet):
     class Meta:
         model = DocumentFileDetail
-        fields = ['document_barcode']
+        fields = ['document_barcode', 'document_type']
