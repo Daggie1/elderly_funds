@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from enum import Enum
-
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.utils import timezone
@@ -242,3 +242,20 @@ class Filer(models.Model):
 
     def filename(self):
         return os.path.basename(self.filepond.name)
+
+
+class ModificationTable(models.Model):
+    object_type= models.ForeignKey(ContentType,  on_delete=models.CASCADE)
+    object_pk=models.CharField(max_length=255)
+    modification_started_at=models.DateTimeField()
+    modification_ended_at = models.DateTimeField(null=True)
+    modified_from_state = models.ForeignKey(DocumentState, on_delete=models.CASCADE)
+    modified_to_state = models.ForeignKey(DocumentState, on_delete=models.CASCADE, null=True)
+    by=models.ForeignKey(User, on_delete=models.CASCADE)
+    comment=models.TextField(null=True)
+
+class Notification(models):
+    object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_pk = models.CharField(max_length=255)
+    to = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField(null=True)

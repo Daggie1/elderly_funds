@@ -235,22 +235,27 @@
 {% if messages %}
             {% for message in messages %}
                 <script>
-                $(function() {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000
+          $(function() {
 
-    });
-      Toast.fire({
-        type: "{{ message.tags }}",
-        title: "{{ message }}"
-      }) ;
+        var msgtype = "{{ message.tags }}"
+        var message= "{{ message }}"
+
+    if (msgtype==='success') {
+        toastr.success(message)
+    }
+      if (msgtype==='warning') {
+        toastr.warning(message)
+    }
+        if (msgtype==='error') {
+        toastr.error(message)
+    }
+          if (msgtype==='info') {
+        toastr.info(message)
+    }
       });
 
                 </script>
-                {{ message }}
+
             {% endfor %}
           {% endif %}
 <script>

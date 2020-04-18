@@ -133,3 +133,5 @@ class StorageForm(forms.ModelForm):
         fields = ('filepond',)
 
 
+class ResetPassword(Form):
+    username=forms.CharField(max_length=255, required=True)

@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'edms.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-DOCKER = False
+DOCKER = True
 
 if DOCKER:
     DATABASES = {
@@ -89,7 +89,7 @@ if DOCKER:
             'NAME': 'edms6',
 
             'USER': 'postgres',
-            'HOST': 'localhost',
+            'HOST': 'db',
             'PORT': '5432',
             'PASSWORD': 'toor'
         }
@@ -106,6 +106,7 @@ else:
             'PASSWORD': 'toor'
         }
     }
+
 
 
 # Password validation
@@ -146,6 +147,7 @@ STATIC_ROOT =  os.path.join(BASE_DIR, 'static')
 LOGIN_URL = 'login'
 MEDIA_URL = '/media/'
 LOGIN_REDIRECT_URL = 'users.index'
+LOGOUT_REDIRECT_URL = 'login'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

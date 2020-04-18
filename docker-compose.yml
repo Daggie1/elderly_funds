@@ -1,23 +1,46 @@
 version: '3'
 services:
-  db:
-    restart: always
-    build: ./postgres/
-    ports:
-      - "5433:5433"
+
   web:
-    restart: always
-    build: .
-    command: python3 manage.py runserver 127.0.0.1:8000
 
-    volumes:
+      build: .
+      container_name: great
+      volumes:
       - .:/edms
-    ports:
-      - "8000:8000"
-    expose:
-      - "8000"
-    links:
-      - db:db
+      - static:/edms/static_cdn
+      - media:/edms/media_cdn
+      depends_on:
+          - postgres
+      expose:
+        - 8080
+      command: bash -c "python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && gunicorn --workers=3 projectname.wsgi -b 0.0.0.0:8080"
 
-    depends_on:
-      - db
+  postgres:
+      build: ./postgres
+      restart: unless-stopped
+      expose:
+        - "5432"
+      environment:   # will be used by the init script
+            LC_ALL: C.UTF-8
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: toor
+            POSTGRES_DB: edms7
+      volumes:
+          - pgdata:/var/lib/postgresql/data/
+
+  nginx:
+      restart: always
+      build: ./nginx/
+      volumes:
+        - ./nginx/:/etc/nginx/conf.d
+        - ./logs/:/code/logs
+        - static:/edms/static_cdn
+        - media:/edms/media_cdn
+      ports:
+        - "1221:80"
+      links:
+        - web
+volumes:
+  pgdata:
+  media:
+  static:

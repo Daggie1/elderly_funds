@@ -9,6 +9,7 @@ from app.view.file_type import FileTypeCreate, FileTypeList
 from app.view.scanner import upload_documents_to_file, get_file_to_upload_documents
 from app.view.transcribe import get_files_from_storage, update_document_file_detail
 from app.view.user import profile
+from .view.user import reset_default_password
 from .views import (
     registry_submit, AdminView, FileTypeDelete,request_file,
     DocumentTranscribe,
@@ -70,7 +71,7 @@ urlpatterns = [
     path('users/create/', user_create, name='users.create'),
     path('users/<int:pk>/', UserDetailView.as_view(), name='users.detail'),
     path('users/update/<int:pk>/', UserUpdateView.as_view(), name='user.update'),
-    path('users/password_reset/<username>', change_password, name='user.changepass'),
+    path('change_password/<username>', change_password, name='user.changepass'),
 
     path('user/delete/<int:pk>/', UserDeleteView.as_view(), name='user.delete'),
     # groups
@@ -81,7 +82,7 @@ urlpatterns = [
 
     path('login/', Login.as_view(), name='login'),
 
-    path('logout/', LogoutView.as_view(template_name='logout.html'), name='logout'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 
     path('change_status/<file_ref>/', file_submit, name='file_submit'),
 
@@ -96,6 +97,7 @@ urlpatterns = [
     path('request_file', request_file, name='request_file'),
 
     path('profile/', profile, name='profile'),
+    path('reset_default_password', reset_default_password, name='reset_default_password')
     # api endpoints
     # path('api/v1/',ApiViewSet.as_view(), name='api'),
 ]

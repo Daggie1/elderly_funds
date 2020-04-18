@@ -1,7 +1,8 @@
-from app.forms import UserUpdateForm,ProfileUpdateForm
+from app.forms import UserUpdateForm,ProfileUpdateForm,ResetPassword
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,reverse
+from django.contrib.auth.models import User
 @login_required
 def profile(request):
     if request.method == 'POST':
@@ -25,3 +26,32 @@ def profile(request):
     }
 
     return render(request, 'user/profile.html', context)
+def reset_default_password(request):
+    if request.method == 'POST':
+
+        form= ResetPassword(request.POST)
+        if form.is_valid():
+            username= form.cleaned_data.get('username')
+            print(username)
+            user = User.objects.get(username=username)
+            if user:
+                try:
+                    user.set_password(user.profile.id_no)
+                    user.profile.first_login=True
+                    user.save()
+                    messages.info(request,'use your ID NO as your old password')
+                    return redirect(reverse('user.changepass',kwargs={'username':username}))
+                except():
+                    messages.error(request,'Unable to chnage to default password')
+                    pass
+
+
+    else:
+       form=ResetPassword()
+
+    context = {
+
+        'form': form
+    }
+
+    return render(request, 'user/reset_password.html', context)

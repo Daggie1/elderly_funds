@@ -1,3 +1,3 @@
-psql -U postgres -c "CREATE USER allan PASSWORD 'password'"
-psql -U postgres -c "CREATE DATABASE work OWNER allan"
-psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE work TO allan"
+psql -U postgres -c "CREATE USER postgres PASSWORD 'toor'"
+psql -U postgres -c "CREATE DATABASE edms7 OWNER postgres"
+psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE edms7 TO postgres"

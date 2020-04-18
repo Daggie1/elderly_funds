@@ -164,7 +164,10 @@ def change_password(request, username):
             user.refresh_from_db()
             user.profile.first_login = False
             user.save()
-            messages.success(request, 'Password Changed Successfully,')
+           # update_session_auth_hash(request, form.user)
+
+
+            messages.success(request, 'Password Changed Successfully, you can now login')
             return redirect(reverse('login'))
         else:
             messages.error(request, form.error_messages)
