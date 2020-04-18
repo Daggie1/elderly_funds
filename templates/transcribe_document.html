@@ -96,7 +96,7 @@
 
         {#jquery code#}
          $(function(){
-               let page = 1;
+             let page = 1;
         let pageText = "page <block>" + page +"</block>";
          let statistics = matched.length + " of " + noOfDocuments;
          let list = noOfDocuments - matched.length + " more to go";
@@ -166,19 +166,18 @@
 
         $('#updatedoc').click(function(){
             let document_id = $('#barcode option:selected').val();
-            console.log(document_id);
             matched.push(document_id);
             let data = {
                 document_path: documents[count].filepond,
                 document_type: $('#documenttype option:selected').text()
             };
             let urlMask = "{% url 'update_document_file_detail' 87 %}".replace(/87/, document_id.toString());
-            console.log(urlMask);
            $.ajax({
               type: "POST",
               url: urlMask,
               data: data,
               success: console.log('received a result'),
+               error: console.log('an error occurred'),
               dataType: 'json'
             });
         })
