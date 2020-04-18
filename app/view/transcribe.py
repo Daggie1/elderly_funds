@@ -2,6 +2,7 @@ from django.core.serializers import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
 
 from app.models import Filer, DocumentFile, DocumentFileDetail, DocumentType
 
@@ -23,8 +24,6 @@ def get_files_from_storage(request, file_reference):
     document_type = DocumentType.objects.all().values('document_name')
     file = DocumentFile.objects.get(pk=file_reference)
 
-
-
     context = {'scanned_documents': list(scanned_documents),
                'digital_documents': map_keys_to_value_digital(digital_documents), 'file': file,
                'document_type': list(document_type)}
@@ -36,13 +35,27 @@ def get_files_from_storage(request, file_reference):
 def update_document_file_detail(request, document):
     # get the document
     # update the document_path, document_type
-    document = DocumentFileDetail.objects.get(pk=document)
-    document_path = request.POST.get('document_path')
-    document_type = request.POST.get('document_type')
-    document_type_instance = DocumentType.objects.get(pk=document_type)
-    document.document_type = document_type_instance
-    document.document_file_path = document_path
-    document.save()
-    # if succes return 200 if failed return 500
-    results = {'success': True}
-    return JsonResponse(results)
+    print(document)
+    if request.POST and document is not None:
+        document = get_object_or_404(DocumentFileDetail, pk=document)
+        if document is None:
+            response = JsonResponse()
+            response.status_code = 400
+            return response
+        document_path = request.POST.get('document_path')
+        document_type = request.POST.get('document_type')
+        document_type_instance = get_object_or_404(DocumentType, pk=document_type)
+        if document_type_instance is None:
+            response = JsonResponse()
+            response.status_code = 400
+            return response
+        document.document_type = document_type_instance
+        document.document_file_path = document_path
+        document.save()
+        response = JsonResponse({'success':'update was success'})
+        response.status_code = 200
+        return response
+    else:
+        response =  JsonResponse({'error':'update failed'})
+        response.status_code  = 500
+        return response
