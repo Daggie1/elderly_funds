@@ -14,7 +14,7 @@
                 <span class="info-box-number" id="statistics"></span>
 
                 <div class="progress">
-                  <div class="progress-bar" style="width: 10%"></div>
+                  <div class="progress-bar" style="width: 0%"></div>
                 </div>
                 <span class="progress-description" id="list">
                 </span>
@@ -165,11 +165,11 @@
 
         $('#updatedoc').click(function(){
             let document_id = $('#barcode option:selected').val();
-            matched.push(document_id);
             let data = {
                 document_path: scannedDocuments[count].filepond,
                 document_type: $('#documenttype option:selected').text()
             };
+            matched.push(data)
             let urlMask = "{% url 'update_document_file_detail' 87 %}".replace(/87/, document_id.toString());
            $.ajax({
               type: "POST",
@@ -186,6 +186,12 @@
                       timer: 1000,
 
                     });
+                   counterPercentile = Math.round(matched.length / scannedDocuments.length * 100);
+                  $('.progress-bar').css('width', counterPercentile + "%");
+                   let statistics = matched.length + " of " + scannedDocuments.length;
+                  $('#statistics').html(statistics);
+                   let list = scannedDocuments.length - matched.length + " more to go";
+                    $('#list').html(list);
               },
                error: function(error){
                       Swal.fire({
