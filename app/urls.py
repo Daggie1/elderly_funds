@@ -9,6 +9,7 @@ from app.view.file_type import FileTypeCreate, FileTypeList
 from app.view.scanner import upload_documents_to_file, get_file_to_upload_documents
 from app.view.transcribe import get_files_from_storage, update_document_file_detail
 from app.view.user import profile
+from app.view.report import report
 from .views import (
     registry_submit, AdminView, FileTypeDelete,request_file,
     DocumentTranscribe,
@@ -24,7 +25,7 @@ from .views import (
 
 
 urlpatterns = [
-    path('', AdminView.as_view(), name='home'),
+    path('', report, name='home'),
     #submits
     path('submit/<int:batch_id>', registry_submit, name='submit.registry'),
 
