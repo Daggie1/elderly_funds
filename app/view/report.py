@@ -15,6 +15,11 @@ def report(request):
     file_types = DocumentFileType.objects.all()
     #get all users
     users = User.objects.all()
+    registry = DocumentFile.objects.filter(file_status = 'registry');
+    reception = DocumentFile.objects.filter(file_status = 'reception');
+    disassembly = DocumentFile.objects.filter(file_status = 'disassembly');
+    scanning = DocumentFile.objects.filter(file_status = 'scanning');
+    transcription = DocumentFile.objects.filter(file_status = 'transcription');
     context = {
         "documents": documents,
         "files": files,
