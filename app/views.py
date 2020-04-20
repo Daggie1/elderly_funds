@@ -13,6 +13,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django_filters.views import FilterView
+from django_tables2 import RequestConfig
 from django_tables2.views import SingleTableMixin
 
 from .mixin import LoggedInRedirectMixin
@@ -89,11 +90,14 @@ class DocumentTranscribe(LoginRequiredMixin, SingleTableMixin, FilterView):
     template_name = 'file_documents_list.html'
     filterset_class = DocumentFilter
 
+
     def get_queryset(self):
         queryset = DocumentFileDetail.objects.filter(file_reference_id= self.kwargs['file_reference'])
         self.table = DocumentTable(queryset)
         self.filter = DocumentFilter(self.request.GET, DocumentFileDetail.objects.filter(file_reference_id=self.kwargs['file_reference']))
         self.table = DocumentTable(self.filter.qs)
+        RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
+
 
     def get_context_data(self, **kwargs):
         context  = super().get_context_data()
