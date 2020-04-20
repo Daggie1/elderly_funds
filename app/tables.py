@@ -27,7 +27,7 @@ class DocumentFileTable(tables.Table):
 class DocumentTable(tables.Table):
     class Meta:
         model = DocumentFileDetail
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("file_reference_id", "document_barcode", "document_name_id", "document_file_path")
 
     actions = TemplateColumn(template_name='app/document_transcribe.html')

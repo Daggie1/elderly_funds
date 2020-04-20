@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% load render_table from django_tables2 %}
 {% block content %}
 
@@ -16,6 +17,12 @@
               </div>
             <!-- /.card-header -->
             <div class="card-body">
+                {% if filter %}
+                <form action="" method="get" class="form form-inline">
+                {{ filter.form }}
+                    <input type="submit" value="search">
+                </form>
+                {% endif %}
               {% render_table table %}
             </div>
             <!-- /.card-body -->
