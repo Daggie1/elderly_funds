@@ -25,7 +25,7 @@ class StateOptions(Enum):
     DISASSEMBLER_REJECTED = 'Rejected at Disassembler'  # pk = 402
     SCANNER_REJECTED = 'Rejected at Scanner'  # pk = 403
     REASSEMBLER_REJECTED = 'Rejected at Reassembler'  # pk = 404
-    TRANSCRIPTION_REJECTED = 'Rejected at Transcription'  # pk = 405
+    TRANSCRIPTION_REJECTED = 'Rejected at transcription'  # pk = 405
     QA_REJECTED = 'Rejected at QA'  # pk = 406
     VALIDATION_REJECTED = 'Rejected at Validation'  # pk = 407
     ADMIN_REJECTED = 'Rejected by Admin'  # pk = 408
@@ -54,7 +54,7 @@ class DocumentState(models.Model):
 
 class Batch(models.Model):
     batch_no = models.CharField(max_length=255, null=False, unique=True)
-    description = models.TextField( null=True, blank=True)
+    name = models.CharField(max_length=255, null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True,
                                    related_name='created_by')
@@ -172,33 +172,26 @@ class Filer(models.Model):
         return os.path.basename(self.filepond.name)
 
 
-
+""" This tables all the modifications of either batch,file or document-will be used to track the action workflow"""
 
 
 class Modification(models.Model):
-
-    """ This tables all the modifications of either batch,file or document-will be used to track the action workflow"""
-
-
     object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)  # either batch, file, doc
     object_pk = models.CharField(max_length=255) # the pk of the object being modified
     modification_started_at = models.DateTimeField(auto_now_add=timezone.now) # time when select to start modifying
     modification_ended_at = models.DateTimeField(null=True)  # time when you submit object to next state after modification
-    modified_from_state = models.ForeignKey(DocumentState,related_name='modified_from_state', on_delete=models.CASCADE )
-    modified_to_state = models.ForeignKey(DocumentState, related_name='modified_to_state', on_delete=models.CASCADE, null=True)
+    modified_from_state = models.ForeignKey(DocumentState, on_delete=models.CASCADE)
+    modified_to_state = models.ForeignKey(DocumentState, on_delete=models.CASCADE, null=True)
     by = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
-
-class Notification(models.Model):
-
+    comment = models.TextField(null=True) # if was rejected
 
     """all notifications"""
 
-
+class Notification(models):
+    object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_pk = models.CharField(max_length=255)
     to = models.ForeignKey(User, on_delete=models.CASCADE)
     read_at = models.DateTimeField(null=True) # if null means not read
-    modification=models.ForeignKey(Modification,on_delete=models.CASCADE)
     comment = models.TextField(null=True)
 
 #

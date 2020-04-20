@@ -10,17 +10,32 @@
   {
   "model": "auth.permission",
   "fields": {
-    "codename": "can_receive_batch",
-    "name": "Can Receive Batch",
-    "content_type": 7
+    "codename": "can_receive_file",
+    "name": "Can Receive File",
+    "content_type": 8
   }
 },
-
+  {
+  "model": "auth.permission",
+  "fields": {
+    "codename": "can_disassemble_file",
+    "name": "Can Disassemble File",
+    "content_type": 8
+  }
+},
   {
   "model": "auth.permission",
   "fields": {
     "codename": "can_scan_file",
     "name": "Can Scan File",
+    "content_type": 8
+  }
+},
+    {
+  "model": "auth.permission",
+  "fields": {
+    "codename": "can_reassemble_file",
+    "name": "Can Reassemble File",
     "content_type": 8
   }
 },

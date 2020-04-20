@@ -7,7 +7,13 @@
       <imported>true</imported>
       <remarks>$PROJECT_DIR$/edms/settings.py</remarks>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://127.0.0.1:5432/edms1</jdbc-url>
+      <jdbc-url>jdbc:postgresql://127.0.0.1:5432/edms3</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="edms03@localhost" uuid="e15245fb-3578-427d-9142-9ecacd0c75e5">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/edms03</jdbc-url>
     </data-source>
   </component>
 </project>

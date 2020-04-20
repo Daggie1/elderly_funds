@@ -98,7 +98,7 @@ class GroupCreationForm(forms.ModelForm):
 class BatchCreationForm(forms.ModelForm):
     class Meta:
         model = Batch
-        fields = ['batch_no', 'name']
+        fields = ['batch_no', 'description']
 
 
 class UserUpdateForm(forms.ModelForm):

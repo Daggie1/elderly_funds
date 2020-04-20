@@ -85,23 +85,25 @@ if DOCKER:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-            'NAME': 'edms6',
-
+            'NAME': 'postgres',
             'USER': 'postgres',
             'HOST': 'db',
             'PORT': '5432',
-            'PASSWORD': 'toor'
+            'PASSWORD': 'password'
+
         }
+
     }
 
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'edms6',
+
+            'NAME': 'edms03',
+
             'USER': 'postgres',
-            'HOST': 'localhost',
+            'HOST': 'db',
             'PORT': '5432',
             'PASSWORD': 'toor'
         }

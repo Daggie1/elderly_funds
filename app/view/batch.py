@@ -23,7 +23,7 @@ class BatchListView(LoginRequiredMixin,SingleTableMixin, ListView):
     def get_queryset(self):
         if self.request.user.has_perm('app.can_register_batch'):
             return Batch.objects.filter(state_id=300)
-        elif self.request.user.has_perm('app.can_receive_batch'):
+        elif self.request.user.has_perm('app.can_receive_file'):
             return Batch.objects.filter(state_id=301)
 
 
@@ -36,9 +36,9 @@ def create_batch(request):
             batch =form.save()
             batch.refresh_from_db()
             batch.created_by = request.user
-            batch.state=DocumentState.objects.get(pk=300)
+            batch.state_id=300
             batch.save()
-            messages.success(request, f"Created successfully")
+            messages.success(request, f" Batch Created successfully")
 
             return redirect(reverse('files.view', kwargs={'batch_id': batch.id}))
 
