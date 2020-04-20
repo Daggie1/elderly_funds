@@ -20,15 +20,23 @@ from django.views.generic import (
 
 class BatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     permission_required = 'app.view_batch'
-    template_name = 'batch/index.html'
-
     table_class = BatchTable
+    template_name = 'batch/index.html'
+    filterset_class = BatchFilter
+
 
     def get_queryset(self):
-        if self.request.user.has_perm('app.can_register_batch'):
-            return Batch.objects.filter(state_id=300)
-        elif self.request.user.has_perm('app.can_receive_batch'):
-            return Batch.objects.filter(state_id=301)
+        queryset = Batch.objects.all()
+        self.table = BatchTable(queryset)
+        self.filter = BatchFilter(self.request.GET, Batch.objects.all())
+        self.table = BatchTable(self.filter.qs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['table'] = self.table
+        context['filter'] = self.filter
+        print(context['filter'])
+        return context
 
 
 @login_required

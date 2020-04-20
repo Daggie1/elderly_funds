@@ -19,9 +19,8 @@
             <div class="card-body">
                 {% if filter %}
                 <form action="" method="get" class="form form-inline">
-{#                    {% bootstrap_form filter.form layout='inline' %}#}
-{#                    {% bootstrap_button 'Search' %}#}
-                {{ filter.form|crispy }}
+                {{ filter.form }}
+                    <input type="submit" value="search">
                 </form>
                 {% endif %}
               {% render_table table %}
