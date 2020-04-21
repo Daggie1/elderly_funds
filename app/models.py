@@ -58,7 +58,8 @@ class Batch(models.Model):
     received_by = models.ForeignKey(User, null=True, blank=True,
                                     on_delete=models.DO_NOTHING,
                                     related_name='received_by')
-    state = models.ForeignKey(DocumentState, null=True, on_delete=models.DO_NOTHING)
+    state = models.CharField(max_length=50)
+    stage = models.CharField(max_length=50)
     rejection_by_receiver_dec = models.TextField(null=True, blank=True)
 
     def __str__(self):
@@ -117,7 +118,8 @@ class DocumentFile(models.Model):
     rejecdatetion_by_transcriber_dec = models.TextField(null=True, blank=True)
     rejection_by_aq_dec = models.TextField(null=True, blank=True)
     rejection_by_validation_dec = models.TextField(null=True, blank=True)
-    state = models.ForeignKey(DocumentState, null=True, on_delete=models.DO_NOTHING)
+    state = models.CharField(max_length=50)
+    stage = models.CharField(max_length=50)
     file_path = models.CharField(null=True, max_length=100)
 
     def __str__(self):
@@ -161,8 +163,8 @@ class DocumentFileDetail(models.Model):
     rejection_by_transcriber_dec = models.TextField(null=True, blank=True)
     rejection_by_aq_dec = models.TextField(null=True, blank=True)
     rejection_by_validation_dec = models.TextField(null=True, blank=True)
-    state = models.ForeignKey(DocumentState, null=True, on_delete=models.DO_NOTHING)
-
+    state = models.CharField(max_length=50)
+    stage = models.CharField(max_length=50)
     def __str__(self):
         return self.document_barcode
 
