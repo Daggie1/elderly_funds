@@ -94,7 +94,7 @@ urlpatterns = [
     path('registry_submit_batch/<int:batch_id>/', registry_submit_to_receiver, name='registry_submit_batch'),
     path('receiver_submit_batch/<int:batch_id>/', receiver_batch_submit, name='receiver_submit_batch'),
 
-    path('receive_select_file/<pk>/', select_file, name='select_file'),
+    path('select_file/<pk>/', select_file, name='select_file'),
     path('scan/<file_ref>/', start_scanning, name='start_scan'),
     path('qa/<file_ref>/', start_qa, name='start_qa'),
     path('validate/<file_ref>/', start_validate, name='start_validate'),

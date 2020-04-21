@@ -21,10 +21,11 @@ class StateOptions(Enum):
     AWAITING_QA = 'Awaiting QA'  # pk = 306
     AWAITING_VALIDATION = 'Awaiting Validation'  # pk = 307
     FULL_VALIDATED = 'Fully validated'  # pk = 308
-    RECEIVE_REJECTED = 'Rejected at Receive'  # pk = 401
-    DISASSEMBLER_REJECTED = 'Rejected at Disassembler'  # pk = 402
-    SCANNER_REJECTED = 'Rejected at Scanner'  # pk = 403
-    REASSEMBLER_REJECTED = 'Rejected at Reassembler'  # pk = 404
+    REGISTRY_REJECTED = 'Rejected to Registry'  # pk = 400
+    RECEIVE_REJECTED = 'Returned to Receiver'  # pk = 401
+    DISASSEMBLER_REJECTED = 'Returned to Scanner'  # pk = 402
+    SCANNER_REJECTED = 'Rejected to transcriber'  # pk = 403
+    REASSEMBLER_REJECTED = 'Rejected to transcriber'  # pk = 404
     TRANSCRIPTION_REJECTED = 'Rejected at Transcription'  # pk = 405
     QA_REJECTED = 'Rejected at QA'  # pk = 406
     VALIDATION_REJECTED = 'Rejected at Validation'  # pk = 407
@@ -197,7 +198,8 @@ class Notification(models.Model):
 
 
     to = models.ForeignKey(User, on_delete=models.CASCADE)
-    read_at = models.DateTimeField(null=True) # if null means not read
+    user_read_at = models.DateTimeField(null=True) # if null means not read
+    admin_read_at = models.DateTimeField(null=True)
     modification=models.ForeignKey(Modification,on_delete=models.CASCADE)
     comment = models.TextField(null=True)
 

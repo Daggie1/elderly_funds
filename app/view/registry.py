@@ -65,7 +65,7 @@ def change_document_status_to_reject(request, pk):
 
 
 def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=None):
-    object_key = int(pk)
+    object_key = pk
 
     returned_object_type = None
     file_obj = None

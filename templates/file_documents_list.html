@@ -3,6 +3,11 @@
 {% load render_table from django_tables2 %}
 {% load bootstrap4 %}
 {% load crispy_forms_tags %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminlte/plugins/select2/css/select2.min.css' %}">
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+{% endblock %}
 {% block content %}
 
   <div class="row">
@@ -46,7 +51,7 @@
                     </div>
                     <input type="hidden" name="is_reject" value="nothing">
                     <div class="col-md-6">
-                        <button class="btn btn-danger" onclick="check()" type="button"> Reject</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-primary"> Reject</button>
                     </div>
                 </div>
 
@@ -70,6 +75,67 @@
           </div>
         </div>
   </div>
+
+{#    modals#}
+
+          <div class="modal fade" id="modal-primary">
+        <div class="modal-dialog">
+          <div class="modal-content ">
+            <div class="modal-header">
+              <h4 class="modal-title">File Rejection Form</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+            </div>
+              <div class="modal-body">
+                  <form action="{% url 'change_file_status_to_reject' file_ref_no %}" method="post"  id="form_data">
+                    {% csrf_token %}
+                      <div class="form-group">
+                          <label for="is_reject_description">Reason for reject *</label>
+                    <textarea  class="form-control" id= "is_reject_description" required="required" placeholder="explain your reason" name="is_reject_description" rows="3">
+
+                    </textarea>
+                  </div>
+                      <div class="form-group ">
+                         <div class="form-group">
+                        <label>The root of escalation *</label>
+                        <select class="form-control select2bs4" name="modified_to_state_id" data-dropdown-css-class="select2-primary" data-placeholder="Select Group" required="required">
+                            {% if 'app.can_receive_file' in perms %}
+                        <option value="400">Missing File</option>
+                        {% endif %}
+                            {% if 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms or  'app.can_transcribe_file' in perms  %}
+                                <option value="401">Unknown File</option>
+
+                                {% endif %}
+                        {% if 'app.can_disassemble_file' in perms or 'app.can_validate_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms or  'app.can_transcribe_file' in perms %}
+                            <option value="400">Missing Documents</option>
+                            {% endif %}
+                        {% if 'app.can_validate_file' in perms %}
+                            <option value="405">Documents not  transcribed correctly</option>
+                            {% endif %}
+
+
+                        </select>
+                      </div>
+
+                      </div>
+                      <div class="row">
+                      <div class="form-group col-md-6 pull-left">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close Form</button>
+                          </div>
+                      <div class="form-group col-md-4 offset-2">
+
+              <button type="submit" class="btn btn-success">Submit changes</button>
+                      </div>
+                          </div>
+                </form>
+              </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+
+
 {% endblock content %}
 
 {% block js %}
@@ -111,4 +177,16 @@ function check() {
     }
 }
 </script>
+<script src="{% static 'adminlte/plugins/select2/js/select2.full.min.js' %}"></script>
+    <script>
+ $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2();
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+     })
+    </script>
 {% endblock %}

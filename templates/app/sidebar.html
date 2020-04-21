@@ -90,7 +90,7 @@
               </li>
 
             {% endif %}
-            {% if 'app.can_register_file' in batch %}
+            {% if 'app.can_register_batch' in perms %}
                  <li class="nav-item">
                 <a href="{% url 'list_file_types' %}" class="nav-link {% if request.resolver_match.url_name == 'list_file_types' %} active {% endif %}">
                   <i class="far fa-circle nav-icon"></i>

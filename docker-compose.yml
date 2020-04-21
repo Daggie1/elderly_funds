@@ -8,9 +8,9 @@ services:
       command: python manage.py runserver 0.0.0.0:8000
       volumes:
       - .:/edms
-
+      container_name: web
       ports:
-        - "8000:8000"
+        - "7878:8000"
       depends_on:
         - db
   db:
@@ -21,3 +21,4 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_HOST_AUTH_METHOD=trust
       - POSTGRES_PASSWORD=password
+    container_name: postgres
