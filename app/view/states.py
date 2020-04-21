@@ -5,6 +5,21 @@ from app.models import *
 """:keyword file"""
 """:keyword document"""
 
+stages = [
+ 'registry',
+ 'reception',
+ 'disassembly',
+ 'scanning',
+ 'reassembly',
+ 'transcription',
+ 'qa',
+ 'validation'
+]
+
+# green means available to proceed
+# yellow means in the process of being worked on
+# red means stopped or flagged
+states = ('green','yellow','red')
 
 def initialize_state(pk, *args, **kwargs):
     """initialize the state of each object upon it's creation"""
