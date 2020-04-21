@@ -21,8 +21,10 @@ from .views import (
     registry_batch_submit,receiver_batch_submit,
     file_submit,start_receive,start_scanning,start_qa,start_validate,change_password)
 
-from .view.registry import registry_submit_to_receiver
-from .view.receiver import receiver_select_file
+from .view.registry import (registry_submit_to_receiver, change_file_status_to_accept,
+                            change_file_status_to_reject,change_document_status_to_accept,
+                            change_document_status_to_reject)
+from .view.receiver import select_file
 
 urlpatterns = [
     path('', AdminView.as_view(), name='home'),
@@ -84,12 +86,15 @@ urlpatterns = [
 
     path('logout/', LogoutView.as_view(), name='logout'),
 
-    path('change_status/<file_ref>/', file_submit, name='file_submit'),
+    path('accept_file/<pk>/', change_file_status_to_accept, name='change_file_status_to_accept'),
+    path('reject_file/<pk>/', change_file_status_to_reject, name='change_file_status_to_reject'),
+    path('accept_document/<pk>/', change_document_status_to_accept, name='change_document_status_to_accept'),
+    path('reject_document/<pk>/', change_document_status_to_reject, name='change_document_status_to_reject'),
 
     path('registry_submit_batch/<int:batch_id>/', registry_submit_to_receiver, name='registry_submit_batch'),
     path('receiver_submit_batch/<int:batch_id>/', receiver_batch_submit, name='receiver_submit_batch'),
 
-    path('receive_select_file/<pk>/', receiver_select_file, name='receiver_select_file'),
+    path('receive_select_file/<pk>/', select_file, name='select_file'),
     path('scan/<file_ref>/', start_scanning, name='start_scan'),
     path('qa/<file_ref>/', start_qa, name='start_qa'),
     path('validate/<file_ref>/', start_validate, name='start_validate'),

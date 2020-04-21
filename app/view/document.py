@@ -8,6 +8,7 @@ from django.views.generic import CreateView, ListView, FormView
 from django.utils import timezone
 from app.forms import DocumentDetailForm, DocumentBarCodeFormSet, DocFormset
 from app.models import DocumentFileDetail, DocumentFile
+from app.views import get_file
 
 
 class DocumentCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -48,7 +49,10 @@ class DocumentView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        file=get_file(self.request,self.kwargs['file_ref_no'])
+        file_state_id=file.state_id
         context['file_ref_no'] = self.kwargs['file_ref_no']
+        context['file_state_id'] = file_state_id
         return context
 
 

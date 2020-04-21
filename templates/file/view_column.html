@@ -1,6 +1,6 @@
 
- {% if 'app.can_receive_file' in perms  %}
-<a class="btn btn-info btn-sm" href="{% url 'receiver_select_file' record.pk %}">Select</a>
+ {% if 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms  %}
+<a class="btn btn-info btn-sm" href="{% url 'select_file' record.pk %}">Select</a>
 {% endif %}
 <a class="btn btn-info btn-sm" href="{% url 'view_docs_in_file'  record.file_reference%}">View</a>
  {% if 'app.can_scan_file' in perms  %}

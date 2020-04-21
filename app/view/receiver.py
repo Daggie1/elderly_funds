@@ -18,7 +18,7 @@ from app.models import Modification, Notification
 from django.contrib.contenttypes.models import ContentType
 
 
-def receiver_select_file(request, pk):
+def select_file(request, pk):
     file = get_file(request, pk)
     if file:
         returned_object_type = ContentType.objects.get(app_label='app', model='documentfile')
@@ -29,7 +29,7 @@ def receiver_select_file(request, pk):
                                                        modified_to_state=None).first()
         print(f'assigned to anyone={is_file_assigned}')
 
-        if file.state.pk == '301' and is_file_assigned == None:
+        if  is_file_assigned == None:
 
             try:
                 Modification.objects.create(object_type=returned_object_type, object_pk=file.pk,
@@ -43,5 +43,5 @@ def receiver_select_file(request, pk):
             else:
                 messages.error(request, "Permission denied")
     else:
-        messages.error(request, "File not found")
+        messages.error(request, "Permission denied")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

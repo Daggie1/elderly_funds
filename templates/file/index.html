@@ -8,9 +8,7 @@
     <div class="card">
            <div class="card-header">
                 <h3 class="card-title">Files for this batch</h3>
-               {% if 'app.can_receive_batch' in perms %}
-                <button class="btn btn-warning" id="action_btn" onclick="hideUnhide()">Take Action on this batch</button>
-                {% endif %}
+
            {% if 'app.can_register_batch' in perms %}
                <div class="card-tools">
                     <a href="{% url 'create_document_file' batch_id %}" class="btn btn-primary">Add File</a>

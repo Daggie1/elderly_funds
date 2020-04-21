@@ -99,6 +99,10 @@ class DocumentTranscribe(LoginRequiredMixin, SingleTableMixin, FilterView):
         context = super().get_context_data()
         context['table'] = self.table
         context['filter'] = self.filter
+        file = get_file(self.request, self.kwargs['file_reference'])
+        print(f'at context{file}')
+        file_state_id = file.state_id
+        context['file_state_id'] = file_state_id
         context['file_ref_no'] = self.kwargs['file_reference']
         return context
 
@@ -362,7 +366,6 @@ def receiver_batch_submit(request, batch_id):
 
 def get_file(request, file_ref=None):
     if not file_ref == None:
-        file_ref = urllib.parse.unquote(file_ref)
         file = DocumentFile.objects.get(pk=file_ref)
 
         print(f'file ={file}')

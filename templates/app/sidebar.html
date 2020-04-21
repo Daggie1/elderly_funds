@@ -101,7 +101,7 @@
             </ul>
           </li>
         {% endif %}
-        {% if 'app.can_scan_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
+        {% if 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
                   <li class="nav-item has-treeview ">
             <a href="#" class="nav-link {% if request.resolver_match.url_name == 'upload_document' or request.resolver_match.url_name == 'uploaded_documents' %} active {% endif %} ">
               <i class="nav-icon fas fa-folder-open"></i>
@@ -111,7 +111,7 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-                {% if 'app.can_scan_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
+                {% if 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
                  <li class="nav-item">
                 <a href="{% url 'list_document_files' %}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>

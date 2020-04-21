@@ -9,12 +9,12 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Documents</h3>
+              <h3 class="card-title">Documents For this file</h3>
 
 
 
                 <div class="card-tools">
-                {% if 'app.can_transcribe_file' in perms %}
+                {% if 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms %}
                 <button class="btn btn-warning" id="action_btn" onclick="hideUnhide()">Take Action on this File</button>
                 {% endif %}
                 {% if 'app.can_register_batch' in perms %}
@@ -29,17 +29,20 @@
                  <div class="row" id="action_row" style="display: none">
                 <div class="col-md-4">
 
-            <form action="{% url 'file_submit' file_ref_no %}" method="post"  id="form_data">
+            <form action="{% url 'change_file_status_to_accept' file_ref_no %}" method="post"  id="form_data">
                     {% csrf_token %}
                     <!-- Default unchecked -->
 
 
 <!-- Default checked -->
                 <div class="row ">
-                    <div class="col-md-6">
+
+                    <div class="col-md-6 ">
+                        <input required value="{{ file_state_id }}" type="hidden" name="modified_to_state_id">
                         <div class="form-group">
                         <button class="btn btn-success"  type="submit"> Accept</button>
                         </div>
+
                     </div>
                     <input type="hidden" name="is_reject" value="nothing">
                     <div class="col-md-6">
@@ -47,13 +50,8 @@
                     </div>
                 </div>
 
-                    <div class="form-group green-border-focus" style="display: none" id="desc">
 
-                      <textarea class="form-control" id="summernote" rows="3" placeholder="reason for reject" name="desc"></textarea>
-                    </div>
-                     <div class="form-group">
-                        <button type="submit"  id ="btn_submit" class="btn btn-primary btn-block" style="display: none">Submit</button>
-                    </div>
+
                 </form>
                 </div>
             </div>

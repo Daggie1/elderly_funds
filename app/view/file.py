@@ -68,11 +68,10 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     def get_queryset(self):
         if self.request.user.is_superuser:
             return DocumentFile.objects.all()
-        elif self.request.user.has_perm('app.can_scan_file'):
+        elif self.request.user.has_perm('app.can_disassemble_file'):
             filter = DocumentFile.objects.filter(state_id=302)
-            list_isNull = filter.filter(file_scanned_by__isnull=True)
-            list_filled = filter.filter(file_scanned_by=self.request.user)
-            return list_isNull.union(list_filled)
+
+            return filter
 
         elif self.request.user.has_perm('app.can_transcribe_file'):
             return DocumentFile.objects.filter(state_id=303 ).filter(file_transcribed_by=self.request.user)
