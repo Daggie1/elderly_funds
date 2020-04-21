@@ -167,22 +167,6 @@ class DocumentFileDetail(models.Model):
         return self.document_barcode
 
 
-#
-#
-#
-
-#
-# class DocumentStateTransition(models.Model):
-#     transition_code = models.CharField()
-#     transition_name = models.CharField()
-#     transition_paremeter = models.CharField()
-#     current_state_code = models.CharField()
-#     current_state = models.CharField()
-#     next_state_code = models.CharField()
-#     next_state = models.CharField()
-#     pre_condition = models.CharField()
-
-
 class DocumentWorkFlow(models.Model):
     current_node_id = models.CharField(max_length=50, primary_key=True)
     current_state_code = models.CharField(max_length=10)
