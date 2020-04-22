@@ -28,7 +28,9 @@ def initialize_state(pk, model, *args, **kwargs):
     initial_stage = stages[0]
     initial_state = states[0]
 
-    # update the model with this
+    item = model.objects.get(pk=pk)
+    item.stage = initial_stage
+    item.state = initial_state
 
 
 def validate_state_object(pk, model, **kwargs):
@@ -41,7 +43,7 @@ def validate_state_object(pk, model, **kwargs):
 def update_state_object(pk, model, **kwargs):
     """update the state of the object"""
     """state can only move a step ahead or behind"""
-    validate = validate_state_object()
+    validate_state_object()
     item = model.objects.get(pk=pk)
     current_stage = item.stage
     current_state = item.state
