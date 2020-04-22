@@ -1,6 +1,7 @@
 from django.contrib.auth.views import LogoutView, PasswordChangeView
 from django.urls import path
 
+
 from .views import (
     registry_submit, AdminView, FileTypeDelete,request_file,
     DocumentTranscribe,
@@ -29,7 +30,7 @@ from app.view.transcribe import get_files_from_storage, update_document_file_det
 from app.view.user import profile
 
 urlpatterns = [
-    path('', AdminView.as_view(), name='home'),
+    path('', report, name='home'),
     #submits
     path('submit/<int:batch_id>', registry_submit, name='submit.registry'),
 

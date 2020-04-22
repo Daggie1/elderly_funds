@@ -23,11 +23,12 @@ class DocumentFileTable(tables.Table):
     # transcribe = TemplateColumn(template_name='app/document_action_column.html')
 
 
+
 class DocumentTable(tables.Table):
     class Meta:
         model = DocumentFileDetail
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("file_reference_id", "document_barcode", "document_name_id", "document_file_path")
 
     actions = TemplateColumn(template_name='app/document_transcribe.html')
-   # validate = TemplateColumn(template_name='app/inspect_document_column.html')
+    validate = TemplateColumn(template_name='app/inspect_document_column.html')

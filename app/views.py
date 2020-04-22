@@ -13,6 +13,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django_filters.views import FilterView
+from django_tables2 import RequestConfig
 from django_tables2.views import SingleTableMixin
 
 from .mixin import LoggedInRedirectMixin
@@ -94,15 +95,18 @@ class DocumentTranscribe(LoginRequiredMixin, SingleTableMixin, FilterView):
         self.filter = DocumentFilter(self.request.GET,
                                      DocumentFileDetail.objects.filter(file_reference_id=self.kwargs['file_reference']))
         self.table = DocumentTable(self.filter.qs)
+        RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['table'] = self.table
         context['filter'] = self.filter
+
         file = get_file(self.request, self.kwargs['file_reference'])
         print(f'at context{file}')
         file_state_id = file.state_id
         context['file_state_id'] = file_state_id
+
         context['file_ref_no'] = self.kwargs['file_reference']
         return context
 
@@ -366,14 +370,17 @@ def receiver_batch_submit(request, batch_id):
 
 def get_file(request, file_ref=None):
     if not file_ref == None:
+
         file = DocumentFile.objects.get(pk=file_ref)
 
         print(f'file ={file}')
         if file and request.user.has_perm("app." + file.state.permission.codename):
             print(f'has perms to acces file {file}')
-            return file
+
+
 
     return None
+
 
 
 def get_docs(request, file):
@@ -382,6 +389,7 @@ def get_docs(request, file):
     if docs:
         return docs
     return None
+
 
 
 @login_required
@@ -411,7 +419,9 @@ def abort(request):
 def file_submit(request, file_ref):
     file = get_file(request, file_ref)
 
+
     docs = get_docs(request, file)
+
     print(docs)
     desc = None
     if request.POST.get('desc') != None:
@@ -508,7 +518,9 @@ def start_scanning(request, file_ref):
     print(file)
 
     if file and file.state.state_code == '302' and file.file_scanned_by == None:
+
         docs = get_docs(request, file)
+
         try:
             docs.update(
                 doc_scanned_by=request.user
@@ -527,7 +539,9 @@ def start_qa(request, file_ref):
     print(file)
 
     if file and file.state.state_code == '304' and file.file_qa_by == None:
+
         docs = get_docs(request, file)
+
         try:
             docs.update(
                 doc_qa_by=request.user
@@ -546,7 +560,10 @@ def start_validate(request, file_ref):
     print(file)
 
     if file and file.state.state_code == '305' and file.file_validated_by == None:
+
         docs = get_docs(request, file)
+
+
         try:
             docs.update(
                 doc_validated_by=request.user
