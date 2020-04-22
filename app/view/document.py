@@ -1,4 +1,5 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import DeleteView
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
@@ -90,6 +91,15 @@ def create_document(request, file_ref_no):
         'formset': formset,
         'heading': heading_message,
     })
+class DocumentDeleteView(LoginRequiredMixin,SuccessMessageMixin, UserPassesTestMixin, DeleteView):
+    model = DocumentFileDetail
+    success_url = reverse_lazy('list_document_files')
+    success_message = 'Document Deleted Successfully'
+    template_name ='document/delete_confirm.html'
 
+    def test_func(self):
+        if self.request.user.has_perm('app.can_register_batch'):
+            return True
+        return False
 # TODO Restrict characters in File Reference or Deal With Special Characters
 # TODO Show update Files, Validate Files Before Mapping

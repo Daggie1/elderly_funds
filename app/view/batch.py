@@ -54,6 +54,6 @@ class BatchDeleteView(LoginRequiredMixin,SuccessMessageMixin, UserPassesTestMixi
 
     def test_func(self):
         batch = self.get_object()
-        if self.request.user == batch.created_by:
+        if self.request.user.has_perm('app.can_register_batch'):
             return True
         return False

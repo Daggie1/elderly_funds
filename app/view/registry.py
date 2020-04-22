@@ -41,6 +41,14 @@ def change_file_status_to_reject(request, pk):
         else:
             messages.error('Invalid form')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+def return_rectified_file(request, pk):
+    if request.method == 'POST':
+        modified_to_state_id = request.POST.get('modified_to_state_id')
+        if modified_to_state_id != None :
+            return modify_notify_file(request, pk, modified_to_state_id, None)
+        else:
+            messages.error('Invalid form')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 def change_document_status_to_accept(request, pk):
     if request.method == 'POST':
         modified_to_state_id = request.POST.get('modified_to_state_id')
@@ -107,12 +115,14 @@ def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=
 
                 if is_reject_description != None:
                     returned_object_type = ContentType.objects.get(app_label='app', model='documentfile')
+
                     who_edited_the_escalated_state = Modification.objects.filter(object_pk=object_key,
-                                                                                     object_type=returned_object_type,
-                                                                                     modified_to_state_id=modified_to_state_id
-                                                                                     ).last()
-                    new_modification=Modification.objects.create(object_type=returned_object_type, object_pk=file.pk,
-                                                                 modified_from_state=file.state,
+                                                                                 object_type=returned_object_type,
+                                                                                 modified_from_state_id=int(
+                                                                                     modified_to_state_id) - 100
+                                                                                 ).exclude(modified_to_state=None).last()
+                    Modification.objects.create(object_type=returned_object_type, object_pk=file.pk,
+                                                                 modified_from_state_id=modified_to_state_id,
                                                                  by=who_edited_the_escalated_state.by)
                     Notification.objects.create(to=who_edited_the_escalated_state.by, modification=file_obj,
                                                     comment=is_reject_description)
@@ -161,7 +171,8 @@ def modify_notify_doc(request, pk, modified_to_state_id, is_reject_description):
                         who_edited_the_escalated_state = Modification.objects.filter(object_pk=object_key,
                                                                                      object_type=returned_object_type,
                                                                                      modified_from_state_id=int(modified_to_state_id)-100
-                                                                                     ).last()
+                                                                                     ).exclude(modified_to_state=None).last()
+
                         Notification.objects.create(to=who_edited_the_escalated_state.by, modification=file_obj,
                                                     comment=is_reject_description)
             else:

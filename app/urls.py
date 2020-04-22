@@ -1,15 +1,6 @@
 from django.contrib.auth.views import LogoutView, PasswordChangeView
 from django.urls import path
 
-from app.view.batch import BatchListView, create_batch,BatchDeleteView
-from app.view.document import DocumentCreate, DocumentView, UploadedDocumentsList, create_document
-from app.view.document_type import DocumentTypeCreate, DocumentTypeList
-from app.view.file import FilesView, DocumentFileCreate, DocumentFileList,RejectedDocumentFileList
-from app.view.file_type import FileTypeCreate, FileTypeList
-from app.view.scanner import upload_documents_to_file, get_file_to_upload_documents
-from app.view.transcribe import get_files_from_storage, update_document_file_detail
-from app.view.user import profile
-from .view.user import reset_default_password
 from .views import (
     registry_submit, AdminView, FileTypeDelete,request_file,
     DocumentTranscribe,
@@ -18,13 +9,24 @@ from .views import (
     UserDeleteView, GroupListView, GroupUpdateView, user_create, Login,
      add_group, update_document_content,
     validate_document_content,
-    registry_batch_submit,receiver_batch_submit,
-    file_submit,start_receive,start_scanning,start_qa,start_validate,change_password)
-
+    receiver_batch_submit,
+    start_scanning,start_qa,start_validate,change_password)
+from .view.user import reset_default_password
+from app.view.file import (
+                            FilesView, DocumentFileCreate, DocumentFileList,
+                            RejectedDocumentFileList,FileDeleteView)
 from .view.registry import (registry_submit_to_receiver, change_file_status_to_accept,
                             change_file_status_to_reject,change_document_status_to_accept,
-                            change_document_status_to_reject)
+                            change_document_status_to_reject, return_rectified_file)
 from .view.receiver import select_file
+from app.view.batch import BatchListView, create_batch,BatchDeleteView
+from app.view.document import DocumentDeleteView, DocumentView, UploadedDocumentsList, create_document
+from app.view.document_type import DocumentTypeCreate, DocumentTypeList
+
+from app.view.file_type import FileTypeCreate, FileTypeList
+from app.view.scanner import upload_documents_to_file, get_file_to_upload_documents
+from app.view.transcribe import get_files_from_storage, update_document_file_detail
+from app.view.user import profile
 
 urlpatterns = [
     path('', AdminView.as_view(), name='home'),
@@ -34,7 +36,7 @@ urlpatterns = [
     # batches
     path('batches/', BatchListView.as_view(), name='batch_index'),
     path('create_batch/',create_batch,name='batch_create'),
-    path('batch/<int:pk>/delete/', BatchDeleteView.as_view(), name='batch_delete'),
+    path('delete_batch/<int:pk>/', BatchDeleteView.as_view(), name='batch_delete'),
 
     # file type urls
     path('create_file_type/', FileTypeCreate.as_view(), name='create_file_type'),
@@ -46,6 +48,7 @@ urlpatterns = [
     path('batch/<int:batch_id>/create_file/', DocumentFileCreate.as_view(), name='create_document_file'),
     path('list_document_files', DocumentFileList.as_view(), name='list_document_files'),
     path('list_of_escalated_document_files', RejectedDocumentFileList.as_view(), name='rejected_list_document_files'),
+    path('delete_file/<pk>/', FileDeleteView.as_view(), name='file_delete'),
 
     # Document Types
     path('create_document_type', DocumentTypeCreate.as_view(), name='create_document_type'),
@@ -57,6 +60,7 @@ urlpatterns = [
     path('uploaded_documents', UploadedDocumentsList.as_view(), name='uploaded_documents'),
     path('files/upload/select',get_file_to_upload_documents, name='get_file_to_upload_documents'),
     path('upload/to/file/<str:file_reference>',upload_documents_to_file, name='upload_document'),
+    path('delete_document/<pk>/', DocumentDeleteView.as_view(), name='document_delete'),
 
 
     # transcribe urls
@@ -91,6 +95,7 @@ urlpatterns = [
     path('reject_file/<pk>/', change_file_status_to_reject, name='change_file_status_to_reject'),
     path('accept_document/<pk>/', change_document_status_to_accept, name='change_document_status_to_accept'),
     path('reject_document/<pk>/', change_document_status_to_reject, name='change_document_status_to_reject'),
+    path('return_rectified_file/<pk>/', return_rectified_file, name='return_rectified_file'),
 
     path('registry_submit_batch/<int:batch_id>/', registry_submit_to_receiver, name='registry_submit_batch'),
     path('receiver_submit_batch/<int:batch_id>/', receiver_batch_submit, name='receiver_submit_batch'),

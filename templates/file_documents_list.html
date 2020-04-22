@@ -22,7 +22,12 @@
                 {% if 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms %}
                 <button class="btn btn-warning" id="action_btn" onclick="hideUnhide()">Take Action on this File</button>
                 {% endif %}
-                {% if 'app.can_register_batch' in perms %}
+                {% if file_state_id == '400'  %}
+
+                    <button class="btn btn-warning" id="return_btn" onclick="hideUnhideReturnRejectedFile()">Take Action on this File</button>
+                {% endif %}
+                {% if 'app.can_register_batch' in perms  %}
+
                     <a href="{% url 'document.create' file_ref_no %}" class="btn btn-primary">Add Document</a>
                 {% endif %}
                 </div>
@@ -53,6 +58,32 @@
                     <div class="col-md-6">
                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-primary"> Reject</button>
                     </div>
+                </div>
+
+
+
+                </form>
+                </div>
+            </div>
+                 <div class="row" id="return_form_row" style="display: none">
+                <div class="col-md-4">
+
+            <form action="{% url 'return_rectified_file' file_ref_no %}" method="post"  >
+                    {% csrf_token %}
+                    <!-- Default unchecked -->
+
+
+<!-- Default checked -->
+                <div class="row ">
+
+                    <div class="col-md-6 ">
+                        <input required value="302" type="hidden" name="modified_to_state_id">
+                        <div class="form-group">
+                        <button class="btn btn-success"  type="submit"> Submit File</button>
+                        </div>
+
+                    </div>
+
                 </div>
 
 
@@ -103,7 +134,7 @@
                         <option value="400">Missing File</option>
                         {% endif %}
                             {% if 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms or  'app.can_transcribe_file' in perms  %}
-                                <option value="401">Unknown File</option>
+                                <option value="400">Unknown File</option>
 
                                 {% endif %}
                         {% if 'app.can_disassemble_file' in perms or 'app.can_validate_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms or  'app.can_transcribe_file' in perms %}
@@ -149,6 +180,18 @@
 
 </script>
     <script>
+  function  hideUnhideReturnRejectedFile()
+     {
+  var form_div = document.getElementById("return_form_row");
+  var return_btn = document.getElementById("return_btn");
+  if (form_div.style.display === "none") {
+    form_div.style.display = "block";
+    return_btn.textContent="Hide Action Form";
+  } else {
+    form_div.style.display = "none";
+return_btn.textContent="Take Action on this File";
+  }
+}
 function hideUnhide() {
   var action_row = document.getElementById("action_row");
   var action_btn = document.getElementById("action_btn");
