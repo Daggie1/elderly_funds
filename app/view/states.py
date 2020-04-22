@@ -28,16 +28,32 @@ def initialize_state(pk, model, *args, **kwargs):
     initial_stage = stages[0]
     initial_state = states[0]
 
+    # update the model with this
 
 
-def validate_state_object(**kwargs):
+def validate_state_object(pk, model, **kwargs):
     """check the schemas for conditions necessary to update the state of the objects"""
     # batch, files, documents
+    # file shouldn't contain a rejected document'
     pass
 
 
-def update_state_object(**kwargs):
+def update_state_object(pk, model, **kwargs):
     """update the state of the object"""
     """state can only move a step ahead or behind"""
     validate = validate_state_object()
-    pass
+    item = model.objects.get(pk=pk)
+    current_stage = item.stage
+    current_state = item.state
+    action = kwargs.get('action')
+    if action == 'next':
+        next_stage = stages.index(current_stage) + 1
+        next_state = states.index(current_state) + 1
+    else:
+        next_stage = stages.index(current_stage) - 1
+        next_state = states.index(current_state) - 1
+    item.stage = next_stage
+    item.state = next_state
+    item.save()
+
+
