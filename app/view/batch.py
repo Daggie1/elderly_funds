@@ -16,6 +16,7 @@ from django.views.generic import (
     ListView,
     DeleteView
 )
+from app.view.states import initialize_state
 
 
 class BatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
@@ -47,8 +48,8 @@ def create_batch(request):
             batch = form.save()
             batch.refresh_from_db()
             batch.created_by = request.user
-            batch.state = DocumentState.objects.get(pk=300)
             batch.save()
+            initialize_state(batch.pk, Batch)
             messages.success(request, f"Created successfully")
 
             return redirect(reverse('files.view', kwargs={'batch_id': batch.id}))

@@ -27,10 +27,12 @@ def initialize_state(pk, model, *args, **kwargs):
     """initialize the state of each object upon it's creation"""
     initial_stage = stages[0]
     initial_state = states[0]
-
+    print("initial stage {} initial state {}".format(initial_stage, initial_state))
     item = model.objects.get(pk=pk)
+    print(item.batch_no)
     item.stage = initial_stage
     item.state = initial_state
+    item.save()
 
 
 def validate_state_object(pk, model, **kwargs):
@@ -43,10 +45,11 @@ def validate_state_object(pk, model, **kwargs):
 def update_state_object(pk, model, **kwargs):
     """update the state of the object"""
     """state can only move a step ahead or behind"""
-    validate_state_object()
+    # validate_state_object()
     item = model.objects.get(pk=pk)
     current_stage = item.stage
     current_state = item.state
+    # action can either be reject or accept
     action = kwargs.get('action')
     if action == 'next':
         next_stage = stages.index(current_stage) + 1
