@@ -3,7 +3,12 @@
 <a class="btn btn-info btn-sm" href="{% url 'select_file' record.pk %}">Select</a>
 {% endif %}
 <a class="btn btn-info btn-sm" href="{% url 'view_docs_in_file'  record.file_reference%}">View</a>
- {% if 'app.can_scan_file' in perms  %}
+{% if record.state.pk == '401' or record.state.pk == '403' or record.state.pk == '405'  %}
+              <a class="btn btn-warning btn-sm" href="{% url 'view_docs_in_file'  record.file_reference%}">Edit</a>
+
+
+
+ {% elif 'app.can_scan_file' in perms  %}
         {% if record.file_scanned_by_id == request.user.pk %}
             <a class="btn btn-info btn-sm" href="{% url 'upload_document' record.file_reference %}">View</a>
             {% else %}

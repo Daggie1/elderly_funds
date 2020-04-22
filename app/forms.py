@@ -67,11 +67,11 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = ['full_name', 'email', 'groups', 'phone', 'id_no']
         widgets = {'groups': SelectMultiple(attrs={'required': 'true',
-                                                   'class': 'select2',
+                                                   'class': ' select2-primary select2',
                                                    'data-dropdown-css-class': 'select2-primary',
                                                    'multiple': 'multiple',
                                                    'data-placeholder': 'Select  Roles',
-                                                   'style': 'width: 10%;'})}
+                                                   'style': 'width: 100%;'})}
 
 
 class GroupCreationForm(forms.ModelForm):

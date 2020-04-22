@@ -8,7 +8,7 @@ from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
 
 from app.filters import DocumentFileFilter
-from app.models import DocumentFile, Batch,DocumentState
+from app.models import DocumentFile, Modification
 from app.tables import DocumentFileTable
 
 
@@ -87,5 +87,26 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
             list_isNull = filter.filter(file_validated_by__isnull=True)
             list_filled = filter.filter(file_validated_by=self.request.user)
             return list_isNull.union(list_filled)
+
+    filterset_class = DocumentFileFilter
+
+
+class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
+
+    table_class = DocumentFileTable
+    template_name = 'file/rejected_file_documents_list.html'
+
+    def get_queryset(self):
+        rejected_files=Modification.objects.filter(by=self.request.user,
+                                                   modified_to_state=None,
+                                                   modified_from_state__in=['401','405','403'],
+                                                   ).first()
+
+        if rejected_files:
+            return DocumentFile.objects.filter(pk =rejected_files.object_pk)
+        else:
+            return None
+
+
 
     filterset_class = DocumentFileFilter

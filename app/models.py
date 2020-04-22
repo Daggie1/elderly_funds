@@ -34,7 +34,7 @@ class StateOptions(Enum):
     @classmethod
     def choices(cls):
         return tuple((i.name, i.value) for i in cls)
-
+#TODO -make barcodes unique
 
 class DocumentState(models.Model):
     state_code = models.CharField(max_length=255, primary_key=True)

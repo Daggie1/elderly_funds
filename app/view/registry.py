@@ -111,6 +111,9 @@ def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=
                                                                                      object_type=returned_object_type,
                                                                                      modified_to_state_id=modified_to_state_id
                                                                                      ).last()
+                    new_modification=Modification.objects.create(object_type=returned_object_type, object_pk=file.pk,
+                                                                 modified_from_state=file.state,
+                                                                 by=who_edited_the_escalated_state.by)
                     Notification.objects.create(to=who_edited_the_escalated_state.by, modification=file_obj,
                                                     comment=is_reject_description)
                 return redirect(reverse('list_document_files'))
@@ -154,9 +157,10 @@ def modify_notify_doc(request, pk, modified_to_state_id, is_reject_description):
 
                     if is_reject_description != None:
                         returned_object_type = ContentType.objects.get(app_label='app', model='documentfiledetail')
+
                         who_edited_the_escalated_state = Modification.objects.filter(object_pk=object_key,
                                                                                      object_type=returned_object_type,
-                                                                                     modified_to_state_id=modified_to_state_id
+                                                                                     modified_from_state_id=int(modified_to_state_id)-100
                                                                                      ).last()
                         Notification.objects.create(to=who_edited_the_escalated_state.by, modification=file_obj,
                                                     comment=is_reject_description)
@@ -196,7 +200,26 @@ def registry_submit_to_receiver(request, batch_id):
         if files:
             docs = get_docs_from_filelist(files)
             if docs:
+                returned_object_type = ContentType.objects.get(app_label='app', model='documentfiledetail')
+                for doc in docs:
+
+                    Modification.objects.create(object_type=returned_object_type,
+                                                object_pk=doc.pk,
+                                                modified_from_state_id=batch.state_id,
+                                                modified_to_state_id=301,
+                                                modification_started_at=batch.created_on,
+                                                modification_ended_at=timezone.now(),
+                                                by=batch.created_by)
                 docs.update(state_id=301)
+                returned_object_type = ContentType.objects.get(app_label='app', model='documentfile')
+                for file in files:
+                    Modification.objects.create(object_type=returned_object_type,
+                                                object_pk=file.pk,
+                                                modified_from_state_id=batch.state_id,
+                                                modified_to_state_id=301,
+                                                modification_started_at=batch.created_on,
+                                                modification_ended_at=timezone.now(),
+                                                by=batch.created_by)
                 files.update(state_id=301)
                 batch.state_id = 301
                 batch.save()

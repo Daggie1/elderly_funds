@@ -4,7 +4,7 @@ from django.urls import path
 from app.view.batch import BatchListView, create_batch,BatchDeleteView
 from app.view.document import DocumentCreate, DocumentView, UploadedDocumentsList, create_document
 from app.view.document_type import DocumentTypeCreate, DocumentTypeList
-from app.view.file import FilesView, DocumentFileCreate, DocumentFileList
+from app.view.file import FilesView, DocumentFileCreate, DocumentFileList,RejectedDocumentFileList
 from app.view.file_type import FileTypeCreate, FileTypeList
 from app.view.scanner import upload_documents_to_file, get_file_to_upload_documents
 from app.view.transcribe import get_files_from_storage, update_document_file_detail
@@ -45,6 +45,7 @@ urlpatterns = [
     path('batch/<int:batch_id>/files', FilesView.as_view(), name='files.view'),
     path('batch/<int:batch_id>/create_file/', DocumentFileCreate.as_view(), name='create_document_file'),
     path('list_document_files', DocumentFileList.as_view(), name='list_document_files'),
+    path('list_of_escalated_document_files', RejectedDocumentFileList.as_view(), name='rejected_list_document_files'),
 
     # Document Types
     path('create_document_type', DocumentTypeCreate.as_view(), name='create_document_type'),
