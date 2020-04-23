@@ -6,14 +6,14 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
-from app.views import get_file, get_docs
+from app.views import get_file, get_docs_from_file
 from app.filters import DocumentFileFilter
 from django.utils import timezone
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from app.models import DocumentFile, DocumentFileDetail, Batch, DocumentState
 from app.tables import DocumentFileTable
-from app.views import get_file, get_docs
+from app.views import get_file, get_docs_from_file
 from app.models import Modification, Notification
 from django.contrib.contenttypes.models import ContentType
 
@@ -90,7 +90,7 @@ def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=
                                                    modified_to_state=None,
                                                    by=request.user).last()
             if file_obj:
-                docs = get_docs(request, file)
+                docs = get_docs_from_file(request, file)
                 if docs:
 
                     returned_object_type = ContentType.objects.get(app_label='app', model='documentfiledetail')
@@ -138,46 +138,47 @@ def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=
 
 
 def modify_notify_doc(request, pk, modified_to_state_id, is_reject_description):
-    object_key = int(pk)
+    object_key = pk
+
     returned_object_type = None
-    obj = None
+    doc_obj = None
 
     try:
-        doc = get_one_doc(request, object_key)
+
+        doc = get_one_doc(request, int(object_key))
         if doc:
-            returned_object_type = ContentType.objects.get(app_label='app', model='documentfile')
-            file_obj = Modification.objects.filter(object_pk=doc.file_reference.pk,
+
+            returned_object_type = ContentType.objects.get(app_label='app', model='documentfiledetail')
+            doc_obj = Modification.objects.filter(object_pk=object_key,
                                                    object_type=returned_object_type,
-                                                   modified_from_state=doc.file_reference.state,
+                                                   modified_from_state=doc.state,
                                                    modified_to_state=None,
                                                    by=request.user).last()
-            if file_obj:
+            if doc_obj:
+
+
+                doc_obj.modified_to_state_id = modified_to_state_id
+                doc_obj.modification_ended_at = timezone.now()
+                doc_obj.save()
+
+
+                if is_reject_description != None:
                     returned_object_type = ContentType.objects.get(app_label='app', model='documentfiledetail')
 
-
-                    Modification.objects.create(object_type=returned_object_type,
-                                                object_pk=object_key,
-                                                modified_from_state_id=file_obj.modified_from_state_id,
-                                                modified_to_state_id=modified_to_state_id,
-                                                modification_started_at=file_obj.modification_started_at,
-                                                modification_ended_at=timezone.now(),
-                                                by=file_obj.by)
-                    doc.state_id = modified_to_state_id
-                    doc.save()
-
-                    if is_reject_description != None:
-                        returned_object_type = ContentType.objects.get(app_label='app', model='documentfiledetail')
-
-                        who_edited_the_escalated_state = Modification.objects.filter(object_pk=object_key,
-                                                                                     object_type=returned_object_type,
-                                                                                     modified_from_state_id=int(modified_to_state_id)-100
-                                                                                     ).exclude(modified_to_state=None).last()
-
-                        Notification.objects.create(to=who_edited_the_escalated_state.by, modification=file_obj,
-                                                    comment=is_reject_description)
+                    who_edited_the_escalated_state = Modification.objects.filter(object_pk=object_key,
+                                                                                 object_type=returned_object_type,
+                                                                                 modified_from_state_id=int(
+                                                                                     modified_to_state_id) - 100
+                                                                                 ).exclude(
+                        modified_to_state=None).last()
+                    Modification.objects.create(object_type=returned_object_type, object_pk=doc.pk,
+                                                modified_from_state_id=modified_to_state_id,
+                                                by=who_edited_the_escalated_state.by)
+                    Notification.objects.create(to=who_edited_the_escalated_state.by, modification=doc_obj,
+                                                comment=is_reject_description)
+                return redirect(reverse('list_document_files'))
             else:
-                messages.error(request,"You don't have the permission to edit this document")
-
+                messages.error(request, "You don't have the permission to edit this document")
         else:
             messages.error(request, "You don't have the permission to edit this document")
 

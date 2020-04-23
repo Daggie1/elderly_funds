@@ -109,7 +109,7 @@ else:
             'USER': 'postgres',
             'HOST': 'localhost',
             'PORT': '5432',
-            'PASSWORD': 'password'
+            'PASSWORD': 'toor'
         }
     }
 

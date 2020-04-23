@@ -17,4 +17,4 @@ class DocumentFilter(django_filters.FilterSet):
 class BatchFilter(django_filters.FilterSet):
     class Meta:
         model = Batch
-        fields = ['batch_no', 'name']
+        fields = ['batch_no', 'description']

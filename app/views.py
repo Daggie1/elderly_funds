@@ -376,14 +376,14 @@ def get_file(request, file_ref=None):
         print(f'file ={file}')
         if file and request.user.has_perm("app." + file.state.permission.codename):
             print(f'has perms to acces file {file}')
-
+            return file
 
 
     return None
 
 
 
-def get_docs(request, file):
+def get_docs_from_file(request, file):
 
     docs = DocumentFileDetail.objects.filter(file_reference=file)
     if docs:
@@ -420,7 +420,7 @@ def file_submit(request, file_ref):
     file = get_file(request, file_ref)
 
 
-    docs = get_docs(request, file)
+    docs = get_docs_from_file(request, file)
 
     print(docs)
     desc = None
@@ -519,7 +519,7 @@ def start_scanning(request, file_ref):
 
     if file and file.state.state_code == '302' and file.file_scanned_by == None:
 
-        docs = get_docs(request, file)
+        docs = get_docs_from_file(request, file)
 
         try:
             docs.update(
@@ -540,7 +540,7 @@ def start_qa(request, file_ref):
 
     if file and file.state.state_code == '304' and file.file_qa_by == None:
 
-        docs = get_docs(request, file)
+        docs = get_docs_from_file(request, file)
 
         try:
             docs.update(
@@ -561,7 +561,7 @@ def start_validate(request, file_ref):
 
     if file and file.state.state_code == '305' and file.file_validated_by == None:
 
-        docs = get_docs(request, file)
+        docs = get_docs_from_file(request, file)
 
 
         try:
