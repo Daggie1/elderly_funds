@@ -83,7 +83,7 @@
       </li>
         <li class="nav-item dropdown user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-          <img src="{% static 'default.jpg'%}" class="user-image img-circle elevation-2" alt="User Image">
+          <img src="{{ user.profile.image.url }}" class="user-image img-circle elevation-2" alt="User Image">
           <span class="d-none d-md-inline">{{request.user.username}}</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
@@ -121,7 +121,9 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
+            <img src="{{ user.profile.image.url }}" class="img-circle elevation-2" alt="User Image">
         </div>
+
         <div class="info">
           <a href="#" class="d-block">{{ user.get_username }}</a>
         </div>

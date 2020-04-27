@@ -27,7 +27,7 @@ from app.view.document_type import DocumentTypeCreate, DocumentTypeList
 from app.view.file_type import FileTypeCreate, FileTypeList
 from app.view.scanner import upload_documents_to_file, get_file_to_upload_documents
 from app.view.transcribe import get_files_from_storage, update_document_file_detail
-from app.view.user import profile
+from app.view.user import profile,admin_check_user
 from .view.report import report
 
 urlpatterns = [
@@ -110,7 +110,8 @@ urlpatterns = [
     path('request_file', request_file, name='request_file'),
 
     path('profile/', profile, name='profile'),
-    path('reset_default_password', reset_default_password, name='reset_default_password')
+    path('reset_default_password', reset_default_password, name='reset_default_password'),
+    path('check_user<int:pk>', admin_check_user, name='admin_check_user')
     # api endpoints
     # path('api/v1/',ApiViewSet.as_view(), name='api'),
 ]

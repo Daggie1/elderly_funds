@@ -26,14 +26,14 @@
                   <th>Roles</th>
                   <th>Active</th>
                     <th>Superuser</th>
-                    <th style="width:150px; min-width:150px;" class="text-center text-danger"><i class="fa fa-bolt"> </i></th>
+                    <th style="width:200px; min-width:200px;" class="text-center text-danger"><i class="fa fa-bolt"> </i></th>
                 </tr>
                 </thead>
                 <tbody>
             {% for obj in object_list %}
                 <tr>
                 <td>{{ obj.id }}</td>
-                    <td><a href="{% url 'users.detail' obj.id %}">{{ obj.username }}</a></td>
+                    <td><a href="{% url 'admin_check_user' obj.id %}">{{ obj.username }}</a></td>
                 <td>{{ obj.email }}</td>
                 <td>
                     {% for group in obj.groups.all %}
@@ -63,6 +63,12 @@
                                             <span class="fa fa-pencil-alt"></span>
                                         </button>
                                     </a>
+                    <a href="{% url 'admin_check_user' obj.id %}">
+                                        <button class="btn btn-info btn-icon sq-32" type="button">
+                                            <span class="fa fa-eye"></span>
+                                        </button>
+                                    </a>
+
 
                                     <a href="{% url 'user.delete' obj.id %}"><button class="btn btn-danger btn-icon sq-32 btnDelete"
                                             type="button">
@@ -82,7 +88,7 @@
                   <th>Roles</th>
                   <th>Active</th>
                     <th>Superuser</th>
-                    <th style="width:150px; min-width:150px;" class="text-center text-danger"><i class="fa fa-bolt"> </i></th>
+                    <th style="width:200px; min-width:200px;" class="text-center text-danger"><i class="fa fa-bolt"> </i></th>
                 </tr>
                 </tfoot>
               </table>
