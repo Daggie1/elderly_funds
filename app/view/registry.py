@@ -11,6 +11,7 @@ from app.filters import DocumentFileFilter
 from django.utils import timezone
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from django.contrib.auth.models import User
 from app.models import DocumentFile, DocumentFileDetail, Batch, DocumentState
 from app.tables import DocumentFileTable
 from app.views import get_file, get_docs_from_file
@@ -89,7 +90,10 @@ def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=
                                                    modified_from_state=file.state,
                                                    modified_to_state=None,
                                                    by=request.user).last()
-            if file_obj:
+
+            if file.assigned_to == request.user:
+
+                print('is assigned')
                 docs = get_docs_from_file(request, file)
                 if docs:
 
@@ -103,11 +107,14 @@ def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=
                                                     modification_started_at=file_obj.modification_started_at,
                                                     modification_ended_at=timezone.now(),
                                                     by=file_obj.by)
+                        doc.assigned_to=None
                         doc.state_id= modified_to_state_id
                         doc.save()
 
                 file_obj.modified_to_state_id = modified_to_state_id
                 file_obj.modification_ended_at = timezone.now()
+
+                file.assigned_to=None
                 file_obj.save()
 
                 file.state_id = modified_to_state_id
@@ -126,9 +133,16 @@ def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=
                                                                  by=who_edited_the_escalated_state.by)
                     Notification.objects.create(to=who_edited_the_escalated_state.by, modification=file_obj,
                                                     comment=is_reject_description)
+                    admins = User.objects.filter(is_superuser=True)
+                    for admin in admins:
+                        Notification.objects.create(to=admin, modification=file_obj,
+                                                    comment=is_reject_description)
+                    file.assigned_to =who_edited_the_escalated_state.by
+
+                    file.save()
                 return redirect(reverse('list_document_files'))
             else:
-                messages.error(request,"You don't have the permission to edit this file")
+                messages.error(request,"You don't have the permissions to edit this file")
         else:
             messages.error(request, "You don't have the permission to edit this file")
 
@@ -176,6 +190,11 @@ def modify_notify_doc(request, pk, modified_to_state_id, is_reject_description):
                                                 by=who_edited_the_escalated_state.by)
                     Notification.objects.create(to=who_edited_the_escalated_state.by, modification=doc_obj,
                                                 comment=is_reject_description)
+
+                    admins=User.objects.filter(is_superuser=True)
+                    for admin in admins:
+                        Notification.objects.create(to=admin, modification=doc_obj,
+                                                    comment=is_reject_description)
                 return redirect(reverse('list_document_files'))
             else:
                 messages.error(request, "You don't have the permission to edit this document")

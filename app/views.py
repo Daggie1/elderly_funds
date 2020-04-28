@@ -144,16 +144,15 @@ def validate_document_content(request, doc_id):
 
 class Login(LoggedInRedirectMixin, LoginView):
     template_name = 'login.html'
-
     def form_valid(self, form):
         print(form.get_user())
         # form is valid (= correct password), now check if user requires to set own password
         if form.get_user().profile.first_login:
 
             return redirect(reverse_lazy('user.changepass', kwargs={'username': form.get_user().username}))
-        else:
-            auth_login(self.request, form.get_user())
-            return redirect(self.get_success_url())
+
+
+        return super().form_valid(form)
 
 
 def change_password(request, username):
@@ -378,7 +377,8 @@ def get_file(request, file_ref=None):
             print(f'has perms to acces file {file}')
             return file
 
-
+        elif request.user.has_perm("app.can_register_batch"):
+            return file
     return None
 
 

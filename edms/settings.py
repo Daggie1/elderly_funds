@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'edms.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-DOCKER = True
+DOCKER = False
 
 if DOCKER:
     DATABASES = {
@@ -103,7 +103,7 @@ else:
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
 
-            'NAME': 'edms04',
+            'NAME': 'edms05',
 
 
             'USER': 'postgres',
@@ -152,7 +152,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT =  os.path.join(BASE_DIR, 'static')
 LOGIN_URL = 'login'
 MEDIA_URL = '/media/'
-LOGIN_REDIRECT_URL = 'users.index'
+LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'login'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

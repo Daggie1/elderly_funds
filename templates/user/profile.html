@@ -34,9 +34,9 @@
                   </li>
                 </ul>
 {% if user.is_active %}
-                <a href="#" class="btn btn-primary btn-block"><b>Deactivate</b></a>
+                <button  class="btn btn-success btn-block"><b>Active</b></button>
   {% else %}
- <a href="#" class="btn btn-danger btn-block"><b>Activate</b></a>
+ <button  class="btn btn-default btn-block"><b>Suspended</b></button>
 {% endif %}
               </div>
               <!-- /.card-body -->

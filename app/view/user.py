@@ -1,10 +1,11 @@
 from app.forms import UserUpdateForm,ProfileUpdateForm,ResetPassword
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.shortcuts import render, redirect,reverse
 from django.contrib.auth.models import User
 @login_required
+
 def profile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
@@ -29,6 +30,7 @@ def profile(request):
     return render(request, 'user/profile.html', context)
 
 @login_required
+@permission_required(perm="app.can_change_user",raise_exception=True)
 def admin_check_user(request, pk):
     user=User.objects.get(pk=pk)
     if request.method == 'POST':

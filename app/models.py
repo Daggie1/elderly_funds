@@ -215,8 +215,7 @@ class Notification(models.Model):
 
 
     to = models.ForeignKey(User, on_delete=models.CASCADE)
-    user_read_at = models.DateTimeField(null=True) # if null means not read
-    admin_read_at = models.DateTimeField(null=True)
+    read_at = models.DateTimeField(null=True) # if null means not read
     modification=models.ForeignKey(Modification,on_delete=models.CASCADE)
     comment = models.TextField(null=True)
 
