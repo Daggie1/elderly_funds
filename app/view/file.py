@@ -70,25 +70,57 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     def get_queryset(self):
         if self.request.user.is_superuser:
             return DocumentFile.objects.all()
-        elif self.request.user.has_perm('app.can_disassemble_file'):
-            filter = DocumentFile.objects.filter(state_id=302)
+        elif self.request.user.has_perm('app.can_receive_file'):
 
-            return filter
+
+
+            q1 = DocumentFile.objects.filter(state_id = 301,
+                                               assigned_to = self.request.user)
+            q2 = DocumentFile.objects.filter(state_id = 301,
+                                               assigned_to = None)
+            return q1.union(q2)
+        elif self.request.user.has_perm('app.can_disassemble_file'):
+
+            q1 = DocumentFile.objects.filter(state_id=302,
+                                             assigned_to=self.request.user)
+            q2 = DocumentFile.objects.filter(state_id=302,
+                                             assigned_to=None)
+            return q1.union(q2)
+        elif self.request.user.has_perm('app.can_scan_file'):
+
+            q1 = DocumentFile.objects.filter(state_id=303,
+                                             assigned_to=self.request.user)
+            q2 = DocumentFile.objects.filter(state_id=303,
+                                             assigned_to=None)
+            return q1.union(q2)
+        elif self.request.user.has_perm('app.can_reassemble_file'):
+
+            q1 = DocumentFile.objects.filter(state_id=304,
+                                             assigned_to=self.request.user)
+            q2 = DocumentFile.objects.filter(state_id=304,
+                                             assigned_to=None)
+            return q1.union(q2)
 
         elif self.request.user.has_perm('app.can_transcribe_file'):
-            return DocumentFile.objects.filter(state_id=303 ).filter(file_transcribed_by=self.request.user)
+            q1 = DocumentFile.objects.filter(state_id=305,
+                                             assigned_to=self.request.user)
+            q2 = DocumentFile.objects.filter(state_id=305,
+                                             assigned_to=None)
+            return q1.union(q2)
 
         elif self.request.user.has_perm('app.can_qa_file'):
-            filter=DocumentFile.objects.filter(state_id=304)
-            list_isNull=filter.filter( file_qa_by__isnull=True )
-            list_filled=filter.filter(file_qa_by=self.request.user)
-            return list_isNull.union(list_filled)
+            q1 = DocumentFile.objects.filter(state_id=306,
+                                             assigned_to=self.request.user)
+            q2 = DocumentFile.objects.filter(state_id=306,
+                                             assigned_to=None)
+            return q1.union(q2)
 
         elif self.request.user.has_perm('app.can_validate_file'):
-            filter = DocumentFile.objects.filter(state_id=305)
-            list_isNull = filter.filter(file_validated_by__isnull=True)
-            list_filled = filter.filter(file_validated_by=self.request.user)
-            return list_isNull.union(list_filled)
+            q1 = DocumentFile.objects.filter(state_id=307,
+                                             assigned_to=self.request.user)
+            q2 = DocumentFile.objects.filter(state_id=307,
+                                             assigned_to=None)
+            return q1.union(q2)
 
     filterset_class = DocumentFileFilter
 

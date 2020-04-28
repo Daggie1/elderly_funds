@@ -62,7 +62,9 @@ class Batch(models.Model):
 
 
     state = models.ForeignKey(DocumentState, null=True, on_delete=models.DO_NOTHING)
-
+    assigned_to = models.ForeignKey(User, null=True, blank=True,
+                                    on_delete=models.DO_NOTHING,
+                                    related_name='batch_assigned_to')
 
 
     def __str__(self):
@@ -103,7 +105,9 @@ class DocumentFile(models.Model):
 
     file_barcode = models.CharField(null=True, max_length=255)
     state = models.ForeignKey(DocumentState, null=True, on_delete=models.DO_NOTHING)
-
+    assigned_to = models.ForeignKey(User, null=True, blank=True,
+                                        on_delete=models.DO_NOTHING,
+                                        related_name='file_assigned_to')
     file_path = models.CharField(null=True, max_length=100)
 
     def __str__(self):
@@ -128,7 +132,9 @@ class DocumentFileDetail(models.Model):
     created_on = models.DateTimeField(auto_now_add=timezone.now)
 
     state = models.ForeignKey(DocumentState, null=True, on_delete=models.DO_NOTHING)
-
+    assigned_to = models.ForeignKey(User, null=True, blank=True,
+                                    on_delete=models.DO_NOTHING,
+                                    related_name='doc_assigned_to')
 
     def __str__(self):
         return self.document_barcode

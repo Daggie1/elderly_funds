@@ -29,7 +29,7 @@ class BatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     def get_queryset(self):
 
         if self.request.user.has_perm('app.can_register_batch'):
-            return Batch.objects.filter(state_id=300)
+            return Batch.objects.all()
         elif self.request.user.has_perm('app.can_receive_file'):
             return Batch.objects.filter(state_id=301)
 
