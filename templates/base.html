@@ -70,13 +70,13 @@
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <span class="dropdown-item dropdown-header">{%  if  user.notification_set.all.count > 0 %}{{ user.notification_set.all.count }} Notification(s) {% endif %}</span>
           <div class="dropdown-divider"></div>
-        {% for notification in user.notification_set.all %}
-          <a href="{%  url 'rejected_list_document_files' %}" class="dropdown-item">
-            <i class="fas fa-file-pdf mr-2"></i> {{ notification.modification.object_type }} Flagged
-            <span class="float-right text-muted text-sm">{{ notification.modification.modification_ended_at }}</span>
-          </a>
-          <div class="dropdown-divider"></div>
-        {% endfor %}
+{#        {% for notification in user.notification_set.all %}#}
+{#          <a href="{%  url 'rejected_list_document_files' %}" class="dropdown-item">#}
+{#            <i class="fas fa-file-pdf mr-2"></i> {{ notification.modification.object_type }} Flagged#}
+{#            <span class="float-right text-muted text-sm">{{ notification.modification.modification_ended_at }}</span>#}
+{#          </a>#}
+{#          <div class="dropdown-divider"></div>#}
+{#        {% endfor %}#}
 
           <a href="{%  url 'rejected_list_document_files' %}" class="dropdown-item dropdown-footer">See All Notifications</a>
         </div>
