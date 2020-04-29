@@ -191,7 +191,7 @@
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
-                 {% endif %}
+
 
             <ul class="nav nav-treeview">
             {% if perms.auth.view_user %}
@@ -217,6 +217,7 @@
                   <p>Roles</p>
                 </a>
               </li>
+                    {% endif %}
              {% if perms.auth.add_user %}
                  <li class="nav-item">
                 <a href="{% url 'roles.create' %}" class="nav-link">
@@ -230,5 +231,38 @@
             </li>
 
             {% endif %}
+
+            <li class="nav-item has-treeview">
+            <a href="#" class="nav-link ">
+              <i class="nav-icon fas fa-burn"></i>
+              <p>
+                Escalation
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+
+
+            <ul class="nav nav-treeview">
+
+                 <li class="nav-item">
+                <a href="{%  url 'rejected_list_document_files' %}" class="nav-link">
+                  <i class="fas fa-file nav-icon"></i>
+                  <p>Files</p>
+                </a>
+              </li>
+
+
+                 <li class="nav-item">
+                <a href="{%  url 'rejected_list_document_files' %}" class="nav-link">
+                  <i class="fas fa-file-pdf nav-icon"></i>
+                  <p>Documents</p>
+                </a>
+              </li>
+            </ul>
+
+            </li>
+
+
         </ul>
+
       </nav>
