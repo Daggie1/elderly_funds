@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'edms.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-DOCKER = True
+DOCKER = False
 
 if DOCKER:
     DATABASES = {
@@ -103,13 +103,13 @@ else:
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
 
-            'NAME': 'edms04',
+            'NAME': 'work',
 
 
             'USER': 'postgres',
             'HOST': 'localhost',
             'PORT': '5432',
-            'PASSWORD': 'toor'
+            'PASSWORD': 'password'
         }
     }
 

@@ -87,8 +87,9 @@
             <!-- Box Comment -->
             <div class="card card-widget">
               <div class="card-header bg-gradient-navy">
-                <h3 class="card-title">Registry</h3>
+                <h3 class="card-title">Registry | {{ registry|length }} </h3>
                 <div class="card-tools">
+
 
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
                   </button>
@@ -97,7 +98,13 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-
+                    <ul class="list-group">
+                    {% for file in registry %}
+                    <tr>
+                      <a href="#" class="list-group-item">{{ file.file_barcode }}</a>
+                    </tr>
+                    {% endfor %}
+                    </ul>
               </div>
 
             </div>
@@ -112,7 +119,7 @@
             <!-- Box Comment -->
             <div class="card card-widget">
               <div class="card-header bg-gradient-lime">
-                <h3 class="card-title">Reception</h3>
+                <h3 class="card-title">Reception | {{ reception| length }}</h3>
                 <div class="card-tools">
 
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -122,7 +129,13 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-
+                     <ul class="list-group">
+                    {% for file in reception %}
+                    <tr>
+                      <a href="#" class="list-group-item">{{ file.file_barcode }}</a>
+                    </tr>
+                    {% endfor %}
+                    </ul>
               </div>
 
             </div>
@@ -131,13 +144,11 @@
 
 {#                end of reception#}
 
-
-
-                  <div class="col-md-2">
+                          <div class="col-md-2">
             <!-- Box Comment -->
             <div class="card card-widget">
-              <div class="card-header bg-gradient-indigo">
-                <h3 class="card-title">Disassemply</h3>
+              <div class="card-header bg-gradient-info">
+                <h3 class="card-title">Disassembly</h3>
                 <div class="card-tools">
 
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -147,7 +158,41 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
+                      <ul class="list-group">
+                    {% for file in disassembly %}
+                    <tr>
+                      <a href="#" class="list-group-item">{{ file.file_barcode }}</a>
+                    </tr>
+                    {% endfor %}
+                    </ul>
+              </div>
 
+            </div>
+            <!-- /.card -->
+          </div>
+
+
+                  <div class="col-md-2">
+            <!-- Box Comment -->
+            <div class="card card-widget">
+              <div class="card-header bg-gradient-indigo">
+                <h3 class="card-title">Scanning| {{ scanning|length }}</h3>
+                <div class="card-tools">
+
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                 <ul class="list-group">
+                    {% for file in scanning %}
+                    <tr>
+                      <a href="#" class="list-group-item">{{ file.file_barcode }}</a>
+                    </tr>
+                    {% endfor %}
+                    </ul>
               </div>
 
             </div>
@@ -158,7 +203,7 @@
             <!-- Box Comment -->
             <div class="card card-widget">
               <div class="card-header bg-gradient-yellow">
-                <h3 class="card-title">Scanning</h3>
+                <h3 class="card-title">Transcription| {{ transcription|length }}</h3>
                 <div class="card-tools">
 
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -168,7 +213,13 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-
+                 <ul class="list-group">
+                    {% for file in transcription %}
+                    <tr>
+                      <a href="#" class="list-group-item">{{ file.file_barcode }}</a>
+                    </tr>
+                    {% endfor %}
+                    </ul>
               </div>
 
             </div>
@@ -179,7 +230,7 @@
             <!-- Box Comment -->
             <div class="card card-widget">
               <div class="card-header bg-gradient-fuchsia">
-                <h3 class="card-title">Transcription</h3>
+                <h3 class="card-title">QA | {{ qa | length }}</h3>
                 <div class="card-tools">
 
                   <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
@@ -189,36 +240,18 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-
+                     <ul class="list-group">
+                    {% for file in qa %}
+                    <tr>
+                      <a href="#" class="list-group-item">{{ file.file_barcode }}</a>
+                    </tr>
+                    {% endfor %}
+                    </ul>
               </div>
 
             </div>
             <!-- /.card -->
           </div>
-
-
-                           <div class="col-md-2">
-            <!-- Box Comment -->
-            <div class="card card-widget">
-              <div class="card-header bg-gradient-info">
-                <h3 class="card-title">QA</h3>
-                <div class="card-tools">
-
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                  </button>
-                </div>
-                <!-- /.card-tools -->
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-
-              </div>
-
-            </div>
-            <!-- /.card -->
-          </div>
-
-
 
             </div>
                  </div>
@@ -238,7 +271,7 @@
             <!-- Box Comment -->
             <div class="card card-widget">
               <div class="card-header">
-                    <h3 class="card-title">Recent Rejected Files</h3>
+                    <h3 class="card-title">Recent Rejected Files | {{ rejected_file | length }}</h3>
                 <!-- /.user-block -->
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-toggle="tooltip" title="Mark as read">
@@ -250,7 +283,30 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-
+                    <table class="table">
+                  <thead>
+                    <tr>
+                      <th style="width: 10px">#</th>
+                      <th>File Barcode</th>
+                      <th>Reason</th>
+                      <th style="width: 40px">Rejected By</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for file in rejected_file %}
+                    <tr>
+                      <td>1.</td>
+                      <td>{{ file.file_barcode }}</td>
+                      <td>
+                        <div class="progress progress-xs">
+                          <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-danger">55%</span></td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
               </div>
               <!-- /.card-body -->
               <div class="card-footer card-comments">
@@ -268,7 +324,7 @@
             <!-- Box Comment -->
             <div class="card card-widget">
               <div class="card-header">
-                <h3 class="card-title">Recent Rejected Documents</h3>
+                <h3 class="card-title">Recent Rejected Documents | {{ rejected_document |length }}</h3>
                 <!-- /.user-block -->
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-toggle="tooltip" title="Mark as read">
@@ -280,7 +336,30 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-
+               <table class="table">
+                  <thead>
+                    <tr>
+                      <th style="width: 10px">#</th>
+                      <th>File Barcode</th>
+                      <th>Reason</th>
+                      <th style="width: 40px">Rejected By</th>
+                    </tr>
+                  </thead>
+               <tbody>
+                 {% for document in rejected_document %}
+                    <tr>
+                      <td>1.</td>
+                      <td>{{ document.document_barcode }}</td>
+                      <td>
+                        <div class="progress progress-xs">
+                          <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-danger">55%</span></td>
+                    </tr>
+                  {% endfor %}
+               </tbody>
+               </table>
               </div>
               <!-- /.card-body -->
               <div class="card-footer card-comments">
