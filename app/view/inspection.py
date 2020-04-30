@@ -29,7 +29,7 @@ def receive(request,id=None):
     return render(request, 'inspect/receiver.html',context=context)
 
 
-def inspect(request, id):
+def inspect(request, id=None):
     # make a query
     # documents = DocumentFileDetail.objects.get(pk=id)
     if request.method == 'POST':

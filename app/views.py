@@ -369,7 +369,6 @@ def receiver_batch_submit(request, batch_id):
 
 def get_file(request, file_ref=None):
     if not file_ref == None:
-
         file = DocumentFile.objects.get(pk=file_ref)
 
         print(f'file ={file}')
@@ -536,8 +535,6 @@ def start_scanning(request, file_ref):
 
 def start_qa(request, file_ref):
     file = get_file(request, urllib.parse.unquote(file_ref))
-    print(file)
-
     if file and file.state.state_code == '304' and file.file_qa_by == None:
 
         docs = get_docs_from_file(request, file)
@@ -546,7 +543,6 @@ def start_qa(request, file_ref):
             docs.update(
                 doc_qa_by=request.user
             )
-
             file.file_qa_by = request.user
             file.save()
             return render(request, 'upload_document.html', {'file': file})

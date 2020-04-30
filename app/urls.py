@@ -30,6 +30,8 @@ from app.view.transcribe import get_files_from_storage, update_document_file_det
 from app.view.user import profile,admin_check_user
 from .view.report import report
 from app.view.inspection import  inspect, receive
+from app.view.qa import  QaFileList
+from app.view.validate import ValidateFileList
 
 urlpatterns = [
     path('', report, name='home'),
@@ -122,5 +124,8 @@ urlpatterns = [
     re_path(r'^receive/batch/$', receive, name='receive'),
     re_path(r'^receive/batch/(?P<id>\w+)/$', receive, name='receive'),
 
+    #quality assuarance link
+    path('quality/files/', QaFileList.as_view(), name='quality'),
+    path('validate/document/files', ValidateFileList.as_view(), name='validation'),
 ]
 

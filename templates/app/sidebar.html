@@ -154,8 +154,8 @@
                 </li>
         {% endif %}
         {% if 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
-             <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
+             <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'quality' or request.resolver_match.url_name == 'inspect' or request.resolver_match.url_name == 'receive' or request.resolver_match.url_name == 'validation'  %} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'quality' or request.resolver_match.url_name == 'inspect' or request.resolver_match.url_name == 'receive' or request.resolver_match.url_name == 'validation' %} active {% endif %}">
               <i class="nav-icon fas fa-microscope"></i>
               <p>
                 Quality Control
@@ -165,16 +165,16 @@
             <ul class="nav nav-treeview">
 {% if 'app.can_qa_file' in perms %}
                  <li class="nav-item">
-                <a href="{% url 'list_document_files' %}" class="nav-link">
+                <a href="{% url 'quality' %}" class="nav-link {% if request.resolver_match.url_name == 'quality' %} active {% endif %}">
                   <i class="fas fa-gavel nav-icon"></i>
-                  <p>Verify Quality</p>
+                  <p>QA</p>
                 </a>
               </li>
 
     {% endif %}
             {% if 'app.can_disassemble_file' in perms %}
                       <li class="nav-item">
-                <a href="{% url 'inspect' %}" class="nav-link">
+                <a href="{% url 'inspect' %}" class="nav-link {% if request.resolver_match.url_name == 'inspect' %} active {% endif %}">
                   <i class="fas fa-gavel nav-icon"></i>
                   <p>Assembler</p>
                 </a>
@@ -184,7 +184,7 @@
             {% if 'app.can_receive_file' in perms %}
 
                 <li class="nav-item">
-                <a href="{% url 'receive' %}" class="nav-link">
+                <a href="{% url 'receive' %}" class="nav-link {% if request.resolver_match.url_name == 'receive' %} active {% endif %}">
                   <i class="fas fa-gavel nav-icon"></i>
                   <p>Reception</p>
                 </a>
@@ -192,7 +192,7 @@
                 {% endif %}
     {% if 'app.can_validate_file' in perms %}
                   <li class="nav-item">
-                <a href="{% url 'list_document_files' %}" class="nav-link">
+                <a href="{% url 'validation' %}" class="nav-link {% if request.resolver_match.url_name == 'validation' %} active {% endif %}">
                   <i class="fas fa-check-double nav-icon"></i>
                   <p>Validate Documents</p>
                 </a>
