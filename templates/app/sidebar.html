@@ -170,19 +170,26 @@
                   <p>Verify Quality</p>
                 </a>
               </li>
-                <li class="nav-item">
-                <a href="{% url 'inspect' %}" class="nav-link">
-                  <i class="fas fa-gavel nav-icon"></i>
-                  <p>Receive</p>
-                </a>
-              </li>
-                <li class="nav-item">
-                <a href="{% url 'inspect' %}" class="nav-link">
-                  <i class="fas fa-gavel nav-icon"></i>
-                  <p>Assemble/Reassemble</p>
-                </a>
-              </li>
+
     {% endif %}
+            {% if 'app.can_disassemble_file' in perms %}
+                      <li class="nav-item">
+                <a href="{% url 'inspect' %}" class="nav-link">
+                  <i class="fas fa-gavel nav-icon"></i>
+                  <p>Assembler</p>
+                </a>
+    </li>
+
+                {% endif %}
+            {% if 'app.can_receive_file' in perms %}
+
+                <li class="nav-item">
+                <a href="{% url 'inspect' %}" class="nav-link">
+                  <i class="fas fa-gavel nav-icon"></i>
+                  <p>Reception</p>
+                </a>
+              </li>
+                {% endif %}
     {% if 'app.can_validate_file' in perms %}
                   <li class="nav-item">
                 <a href="{% url 'list_document_files' %}" class="nav-link">
