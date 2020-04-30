@@ -43,6 +43,7 @@ DocumentBarCodeFormSet = modelformset_factory(DocumentFileDetail, fields=('docum
 
 class DocForm(forms.Form):
     document_barcode = forms.CharField(max_length=200)
+    document_barcode.widget.attrs.update({'class': 'form-control'})
 
 
 DocFormset = formset_factory(DocForm, extra=1)

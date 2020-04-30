@@ -59,8 +59,6 @@ class Batch(models.Model):
     created_on = models.DateTimeField(auto_now_add=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True,
                                    related_name='created_by')
-
-
     state = models.ForeignKey(DocumentState, null=True, on_delete=models.DO_NOTHING)
     assigned_to = models.ForeignKey(User, null=True, blank=True,
                                     on_delete=models.DO_NOTHING,

@@ -10,7 +10,7 @@ def unread_notification_count(all_notifications=Notification.objects.none()):
 
 
     print(all_notifications)
-    all_notifications.filter(read_at=None)
+    all_notifications=all_notifications.filter(read_at=None)
     return all_notifications.count()
 @register.filter
 def unread_notification_list(all_notifications=Notification.objects.none()):
