@@ -1,5 +1,5 @@
 from django.contrib.auth.views import LogoutView, PasswordChangeView
-from django.urls import path
+from django.urls import path, re_path
 
 
 from .views import (
@@ -117,6 +117,7 @@ urlpatterns = [
     # path('api/v1/',ApiViewSet.as_view(), name='api'),
 
     # run file and document inspection
-    path('inspect/file',inspect, name='inspect'),
+    re_path(r'^inspect/file/$', inspect, name='inspect'),
+    re_path(r'^inspect/file/(?P<id>\w+)/$', inspect, name='inspect'),
 ]
 
