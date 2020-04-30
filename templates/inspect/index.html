@@ -41,14 +41,20 @@
             <div class="row">
                 <div class="col-md-6">
                     Missing Documents
+                    <ul class="list-group" id="missing">
+
+                    </ul>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" id="excess">
                     Excess Documents
                 </div>
 
             </div>
         </div>
         <div class="col-md-6">
+            <div id="barbadges">
+
+            </div>
             <button class="btn btn-success">Approve</button>
             <button class="btn btn-danger">Reject</button>
             <ul class="list-group" id="verdict">
@@ -64,7 +70,22 @@
 
 
     $(function(){
-        let documents = ['6161100912709','7161100912748','6161145912748','6161122912748','6161100912748']
+        let documents = {{ documents | safe }};
+        let missing = []
+        let excess = []
+        excess= documents
+        let scanned = []
+
+        for(let i = 0; i < documents.length; i++){
+            barItem = "<span class='badge badge-secondary'>"+ documents[i] +"</span>"
+            $('#barbadges').append(barItem)
+        }
+
+         for(let i = 0; i < excess.length; i++){
+               let li =  "<li class='list-group-item'>"+ excess[i] +"</li>"
+               $('#excess').append(li)
+         }
+
         $("#barcoded").keypress(function(event){
             if (event.which == '10' || event.which == '13') {
                 checkPresent($(this).val())
@@ -76,22 +97,33 @@
             present = documents.indexOf(barcode)
             let listItem = undefined
             if(present < 0){
+                missing.push(barcode)
+               registerMissing()
                 listItem = "<li class='list-group-item bg-danger'>"+ barcode +"</li>"
             }else{
+               let index = excess.indexOf(barcode);
+                if (index > -1) {
+                  excess.splice(index, 1);
+                }
+                registerExcess()
                 listItem = "<li class='list-group-item bg-success'>" +barcode+ "</li>"
             }
             $('#verdict').append(listItem)
 
         }
-        function registerMissing(barcode){
-            let missing = []
-            missing.push(barcode)
-            return missing
+        function registerMissing(){
+           for(let i = 0; i < missing.length; i++){
+               let li =  "<li class='list-group-item bg-gradient-warning'>"+ missing[i] +"</li>"
+               $('#missing').append(li)
+           }
         }
 
         function registerExcess(){
-            let excess = []
-            excess.push(documents)
+            $('#excess').empty()
+           for(let i = 0; i < excess.length; i++){
+               let li =  "<li class='list-group-item bg-gradient-warning'>"+ excess[i] +"</li>"
+               $('#excess').append(li)
+           }
         }
     })
 </script>
