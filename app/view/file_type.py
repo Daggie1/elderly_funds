@@ -3,6 +3,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView
 
+
 from app.models import DocumentFileType
 
 
@@ -20,3 +21,9 @@ class FileTypeCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     fields = ['file_type', 'file_description']
     success_message = 'Added created successfully'
     success_url = reverse_lazy('list_file_types')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        filetypes = DocumentFileType.objects.all()
+        context['types'] = filetypes
+        return context
