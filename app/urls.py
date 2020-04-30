@@ -29,7 +29,7 @@ from app.view.scanner import upload_documents_to_file, get_file_to_upload_docume
 from app.view.transcribe import get_files_from_storage, update_document_file_detail
 from app.view.user import profile,admin_check_user
 from .view.report import report
-from app.view.inspection import  inspect
+from app.view.inspection import  inspect, receive
 
 urlpatterns = [
     path('', report, name='home'),
@@ -119,5 +119,8 @@ urlpatterns = [
     # run file and document inspection
     re_path(r'^inspect/file/$', inspect, name='inspect'),
     re_path(r'^inspect/file/(?P<id>\w+)/$', inspect, name='inspect'),
+    re_path(r'^receive/batch/$', receive, name='receive'),
+    re_path(r'^receive/batch/(?P<id>\w+)/$', receive, name='receive'),
+
 ]
 

@@ -3,6 +3,34 @@
     <div class="container">
     <div class="row">
         <div class="col-md-6">
+             <form class="form-inline ml-3" action="." method="get">
+              <div class="input-group input-group-sm">
+                <input name="q" class="form-control form-control-navbar" type="search" placeholder="Search Batchgit " aria-label="Search">
+                <div class="input-group-append">
+                  <button class="btn btn-navbar" type="submit">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+            {% if results %}
+            <div class="card shadow">
+            <div class="card-header">
+                <p class="card-title">Search Results</p>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for result in results %}
+                        <li class="list-group-item">{{ result.file_barcode }} <a href="{% url 'inspect' result.file_reference %}" class="btn btn-default float-right">Select</a></li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            </div>
+            {% endif %}
+            {% if documents %}
+                <h4>Counter Check Files in Batch {{ file.file_barcode }}</h4>
+            {% endif %}
             <form>
 
                 <div class="form-group">
@@ -12,15 +40,23 @@
             </form>
             <div class="row">
                 <div class="col-md-6">
-                    Missing Documents
+                    Missing Files
+                    <ul class="list-group" id="missing">
+
+                    </ul>
                 </div>
-                <div class="col-md-6">
-                    Excess Documents
+                <div class="col-md-6" id="excess">
+                    Excess Files
                 </div>
 
             </div>
         </div>
         <div class="col-md-6">
+            <div id="barbadges">
+
+            </div>
+            <button class="btn btn-success">Approve</button>
+            <button class="btn btn-danger">Reject</button>
             <ul class="list-group" id="verdict">
 
             </ul>
@@ -34,7 +70,22 @@
 
 
     $(function(){
-        let documents = ['6161100912709','7161100912748','6161145912748','6161122912748','6161100912748']
+        let documents = {{ documents | safe }};
+        let missing = []
+        let excess = []
+        excess= documents
+        let scanned = []
+
+        for(let i = 0; i < documents.length; i++){
+            barItem = "<span class='badge badge-secondary'>"+ documents[i] +"</span>"
+            $('#barbadges').append(barItem)
+        }
+
+         for(let i = 0; i < excess.length; i++){
+               let li =  "<li class='list-group-item'>"+ excess[i] +"</li>"
+               $('#excess').append(li)
+         }
+
         $("#barcoded").keypress(function(event){
             if (event.which == '10' || event.which == '13') {
                 checkPresent($(this).val())
@@ -46,22 +97,33 @@
             present = documents.indexOf(barcode)
             let listItem = undefined
             if(present < 0){
+                missing.push(barcode)
+               registerMissing()
                 listItem = "<li class='list-group-item bg-danger'>"+ barcode +"</li>"
             }else{
+               let index = excess.indexOf(barcode);
+                if (index > -1) {
+                  excess.splice(index, 1);
+                }
+                registerExcess()
                 listItem = "<li class='list-group-item bg-success'>" +barcode+ "</li>"
             }
             $('#verdict').append(listItem)
 
         }
-        function registerMissing(barcode){
-            let missing = []
-            missing.push(barcode)
-            return missing
+        function registerMissing(){
+           for(let i = 0; i < missing.length; i++){
+               let li =  "<li class='list-group-item bg-gradient-warning'>"+ missing[i] +"</li>"
+               $('#missing').append(li)
+           }
         }
 
         function registerExcess(){
-            let excess = []
-            excess.push(documents)
+            $('#excess').empty()
+           for(let i = 0; i < excess.length; i++){
+               let li =  "<li class='list-group-item bg-gradient-warning'>"+ excess[i] +"</li>"
+               $('#excess').append(li)
+           }
         }
     })
 </script>
