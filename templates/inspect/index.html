@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form>
+
+                <div class="form-group">
+                    <label for="barcode">Barcode</label>
+                    <input type="text" class="form-control" id="barcoded" placeholder="Barcode">
+                </div>
+            </form>
+            <div class="row">
+                <div class="col-md-6">
+                    Missing Documents
+                </div>
+                <div class="col-md-6">
+                    Excess Documents
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <ul class="list-group" id="verdict">
+
+            </ul>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block js %}
+    <script>
+
+
+    $(function(){
+        let documents = ['6161100912709','7161100912748','6161145912748','6161122912748','6161100912748']
+        $("#barcoded").keypress(function(event){
+            if (event.which == '10' || event.which == '13') {
+                checkPresent($(this).val())
+                $(this).val('')
+                event.preventDefault();
+            }
+        });
+        function checkPresent(barcode){
+            present = documents.indexOf(barcode)
+            let listItem = undefined
+            if(present < 0){
+                listItem = "<li class='list-group-item bg-danger'>"+ barcode +"</li>"
+            }else{
+                listItem = "<li class='list-group-item bg-success'>" +barcode+ "</li>"
+            }
+            $('#verdict').append(listItem)
+
+        }
+        function registerMissing(barcode){
+            let missing = []
+            missing.push(barcode)
+            return missing
+        }
+
+        function registerExcess(){
+            let excess = []
+            excess.push(documents)
+        }
+    })
+</script>
+{% endblock %}

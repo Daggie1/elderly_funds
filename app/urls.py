@@ -29,6 +29,7 @@ from app.view.scanner import upload_documents_to_file, get_file_to_upload_docume
 from app.view.transcribe import get_files_from_storage, update_document_file_detail
 from app.view.user import profile,admin_check_user
 from .view.report import report
+from app.view.inspection import  inspect
 
 urlpatterns = [
     path('', report, name='home'),
@@ -111,8 +112,11 @@ urlpatterns = [
 
     path('profile/', profile, name='profile'),
     path('reset_default_password', reset_default_password, name='reset_default_password'),
-    path('check_user<int:pk>', admin_check_user, name='admin_check_user')
+    path('check_user<int:pk>', admin_check_user, name='admin_check_user'),
     # api endpoints
     # path('api/v1/',ApiViewSet.as_view(), name='api'),
+
+    # run file and document inspection
+    path('inspect/file',inspect, name='inspect'),
 ]
 
