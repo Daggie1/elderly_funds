@@ -22,10 +22,9 @@
              </li>
 
     {% if "app.can_register_batch" in perms or "app.can_receive_file" in perms  %}
-        <li class="nav-item has-treeview  {% if request.resolver_match.url_name == 'batch.index' or request.resolver_match.url_name == 'create_document_file' or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch.create' %} menu-open {% endif %}" >
-            <a href="#" class="nav-link  {% if request.resolver_match.url_name == 'batch.index' or request.resolver_match.url_name == 'create_document_file' or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch.create' %} active {% endif %}">
+        <li class="nav-item has-treeview  {% if request.resolver_match.url_name == 'batch_index'  or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch_create' %} menu-open {% endif %}" >
+            <a href="#" class="nav-link  {% if request.resolver_match.url_name == 'batch_index' or request.resolver_match.url_name == 'create_document_file' or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch_create' %} active {% endif %}">
               <i class="nav-icon fas fa-file-pdf"></i>
-
               <p>
                 Batches
                 <i class="right fas fa-angle-left"></i>
@@ -34,8 +33,8 @@
             <ul class="nav nav-treeview">
 
               <li class="nav-item">
-                <a href="{% url 'batch_index' %}" class="nav-link ">
-                  <i class="far fa-plus-circle nav-icon"></i>
+                <a href="{% url 'batch_index' %}" class="nav-link {% if request.resolver_match.url_name == 'batch_index' %} active {% endif %}">
+                  <i class="far fa-folder-open"></i>
                   <p>Batches</p>
                 </a>
               </li>
@@ -44,8 +43,8 @@
         {% endif %}
 
                 {% if 'app.can_register_batch' in perms %}
-            <li class="nav-item has-treeview">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'create_document_type'  or request.resolver_match.url_name == 'view_document_types' %} active {% endif %}">
+            <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'create_document_type'  or request.resolver_match.url_name == 'list_document_types' %} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'create_document_type'  or request.resolver_match.url_name == 'list_document_types' %} active {% endif %}">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Document Types
@@ -55,12 +54,12 @@
             <ul class="nav nav-treeview">
                 {% if 'app.can_register_batch' in perms %}
               <li class="nav-item">
-                <a href="{% url 'create_document_type' %}" class="nav-link">
+                <a href="{% url 'create_document_type' %}" class="nav-link {% if request.resolver_match.url_name == 'create_document_type' %} active {% endif %}">
                   <i class="fas fa-plus-circle nav-icon"></i>
                   <p>Add Document Type</p>
                 </a>
               </li><li class="nav-item">
-                <a href="{% url 'list_document_types' %}" class="nav-link">
+                <a href="{% url 'list_document_types' %}" class="nav-link {% if request.resolver_match.url_name == 'list_document_types' %} active {% endif %} ">
                   <i class="fas fa-plus-circle nav-icon"></i>
                   <p>Document Types</p>
                 </a>

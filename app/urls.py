@@ -20,7 +20,7 @@ from .view.registry import (registry_submit_to_receiver, change_file_status_to_a
                             change_file_status_to_reject,change_document_status_to_accept,
                             change_document_status_to_reject, return_rectified_file)
 from .view.receiver import select_file
-from app.view.batch import BatchListView, create_batch,BatchDeleteView
+from app.view.batch import BatchListView, create_batch,BatchDeleteView, BatchFilesView, BatchDocumentsView
 from app.view.document import DocumentDeleteView, DocumentView, UploadedDocumentsList, create_document
 from app.view.document_type import DocumentTypeCreate, DocumentTypeList
 
@@ -42,6 +42,8 @@ urlpatterns = [
     path('batches/', BatchListView.as_view(), name='batch_index'),
     path('create_batch/',create_batch,name='batch_create'),
     path('delete_batch/<int:pk>/', BatchDeleteView.as_view(), name='batch_delete'),
+    path('view/batch/<int:batch_id>/files/', BatchFilesView.as_view(), name='batch_files' ),
+    path('view/batch/<str:file_reference>/documents/', BatchDocumentsView.as_view(), name='batch_documents'),
 
     # file type urls
     path('create_file_type/', FileTypeCreate.as_view(), name='create_file_type'),
