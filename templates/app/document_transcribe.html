@@ -1,9 +1,11 @@
 
-{% if 'app.can_register_batch' in perms %}
+{% if 'app.can_register_batch' in perms and not user.is_superuser %}
     <a class="btn btn-danger btn-sm" href="{% url 'document_delete' record.pk %}"><i class="fas fa-trash"></i></a>
 
-{% elif 'app.can_transcribe_file' in perms  %}
+{% elif 'app.can_transcribe_file' in perms and not user.is_superuser  %}
 <a class="btn btn-secondary btn-sm" href="{% url 'transcription_lab' record.id record.document_type_id %}">Transcribe</a>
-{% elif 'app.can_qa_file' in perms %}
+{% elif 'app.can_qa_file' in perms  and not user.is_superuser%}
+    <a class="btn btn-info btn-sm" href="{% url 'validate_doc_content' record.id  %}">Check Quality</a>
+    {% elif 'app.can_validate_file' in perms  and not user.is_superuser%}
     <a class="btn btn-info btn-sm" href="{% url 'validate_doc_content' record.id  %}">Validate</a>
 {% endif %}
