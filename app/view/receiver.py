@@ -31,12 +31,18 @@ def select_file(request, pk):
                 file.save()
                 Modification.objects.create(object_type=returned_object_type, object_pk=file.pk,
                                             modified_from_state=file.state, by=request.user)
-                return redirect(reverse('view_docs_in_file', kwargs={'file_reference': file.pk}))
+                if request.user.has_perm("app.can_scan_file"):
+                    return redirect(reverse('upload_document', kwargs={'file_reference': file.pk}))
+                else:
+                    return redirect(reverse('view_docs_in_file', kwargs={'file_reference': file.pk}))
             except AttributeError as e:
                 messages.error(request, 'Something wrong happened')
         else:
             if file.assigned_to == request.user:
-                return redirect(reverse('view_docs_in_file', kwargs={'file_reference': file.pk}))
+                if request.user.has_perm("app.can_scan_file"):
+                    return redirect(reverse('upload_document', kwargs={'file_reference': file.pk}))
+                else:
+                    return redirect(reverse('view_docs_in_file', kwargs={'file_reference': file.pk}))
             else:
                 messages.error(request, "Permission denied")
     else:

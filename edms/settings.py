@@ -103,7 +103,7 @@ else:
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
 
-            'NAME': 'edms05',
+            'NAME': 'edms07',
 
 
             'USER': 'postgres',

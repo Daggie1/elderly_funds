@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 import urllib.parse
 from django.contrib.auth.views import LoginView
-
+from .models import Modification
 from django.contrib.auth.models import Group, User, Permission
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
@@ -396,11 +396,13 @@ def get_docs_from_file(request, file):
 def request_file(request):
     if request.user.has_perm('app.can_transcribe_file'):
 
-        file = DocumentFile.objects.filter(state_id=303, file_transcribed_by=None).first()
+        file = DocumentFile.objects.filter(state_id=305, assigned_to=None).first()
         if file:
             try:
-                file.file_transcribed_by = request.user
+                file.assigned_to = request.user
                 file.save()
+                Modification.objects.create(object_type=returned_object_type, object_pk=file.pk,
+                                            modified_from_state=file.state, by=request.user)
                 messages.success(request, 'New file given')
 
             except AttributeError as e:
