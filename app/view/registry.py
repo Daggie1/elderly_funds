@@ -85,7 +85,7 @@ def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=
         if file:
 
             returned_object_type = ContentType.objects.get(app_label='app', model='documentfile')
-            file_obj = Modification.objects.get_or_create(object_pk=object_key,
+            file_obj = Modification.objects.filter(object_pk=object_key,
                                                    object_type=returned_object_type,
                                                    modified_from_state=file.state,
                                                    modified_to_state=None,
@@ -152,7 +152,7 @@ def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def modify_notify_doc(request, pk, modified_to_state_id, is_reject_description):
+def modify_notify_doc(request, pk, modified_to_state_id, is_reject_description=None):
     object_key = pk
 
     returned_object_type = None
