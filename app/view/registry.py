@@ -164,7 +164,7 @@ def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def modify_notify_doc(request, pk, modified_to_state_id, is_reject_description):
+def modify_notify_doc(request, pk, modified_to_state_id, is_reject_description=None):
     object_key = pk
 
     returned_object_type = None

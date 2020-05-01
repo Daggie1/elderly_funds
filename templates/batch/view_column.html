@@ -1,6 +1,7 @@
 
-
-    {% if 'app.can_register_batch' in perms %}
+{% if 'app.can_register_batch' in perms %}
+    <a class="btn btn-info btn-sm" href="{% url 'files.view' record.id %}">Open </a>
+    {% elif 'app.can_register_batch' in perms %}
 
     {% if record.state_id == '300' %}
     <a class="btn btn-info btn-sm" href="{% url 'files.view' record.id %}">Open </a>
