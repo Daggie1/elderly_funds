@@ -116,11 +116,10 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
             return q1.union(q2)
 
         elif self.request.user.has_perm('app.can_transcribe_file'):
-            q1 = DocumentFile.objects.filter(state_id=305,
+
+
+            return DocumentFile.objects.filter(state_id=305,
                                              assigned_to=self.request.user)
-            q2 = DocumentFile.objects.filter(state_id=305,
-                                             assigned_to=None)
-            return q1.union(q2)
 
         elif self.request.user.has_perm('app.can_qa_file'):
             q1 = DocumentFile.objects.filter(state_id=306,

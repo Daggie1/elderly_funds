@@ -62,5 +62,101 @@
     "name": "Can Validate File",
     "content_type": 8
   }
-}
+},
+
+
+
+
+
+
+
+
+{
+  "model": "auth.group",
+  "fields": {"name": "Registrys",
+    "permissions": [65]}},
+  {
+    "model": "auth.group",
+    "fields": {"name": "Receivers",
+      "permissions": [66]}}, {"model": "auth.group",
+  "fields": {"name": "Disassemblers",
+    "permissions": [67]}},
+  {
+    "model": "auth.group",
+    "fields": {"name": "Scanners",
+      "permissions": [68]}},
+  {
+    "model": "auth.group",
+    "fields": {"name": "Reassemblers",
+      "permissions": [69]}},
+  {
+    "model": "auth.group",
+    "fields": {"name": "Transcribers",
+      "permissions": [70]}},
+  {
+    "model": "auth.group",
+    "fields": {"name": "QAs",
+      "permissions": [71]}},
+  {
+    "model": "auth.group",
+    "fields": {"name": "Validators",
+      "permissions": [72]}
+  },
+
+
+
+
+
+
+  {
+    "model": "app.documentstate",
+    "pk": "300",
+    "fields": {
+      "state_name": "Registry",
+      "permission": 65,
+      "state_parameter": "REGISTRY",
+      "state": "REGISTRY"}},
+  {"model": "app.documentstate",
+    "pk": "301",
+    "fields": {"state_name": "Awaiting Receive", "permission": 66, "state_parameter": "AWAITING_RECEIVE", "state": "AWAITING_RECEIVE"}}, {"model": "app.documentstate", "pk": "302", "fields": {"state_name": "Awaiting Disassembler", "permission": 67, "state_parameter": "AWAITING_DISASSEMBLER", "state": "AWAITING_DISASSEMBLER"}}, {"model": "app.documentstate", "pk": "303", "fields": {"state_name": "Awaiting Scanning", "permission": 68, "state_parameter": "AWAITING_SCANNING", "state": "AWAITING_SCANNING"}}, {"model": "app.documentstate", "pk": "304", "fields": {"state_name": "Awaiting Reassembler", "permission": 69, "state_parameter": "AAWAITING_REASSEMBLER", "state": "AWAITING_REASSEMBLER"}}, {"model": "app.documentstate", "pk": "305", "fields": {"state_name": "Awaiting Transcription", "permission": 70, "state_parameter": "AWAITING_TRANSCRIPTION", "state": "AWAITING_TRANSCRIPTION"}}, {"model": "app.documentstate", "pk": "306", "fields": {"state_name": "Awaiting QA", "permission": 71, "state_parameter": "AWAITING_QA", "state": "AWAITING_QA"}}, {"model": "app.documentstate", "pk": "307", "fields": {"state_name": "Awaiting Validation", "permission": 72, "state_parameter": "AWAITING_VALIDATION", "state": "AWAITING_VALIDATION"}},{"model": "app.documentstate", "pk": "400", "fields": {"state_name": "Rejected to Registry", "permission": 65, "state_parameter": "REGISTRY_REJECTED", "state": "REGISTRY_REJECTED"}}, {"model": "app.documentstate", "pk": "401", "fields": {"state_name": "Rejected at Receive", "permission": 66, "state_parameter": "RECEIVE_REJECTED", "state": "RECEIVE_REJECTED"}},
+
+  {"model": "app.documentstate",
+    "pk": "402",
+    "fields": {"state_name": "Rejected at Disassembler",
+      "permission": 67,
+      "state_parameter": "DISASSEMBLER_REJECTED",
+      "state": "DISASSEMBLER_REJECTED"}},
+  {"model": "app.documentstate",
+    "pk": "403",
+    "fields": {"state_name": "Rejected at Scanner",
+      "permission": 68,
+      "state_parameter": "SCANNER_REJECTED",
+      "state": "SCANNER_REJECTED"}},
+
+  {"model": "app.documentstate",
+    "pk": "404",
+    "fields": {"state_name": "Rejected at Reassembler",
+      "permission": 69,
+      "state_parameter": "REASSEMBLER_REJECTED",
+      "state": "REASSEMBLER_REJECTED"}},
+  {"model": "app.documentstate",
+    "pk": "405",
+    "fields": {"state_name": "Rejected at Transcription",
+      "permission": 70,
+      "state_parameter": "TRANSCRIPTION_REJECTED",
+      "state": "TRANSCRIPTION_REJECTED"}},
+  {"model": "app.documentstate",
+    "pk": "406",
+    "fields": {"state_name": "Rejected at QA",
+      "permission": 71,
+      "state_parameter": "QA_REJECTED",
+      "state": "QA_REJECTED"}},
+  {"model": "app.documentstate",
+    "pk": "407",
+    "fields": {"state_name": "Rejected at Validation",
+      "permission": 72,
+      "state_parameter": "VALIDATION_REJECTED ",
+      "state": "VALIDATION_REJECTED "}}
+
+
 ]

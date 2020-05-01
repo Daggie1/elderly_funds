@@ -30,6 +30,13 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Documents</h3>
+                  <div class="card-tools">
+                      <form method="post" action="{%  url 'change_file_status_to_accept'  file.pk %}">
+                          {% csrf_token %}
+                          <input required value="{{ file.state_id }}" type="hidden" name="modified_to_state_id">
+                    <button type="submit" class="btn btn-primary">Done Scanning</button>
+                          </form>
+                </div>
               </div>
               <!-- /.card-header -->
               <div class="card-body">

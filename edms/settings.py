@@ -103,13 +103,13 @@ else:
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
 
-            'NAME': 'work',
+            'NAME': 'edms07',
 
 
             'USER': 'postgres',
             'HOST': 'localhost',
             'PORT': '5432',
-            'PASSWORD': 'password'
+            'PASSWORD': 'toor'
         }
     }
 

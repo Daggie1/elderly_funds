@@ -31,7 +31,7 @@ def change_file_status_to_accept(request, pk):
             return modify_notify_file(request, pk, modified_to_state_id)
         else:
             messages.error('Invalid form')
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def change_file_status_to_reject(request, pk):
     if request.method == 'POST':
@@ -85,7 +85,7 @@ def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=
         if file:
 
             returned_object_type = ContentType.objects.get(app_label='app', model='documentfile')
-            file_obj = Modification.objects.filter(object_pk=object_key,
+            file_obj = Modification.objects.get_or_create(object_pk=object_key,
                                                    object_type=returned_object_type,
                                                    modified_from_state=file.state,
                                                    modified_to_state=None,
@@ -95,6 +95,7 @@ def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=
 
                 print('is assigned')
                 docs = get_docs_from_file(request, file)
+
                 if docs:
 
                     returned_object_type = ContentType.objects.get(app_label='app', model='documentfiledetail')

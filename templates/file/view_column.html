@@ -3,7 +3,7 @@
 
 
 {% if 'app.can_register_batch' in perms %}
-     {% if record.state_id == 300 %}
+     {% if record.state_id == '300' %}
     <a class="btn btn-info btn-sm" href="{% url 'view_docs_in_file'  record.pk%}">Open</a>
     <a class="btn btn-danger btn-sm" href="{% url 'file_delete' record.pk %}"><i class="fas fa-trash"></i></a>
         {% else %}
@@ -18,19 +18,21 @@
     <a class="btn btn-danger btn-sm" href="{% url 'file_delete' record.pk %}"><i class="fas fa-trash"></i></a>
  {% elif 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms or 'app.can_qa_file' in perms or  'app.can_validate_file' in perms%}
    {% if record.assigned_to == user %}
-       <a class="btn btn-info btn-sm" href="{% url 'view_docs_in_file'  record.pk %}">Open</a>
+       {% if 'app.can_scan_file' in perms %}
+        <a class="btn btn-info btn-sm" href="{% url 'upload_document' record.pk %}">Open</a>
+           {% else %}
+            <a class="btn btn-info btn-sm" href="{% url 'view_docs_in_file'  record.pk %}">Open</a>
+       {% endif %}
+
 
     {% else %}
        <a class="btn btn-info btn-sm" href="{% url 'select_file'  record.pk%}">Select</a>
        {% endif %}
 
     {% elif 'app.can_transcribe_file' in perms %}
-    {% if record.assigned_to == user %}
-    <a class="btn btn-info btn-sm" href="{% url 'select_file'  record.pk%}">Select</a>
-    {% else %}
     <a class="btn btn-info btn-sm" href="{% url 'get_files_from_storage' record.file_reference %}">Map Documents </a>
      <a class="btn btn-warning btn-sm" href="{% url 'view_docs_in_file'  record.file_reference %}">Transcribe</a>
-        {% endif %}
+
 
 
     {% endif %}
