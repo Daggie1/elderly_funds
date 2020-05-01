@@ -14,13 +14,13 @@ def receive(request,id=None):
         query = request.GET.get('q')
         if query:
             qset = (
-                Q(file_barcode__icontains=query)
+                Q(batch_no__icontains=query)
             )
             results = Batch.objects.filter(qset).distinct()
         else:
             results = []
         if id is not None:
-            files = DocumentFile.objects.filter(file_reference=id).values_list('document_barcode', flat=True)
+            files = DocumentFile.objects.filter(batch=id).values('file_barcode','file_reference','state')
             batch = Batch.objects.get(pk=id)
         else:
             batch = ''
