@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 from app.models import *
 
-
+@login_required
 def report(request):
     # get all documents
     documents = DocumentFileDetail.objects.all()

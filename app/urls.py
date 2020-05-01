@@ -1,5 +1,5 @@
 from django.contrib.auth.views import LogoutView, PasswordChangeView
-from django.urls import path
+from django.urls import path, re_path
 
 
 from .views import (
@@ -20,7 +20,7 @@ from .view.registry import (registry_submit_to_receiver, change_file_status_to_a
                             change_file_status_to_reject,change_document_status_to_accept,
                             change_document_status_to_reject, return_rectified_file)
 from .view.receiver import select_file
-from app.view.batch import BatchListView, create_batch,BatchDeleteView
+from app.view.batch import BatchListView, create_batch,BatchDeleteView, BatchFilesView, BatchDocumentsView
 from app.view.document import DocumentDeleteView, DocumentView, UploadedDocumentsList, create_document
 from app.view.document_type import DocumentTypeCreate, DocumentTypeList
 
@@ -29,7 +29,9 @@ from app.view.scanner import upload_documents_to_file, get_file_to_upload_docume
 from app.view.transcribe import get_files_from_storage, update_document_file_detail
 from app.view.user import profile,admin_check_user
 from .view.report import report
-from app.view.inspection import  inspect
+from app.view.inspection import  inspect, receive
+from app.view.qa import  QaFileList
+from app.view.validate import ValidateFileList
 
 urlpatterns = [
     path('', report, name='home'),
@@ -40,6 +42,8 @@ urlpatterns = [
     path('batches/', BatchListView.as_view(), name='batch_index'),
     path('create_batch/',create_batch,name='batch_create'),
     path('delete_batch/<int:pk>/', BatchDeleteView.as_view(), name='batch_delete'),
+    path('view/batch/<int:batch_id>/files/', BatchFilesView.as_view(), name='batch_files' ),
+    path('view/batch/<str:file_reference>/documents/', BatchDocumentsView.as_view(), name='batch_documents'),
 
     # file type urls
     path('create_file_type/', FileTypeCreate.as_view(), name='create_file_type'),
@@ -117,6 +121,13 @@ urlpatterns = [
     # path('api/v1/',ApiViewSet.as_view(), name='api'),
 
     # run file and document inspection
-    path('inspect/file',inspect, name='inspect'),
+    re_path(r'^inspect/file/$', inspect, name='inspect'),
+    re_path(r'^inspect/file/(?P<id>\w+)/$', inspect, name='inspect'),
+    re_path(r'^receive/batch/$', receive, name='receive'),
+    re_path(r'^receive/batch/(?P<id>\w+)/$', receive, name='receive'),
+
+    #quality assuarance link
+    path('quality/files/', QaFileList.as_view(), name='quality'),
+    path('validate/document/files', ValidateFileList.as_view(), name='validation'),
 ]
 
