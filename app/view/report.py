@@ -17,17 +17,17 @@ def report(request):
     # get all users
     users = User.objects.all()
     reject_file = DocumentFile.objects.filter(
-        Q(state='400') | Q(state='401') | Q(state='402') | Q(state='403') | Q(state='404') | Q(state='405') | Q(
-            state='406') | Q(state='407') | Q(state='408'))
+        Q(state_id=400) | Q(state_id=401) | Q(state_id=402) | Q(state_id=403) | Q(state_id=404) | Q(state_id=405) | Q(
+            state_id=406) | Q(state_id=407) | Q(state_id=408))
     reject_document = DocumentFileDetail.objects.filter(
-        Q(state='400') | Q(state='401') | Q(state='402') | Q(state='403') | Q(state='404') | Q(state='405') | Q(
-            state='406') | Q(state='407') | Q(state='408'))
-    registry = DocumentFile.objects.filter(state='300');
-    reception = DocumentFile.objects.filter(file_status='301');
-    disassembly = DocumentFile.objects.filter(file_status='302')
-    qa = DocumentFile.objects.filter(file_status='306');
-    scanning = DocumentFile.objects.filter(file_status='303');
-    transcription = DocumentFile.objects.filter(file_status='305');
+        Q(state_id=400) | Q(state_id=401) | Q(state_id=402) | Q(state_id=403) | Q(state_id=404) | Q(state_id=405) | Q(
+            state_id=406) | Q(state_id=407) | Q(state_id=408))
+    registry = DocumentFile.objects.filter(state_id=300);
+    reception = DocumentFile.objects.filter(state_id=301);
+    disassembly = DocumentFile.objects.filter(state_id=302)
+    qa = DocumentFile.objects.filter(state_id=306);
+    scanning = DocumentFile.objects.filter(state_id=303);
+    transcription = DocumentFile.objects.filter(state_id=305);
     context = {
         "documents": documents,
         "files": files,
