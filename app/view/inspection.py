@@ -1,8 +1,15 @@
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import redirect, reverse
+
+
+from django.contrib import messages
+
+
+from django.contrib.contenttypes.models import ContentType
+from django.shortcuts import render, redirect
 import itertools
 
-from app.models import DocumentFileDetail, DocumentFile, Batch
+from app.models import DocumentFileDetail, DocumentFile, Batch, Modification
 
 
 def receive(request,id=None):
@@ -46,6 +53,23 @@ def inspect(request, id=None):
         if id is not None:
             documents = DocumentFileDetail.objects.filter(file_reference=id).values_list('document_barcode', flat=True)
             file = DocumentFile.objects.get(pk=id)
+
+            if file.assigned_to == None:
+                returned_object_type = ContentType.objects.get(app_label='app', model='documentfile')
+                print(f'returned_obj={returned_object_type}')
+                try:
+                    file.assigned_to = request.user
+                    file.save()
+                    Modification.objects.create(object_type=returned_object_type, object_pk=file.pk,
+                                                modified_from_state=file.state, by=request.user)
+
+                except AttributeError as e:
+                    messages.error(request, 'Something wrong happened')
+            else:
+                if file.assigned_to != request.user:
+
+
+                    messages.error(request, "Permission denied")
         else:
             file = ''
             documents = []

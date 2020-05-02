@@ -62,17 +62,17 @@
                 {% endif %}
             </div>
         </div>
-        < class="col-md-6">
+        <div class="col-md-6">
             <div id="barbadges">
 
             </div>
             {% if file %}
              <div class="row ">
-                <form action="{% url 'change_file_status_to_accept' file_ref_no %}" method="post"  id="form_data">
+                <form action="{% url 'change_file_status_to_accept' file.pk %}" method="post"  id="form_data">
                     {% csrf_token %}
 
-                    <div class="col-md-6 ">
-                        <input required value="{{ file_state_id }}" type="hidden" name="modified_to_state_id">
+                    <div class="col-md-6">
+                        <input required value="{{ file.state_id }}" type="hidden" name="modified_to_state_id">
                         <div class="form-group">
                         <button class="btn btn-success"  type="submit"> Accept</button>
                         </div>
@@ -121,7 +121,6 @@
 
                                 <option value="400">Unknown Document</option>
                             {% endif %}
-
 
                         </select>
                       </div>

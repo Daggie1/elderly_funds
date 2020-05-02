@@ -39,6 +39,9 @@ def change_file_status_to_accept_ajax(request, pk):
         modified_to_state_id = request.POST.get('modified_to_state_id')
         print(f'modified_to_state_id{modified_to_state_id}')
         if modified_to_state_id != None:
+            file=DocumentFile.objects.get(pk=pk)
+            file.assigned_to=request.user
+            file.save()
             modified_to_state_id = int(modified_to_state_id) + 1
             return modify_notify_file(request, pk, modified_to_state_id)
         else:
@@ -102,6 +105,17 @@ def modify_notify_file(request, pk, modified_to_state_id, is_reject_description=
                                                    modified_from_state=file.state,
                                                    modified_to_state=None,
                                                    by=request.user).last()
+            if file_obj==None:
+                Modification.objects.create(object_pk=object_key,
+                                                   object_type=returned_object_type,
+                                                   modified_from_state=file.state,
+
+                                                   by=request.user)
+                file_obj = Modification.objects.filter(object_pk=object_key,
+                                                       object_type=returned_object_type,
+                                                       modified_from_state=file.state,
+                                                       modified_to_state=None,
+                                                       by=request.user).last()
 
             if file.assigned_to == request.user:
 

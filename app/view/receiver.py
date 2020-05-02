@@ -1,18 +1,9 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth.models import Permission
+
 from django.shortcuts import redirect, reverse
-from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView
-from django_filters.views import FilterView
-from django_tables2 import SingleTableMixin
-from app.views import get_file, get_docs_from_file
-from app.filters import DocumentFileFilter
-from django.utils import timezone
+
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-from app.models import DocumentFile, DocumentFileDetail, Batch, DocumentState
-from app.tables import DocumentFileTable
+
 from app.views import get_file, get_docs_from_file
 from app.models import Modification, Notification
 from django.contrib.contenttypes.models import ContentType

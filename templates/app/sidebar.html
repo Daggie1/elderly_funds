@@ -171,11 +171,17 @@
               </li>
 
     {% endif %}
-            {% if 'app.can_disassemble_file' in perms %}
+            {% if 'app.can_disassemble_file' in perms or 'app.can_reassassemble_file' %}
                       <li class="nav-item">
                 <a href="{% url 'inspect' %}" class="nav-link {% if request.resolver_match.url_name == 'inspect' %} active {% endif %}">
                   <i class="fas fa-gavel nav-icon"></i>
-                  <p>Assembler</p>
+                  <p>{% if user.is_superuser %}
+                      Assembler
+                      {% elif 'app.can_disassemble_file' in perms %}
+                      Disassembler
+                  {% else %}
+                      Reassembler
+                      {% endif %}</p>
                 </a>
     </li>
 

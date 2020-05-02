@@ -12,6 +12,7 @@ class BatchTable(tables.Table):
     files = TemplateColumn(template_name='batch/total_column.html')
     actions = TemplateColumn(template_name='batch/view_column.html')
 
+
 class BatchFileTable(tables.Table):
     class Meta:
         model = DocumentFile
@@ -20,6 +21,7 @@ class BatchFileTable(tables.Table):
 
     docs = TemplateColumn(template_name='file/total_column.html')
     action = TemplateColumn(template_name='batch/file_view_column.html')
+
 
 class BatchDocumentTable(tables.Table):
     class Meta:
