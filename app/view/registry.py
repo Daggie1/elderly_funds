@@ -9,7 +9,7 @@ from django_tables2 import SingleTableMixin
 from app.views import get_file, get_docs_from_file
 from app.filters import DocumentFileFilter
 from django.utils import timezone
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.models import User
 from app.models import DocumentFile, DocumentFileDetail, Batch, DocumentState
@@ -17,7 +17,7 @@ from app.tables import DocumentFileTable
 from app.views import get_file, get_docs_from_file
 from app.models import Modification, Notification
 from django.contrib.contenttypes.models import ContentType
-
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -32,6 +32,18 @@ def change_file_status_to_accept(request, pk):
         else:
             messages.error('Invalid form')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@csrf_exempt
+def change_file_status_to_accept_ajax(request, pk):
+    if request.method == 'POST':
+        modified_to_state_id = request.POST.get('modified_to_state_id')
+        print(f'modified_to_state_id{modified_to_state_id}')
+        if modified_to_state_id != None:
+            modified_to_state_id = int(modified_to_state_id) + 1
+            return modify_notify_file(request, pk, modified_to_state_id)
+        else:
+            messages.error('Invalid form')
+    return JsonResponse('done')
 
 def change_file_status_to_reject(request, pk):
     if request.method == 'POST':

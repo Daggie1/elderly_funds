@@ -1,33 +1,17 @@
 FROM python:3.6
 
+MAINTAINER Allan Maina
 
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir /edms
-WORKDIR /edms
-COPY . /edms
+COPY . /src
 
+WORKDIR /src
 
-RUN pip install  -r requirements.txt
+COPY requirements.txt ./
 
+RUN pip3 install -r requirements.txt
 
+CMD exec gunicorn edms.wsgi:application - bind  0.0.0.0:8000 - workers 4
 
-
-
-
-
-#
-#ENV PYTHONUNBUFFERED 1
-#
-#RUN mkdir /edms
-#
-#WORKDIR /edms
-#
-#COPY requirements.txt ./
-#
-#
-#
-#COPY . .
-#
-#CMD exec gunicorn edms.wsgi:application - bind  0.0.0.0:8000 - workers 3
-
+EXPOSE 8000

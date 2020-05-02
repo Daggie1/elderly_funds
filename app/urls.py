@@ -16,7 +16,7 @@ from .view.user import reset_default_password
 from app.view.file import (
                             FilesView, DocumentFileCreate, DocumentFileList,
                             RejectedDocumentFileList,FileDeleteView)
-from .view.registry import (registry_submit_to_receiver, change_file_status_to_accept,
+from .view.registry import (registry_submit_to_receiver, change_file_status_to_accept, change_file_status_to_accept_ajax,
                             change_file_status_to_reject,change_document_status_to_accept,
                             change_document_status_to_reject, return_rectified_file)
 from .view.receiver import select_file
@@ -99,6 +99,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
 
     path('accept_file/<pk>/', change_file_status_to_accept, name='change_file_status_to_accept'),
+    re_path(r'^accept_file/ajax/(?P<pk>\w+)/$', change_file_status_to_accept_ajax, name='change_file_status_to_accept_ajax'),
     path('reject_file/<pk>/', change_file_status_to_reject, name='change_file_status_to_reject'),
     path('accept_document/<pk>/', change_document_status_to_accept, name='change_document_status_to_accept'),
     path('reject_document/<pk>/', change_document_status_to_reject, name='change_document_status_to_reject'),
