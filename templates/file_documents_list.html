@@ -20,7 +20,7 @@
 
 
                 <div class="card-tools">
-                {% if 'app.can_receive_file' in perms and not user.is_superuser or 'app.can_disassemble_file' in perms and not user.is_superuser or 'app.can_scan_file' in perms and not user.is_superuser or 'app.can_reassemble_file' in perms and not user.is_superuser or 'app.can_transcribe_file' in perms and not user.is_superuser %}
+                {% if 'app.can_receive_file' in perms and not user.is_superuser or 'app.can_disassemble_file' in perms and not user.is_superuser or 'app.can_scan_file' in perms and not user.is_superuser or 'app.can_reassemble_file' in perms and not user.is_superuser or 'app.can_transcribe_file' in perms and not user.is_superuser or 'app.can_qa_file' in perms and not user.is_superuser or 'app.can_validate_file' in perms and not user.is_superuser %}
                 <button class="btn btn-warning" id="action_btn" onclick="hideUnhide()">Take Action on this File</button>
                 {% endif %}
                 {% if file_state_id == '400' and not user.is_superuser  %}

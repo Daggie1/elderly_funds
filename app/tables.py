@@ -48,7 +48,7 @@ class DocumentTable(tables.Table):
         fields = ("file_reference_id", "document_barcode", "document_name_id", "document_file_path")
 
     actions = TemplateColumn(template_name='app/document_transcribe.html')
-    validate = TemplateColumn(template_name='app/inspect_document_column.html')
+
 
 
 class ValidationTable(tables.Table):

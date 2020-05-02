@@ -101,7 +101,7 @@ class DocumentFile(models.Model):
     created_on = models.DateTimeField(auto_now_add=timezone.now)
 
 
-    file_barcode = models.CharField(null=True, max_length=255)
+    file_barcode = models.CharField(null=True,unique=True, max_length=255)
     state = models.ForeignKey(DocumentState, null=True, on_delete=models.DO_NOTHING)
     assigned_to = models.ForeignKey(User, null=True, blank=True,
                                         on_delete=models.DO_NOTHING,
@@ -117,7 +117,7 @@ class DocumentFile(models.Model):
 
 class DocumentFileDetail(models.Model):
     file_reference = models.ForeignKey(DocumentFile, db_column="file_reference", on_delete=models.CASCADE, null=True)
-    document_barcode = models.CharField(max_length=255)
+    document_barcode = models.CharField(unique=True,max_length=255)
 
     document_name = models.CharField(max_length=255, blank=True)
     document_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE, null=True)
