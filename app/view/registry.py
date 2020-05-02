@@ -195,8 +195,19 @@ def modify_notify_doc(request, pk, modified_to_state_id, is_reject_description=N
                                                    modified_from_state=doc.state,
                                                    modified_to_state=None,
                                                    by=request.user).last()
-            if doc_obj:
+            if doc.file_reference.assigned_to == request.user:
 
+                doc_obj = Modification.objects.filter(object_pk=object_key,
+                                                      object_type=returned_object_type,
+                                                      modified_from_state=doc.state,
+                                                      modified_to_state=None,
+                                                      by=request.user).last()
+                if not doc_obj:
+                    doc_obj=Modification.objects.create(object_pk=object_key,
+                                                      object_type=returned_object_type,
+                                                      modified_from_state=doc.state,
+
+                                                      by=request.user)
 
                 doc_obj.modified_to_state_id = modified_to_state_id
                 doc_obj.modification_ended_at = timezone.now()
