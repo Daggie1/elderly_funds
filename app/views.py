@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.utils import timezone
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.views import PasswordChangeForm
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -398,6 +398,7 @@ def request_file(request):
         file = DocumentFile.objects.filter(state_id=305, assigned_to=None).first()
         if file:
             try:
+                returned_object_type = ContentType.objects.get(app_label='app', model='documentfile')
                 file.assigned_to = request.user
                 file.save()
                 Modification.objects.create(object_type=returned_object_type, object_pk=file.pk,

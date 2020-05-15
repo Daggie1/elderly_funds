@@ -101,8 +101,8 @@
           </li>
         {% endif %}
         {% if 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
-                  <li class="nav-item has-treeview ">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'upload_document' or request.resolver_match.url_name == 'uploaded_documents' %} active {% endif %} ">
+                  <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'list_document_files' %} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'list_document_files' %} active {% endif %} ">
               <i class="nav-icon fas fa-folder-open"></i>
               <p>
                 Files
@@ -112,7 +112,7 @@
             <ul class="nav nav-treeview">
                 {% if 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
                  <li class="nav-item">
-                <a href="{% url 'list_document_files' %}" class="nav-link">
+                <a href="{% url 'list_document_files' %}" class="nav-link  {% if request.resolver_match.url_name == 'list_document_files' %} active {% endif %} ">
                   <i class="far fa-circle nav-icon"></i>
                   <p>View Files</p>
                 </a>
@@ -123,7 +123,7 @@
             </ul>
 {% endif %}
                 {% if 'app.can_scan_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
-            <li class="nav-item has-treeview">
+            <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'create_document_type' or request.resolver_match.url_name == 'get_file_to_upload_documents' %} menu-open {% endif %}">
             <a href="#" class="nav-link {% if request.resolver_match.url_name == 'create_document_type'  or request.resolver_match.url_name == 'view_document_types' %} active {% endif %}">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>

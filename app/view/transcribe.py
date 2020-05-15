@@ -23,9 +23,10 @@ def get_files_from_storage(request, file_reference):
     digital_documents = DocumentFileDetail.objects.filter(file_reference=file_reference).values()
     document_type = DocumentType.objects.all().values('document_name')
     file = DocumentFile.objects.get(pk=file_reference)
+    domain = request.get_host()
 
     context = {'scanned_documents': list(scanned_documents),
-               'digital_documents': map_keys_to_value_digital(digital_documents), 'file': file,
+               'digital_documents': map_keys_to_value_digital(digital_documents), 'file': file, 'domain':domain,
                'document_type': list(document_type)}
 
     return render(request, 'transcribe_document.html', context=context)

@@ -217,33 +217,18 @@ class Notification(models.Model):
     modification=models.ForeignKey(Modification,on_delete=models.CASCADE)
     comment = models.TextField(null=True)
 
-#
-#
-#
 
-#
-# class DocumentStateTransition(models.Model):
-#     transition_code = models.CharField()
-#     transition_name = models.CharField()
-#     transition_paremeter = models.CharField()
-#     current_state_code = models.CharField()
-#     current_state = models.CharField()
-#     next_state_code = models.CharField()
-#     next_state = models.CharField()
-#     pre_condition = models.CharField()
-
-
-# class DocumentWorkFlow(models.Model):
-#     current_node_id = models.CharField(max_length=50, primary_key=True)
-#     current_state_code = models.CharField(max_length=10)
-#     current_state_name = models.CharField(max_length=40)
-#     state_transition_parameter = models.CharField(max_length=5)
-#     document_validation_status = models.CharField(max_length=40)
-#     document_quality_control = models.CharField(max_length=40)
-#     transition_code = models.CharField(max_length=40)
-#     transition_name = models.CharField(max_length=40)
-#     next_node_id = models.CharField(max_length=40)
-#     next_state_code = models.CharField(max_length=40)
-#     next_state = models.CharField(max_length=40)
-#     document = models.ForeignKey(DocumentFileDetail, null=True, on_delete=models.CASCADE)
-#     document_file = models.ForeignKey(DocumentFile, null=True, on_delete=models.CASCADE)
+class DocumentWorkFlow(models.Model):
+    current_node_id = models.CharField(max_length=50, primary_key=True)
+    current_state_code = models.CharField(max_length=10)
+    current_state_name = models.CharField(max_length=40)
+    state_transition_parameter = models.CharField(max_length=5)
+    document_validation_status = models.CharField(max_length=40)
+    document_quality_control = models.CharField(max_length=40)
+    transition_code = models.CharField(max_length=40)
+    transition_name = models.CharField(max_length=40)
+    next_node_id = models.CharField(max_length=40)
+    next_state_code = models.CharField(max_length=40)
+    next_state = models.CharField(max_length=40)
+    document = models.ForeignKey(DocumentFileDetail, null=True, on_delete=models.CASCADE)
+    document_file = models.ForeignKey(DocumentFile, null=True, on_delete=models.CASCADE)

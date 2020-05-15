@@ -85,6 +85,7 @@
              let scannedDocuments = {{ scanned_documents | safe }};
              let barcodeDocuments = {{ digital_documents | safe }};
              let document_types = {{ document_type | safe }};
+             let domain = {{ domain | safe }}
              let doctypes = []
              let matched = [];
              let page = 1;
@@ -139,7 +140,8 @@
                 page = page -1
             }
             let pageText = "page <block>" + page +"</block>";
-            let uri = "http://127.0.0.1:9000/media/" + scannedDocuments[count].filepond + "#toolbar=0";
+            {#let uri = "http://127.0.0.1:8000/media/" + scannedDocuments[count].filepond + "#toolbar=0";#}
+            let uri = domain + "/media/" + scannedDocuments[count].filepond + "#toolbar=0";
             let url = encodeURI(uri);
             $('#page').html(pageText);
             $('#pdf').empty();
@@ -155,7 +157,7 @@
                  }
              }
              let pageText = "page <block>" + page +"</block>";
-             let uri = "http://127.0.0.1:9000/media/" + scannedDocuments[count].filepond + "#toolbar=0";
+             let uri = domain + "/media/" + scannedDocuments[count].filepond + "#toolbar=0";
              let url = encodeURI(uri);
             $('#page').html(pageText);
             $('#pdf').empty();
