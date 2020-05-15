@@ -9,6 +9,9 @@ from django.contrib.auth.models import User, Permission
 from PIL import Image
 from django.urls import reverse
 
+STAGES = ("Registry", "Reception", "Assembly", "Transcriber", "Quality Assuarance", "Validator")
+STATES = ("Open", "In Progress", "Re Opened", "Done", "Closed")
+BATCH = ("Open", "In Progress", "Done", "Closed")
 
 # Create your models here.
 class StateOptions(Enum):
