@@ -1,4 +1,4 @@
-<nav class="mt-2">
+<nav class="mt-2 nav-compact text-sm">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
@@ -124,7 +124,7 @@
 {% endif %}
                 {% if 'app.can_scan_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
             <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'create_document_type' or request.resolver_match.url_name == 'get_file_to_upload_documents' %} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'create_document_type'  or request.resolver_match.url_name == 'view_document_types' %} active {% endif %}">
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'create_document_type'  or request.resolver_match.url_name == 'get_file_to_upload_documents' %} active {% endif %}">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Documents
@@ -207,8 +207,8 @@
             </li>
 {% endif %}
             {% if perms.auth %}
-            <li class="nav-item has-treeview">
-            <a href="#" class="nav-link ">
+            <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'users.index' or request.resolver_match.url_name == 'users.create' or request.resolver_match.url_name == 'groups.index' or request.resolver_match.url_name == 'roles.create'  %} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'users.index' or request.resolver_match.url_name == 'users.create' or request.resolver_match.url_name == 'groups.index' or request.resolver_match.url_name == 'roles.create'  %} active {% endif %} ">
               <i class="nav-icon fas fa-users"></i>
               <p>
                 User Management
@@ -220,7 +220,7 @@
             <ul class="nav nav-treeview">
             {% if perms.auth.view_user %}
                  <li class="nav-item">
-                <a href="{% url 'users.index' %}" class="nav-link">
+                <a href="{% url 'users.index' %}" class="nav-link {% if request.resolver_match.url_name == 'users.index' %} active {% endif %}">
                   <i class="fas fa-user nav-icon"></i>
                   <p>Users</p>
                 </a>
@@ -228,7 +228,7 @@
             {% endif %}
             {% if perms.auth.add_user %}
                  <li class="nav-item">
-                <a href="{% url 'users.create' %}" class="nav-link">
+                <a href="{% url 'users.create' %}" class="nav-link {% if request.resolver_match.url_name == 'users.create' %} active {% endif %} ">
                   <i class="fas fa-plus-circle nav-icon"></i>
                   <p>Add user</p>
                 </a>
@@ -236,7 +236,7 @@
             {% endif %}
                 {% if perms.auth.view_group %}
                   <li class="nav-item">
-                <a href="{% url 'groups.index' %}" class="nav-link">
+                <a href="{% url 'groups.index' %}" class="nav-link  {% if request.resolver_match.url_name == 'groups.index' %} active {% endif %} ">
                   <i class="fas fa-check-double nav-icon"></i>
                   <p>Roles</p>
                 </a>
@@ -244,7 +244,7 @@
                     {% endif %}
              {% if perms.auth.add_user %}
                  <li class="nav-item">
-                <a href="{% url 'roles.create' %}" class="nav-link">
+                <a href="{% url 'roles.create' %}" class="nav-link {% if request.resolver_match.url_name == 'roles.create' %} active {% endif %}">
                   <i class="fas fa-plus-circle nav-icon"></i>
                   <p>Add Role</p>
                 </a>
@@ -256,8 +256,8 @@
 
             {% endif %}
 
-            <li class="nav-item has-treeview">
-            <a href="#" class="nav-link ">
+            <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'rejected_list_document_files'   %} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'rejected_list_document_files' %} active {% endif %}">
               <i class="nav-icon fas fa-burn"></i>
               <p>
                 Escalation
@@ -269,7 +269,7 @@
             <ul class="nav nav-treeview">
 
                  <li class="nav-item">
-                <a href="{%  url 'rejected_list_document_files' %}" class="nav-link">
+                <a href="{%  url 'rejected_list_document_files' %}" class="nav-link {% if request.resolver_match.url_name == 'rejected_list_document_files' %} active {% endif %}">
                   <i class="fas fa-file nav-icon"></i>
                   <p>Files</p>
                 </a>
@@ -277,7 +277,7 @@
 
 
                  <li class="nav-item">
-                <a href="{%  url 'rejected_list_document_files' %}" class="nav-link">
+                <a href="{%  url 'rejected_list_document_files' %}" class="nav-link {% if request.resolver_match.url_name == 'rejected_list_document_files' %} active {% endif %}">
                   <i class="fas fa-file-pdf nav-icon"></i>
                   <p>Documents</p>
                 </a>
