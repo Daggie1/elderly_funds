@@ -29,7 +29,7 @@ from json2html import *
 from .decorators import unauthenticated_user
 from .forms import LoginForm, UserRegistrationForm, \
     PasswordResetForm, GroupCreationForm
-from .models import DocumentFile, DocumentFileType, DocumentType, DocumentFileDetail, Batch, DocumentState
+from .models import DocumentFile, DocumentFileType, DocumentType, DocumentFileDetail, Batch
 from .tables import DocumentTable
 from .filters import DocumentFilter
 
@@ -445,11 +445,6 @@ def change_state(request, file=None, docs=None, is_reject=None, desc=None):
         desc = desc
         new_state = None
         print(f'changes {file.state.state_code} and {docs}')
-        if is_reject:
-            new_state = DocumentState.objects.get(state_code=int(file.state.state_code) + 100)
-
-        else:
-            new_state = DocumentState.objects.get(state_code=int(file.state.state_code) + 1)
 
         if current_state_code == 302 and file.file_scanned_by == request.user:
 

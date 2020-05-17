@@ -8,7 +8,7 @@ from django_tables2 import SingleTableMixin, RequestConfig
 from django.urls import reverse, reverse_lazy
 
 from app.forms import BatchCreationForm
-from app.models import Batch, DocumentState, DocumentFile, DocumentFileDetail
+from app.models import Batch,  DocumentFile, DocumentFileDetail
 from app.tables import BatchTable, DocumentFileTable, BatchDocumentTable, DocumentTable, BatchFileTable
 from app.filters import BatchFilter, DocumentFileFilter, DocumentFilter
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
