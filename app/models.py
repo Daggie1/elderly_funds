@@ -10,8 +10,8 @@ from django.contrib.auth.models import User, Permission
 from PIL import Image
 from django.urls import reverse
 
-STAGES = ("Registry", "Reception", "Assembly", "Transcriber", "Quality Assuarance", "Validator")
-STATES = ("Open", "In Progress", "Re Opened", "Done", "Closed")
+STAGES = ("Registry", "Reception", "Assembly", "Scanner", "Transcriber", "Quality Assuarance", "Validator")
+STATES = ("Open", "In Progress", "Re Opened", "Done", "Closed",)
 BATCH = ("Open", "In Progress", "Done", "Closed")
 
 
@@ -30,7 +30,9 @@ class Batch(models.Model):
 
     # transition methods
     @transition(field=state, source=['Open'], target='In Progress')
-    def start(self):
+    def start(self, user=None):
+        print(f'start user={user}')
+
         pass
 
     @transition(field=state, source=['In Progress'], target='Done')
@@ -77,6 +79,7 @@ class DocumentFile(models.Model):
     state = FSMField(default=STATES[0], protected=True)
 
     file_barcode = models.CharField(unique=True, max_length=255)
+    flagged=models.BooleanField(default=False)
 
     assigned_to = models.ForeignKey(User, null=True, blank=True,
                                         on_delete=models.DO_NOTHING,
@@ -94,13 +97,32 @@ class DocumentFile(models.Model):
             return True
         return False
 
+    def assigned_to_me(self,user=None):
+        if self.assigned_to == user:
+            return True
+        return False
+    def assign_when_not_assigned(self,user=None):
+        if self.assigned_to == user:
+            return True
+        elif self.assigned_to == None:
+            self.assigned_to=user
+            self.save()
+            return True
+
+        return False
+
 
     # transition methods
     @transition(field=state, source=['Open'], target='In Progress')
-    def start(self):
+    def start(self,user=None):
+
+
+        if self.assigned_to == None:
+            self.assigned_to = user
+            self.save()
         pass
 
-    @transition(field=state, source=['In Progress'], target='Done')
+    @transition(field=state, source=['In Progress'], target='Done',)
     def done(self):
         pass
 
@@ -117,37 +139,128 @@ class DocumentFile(models.Model):
         pass
 
     @transition(field=stage, source=['Registry'], target='Reception',conditions=[file_closed],permission=['app.can_create_batch'])
-    def dispatch_reception(self):
+    def dispatch_reception(self,user=None):
+
+        #create log
+        Modification.objects.create(
+            file=self,
+            modified_from_stage=STAGES[0],
+            modified_to_stage=STAGES[0],
+            by=user
+        )
         pass
 
     @transition(field=stage, source=['Reception'], target='Registry',conditions=[file_closed],permission=['app.can_receive_file'])
-    def return_registry(self):
-        #TODO notify admins and user who created
+    def return_registry(self,user,rejection_comment=''):
+        Modification.objects.create(
+            file=self,
+            modified_from_stage=STAGES[1],
+            modified_to_stage=STAGES[0],
+            by=user
+        )
+
+        notification=Notification.objects.create(
+            file=self,
+            comment=rejection_comment
+        )
+        #user who created
+        NotificationSentTo.objects.create(
+            notification=notification,
+            user=self.file_created_by
+        )
+
+        #all admins
+        for user_obj in User.objects.filter(is_superuser=True):
+            NotificationSentTo.objects.create(
+                notification=notification,
+                user=user_obj
+            )
+
+
+        self.assigned_to=self.file_created_by
+        self.save()
         pass
 
     @transition(field=stage, source=['Reception'], target='Assembly',conditions=[file_closed],permission=['app.can_receive_file'])
-    def dispatch_assembly(self):
+    def dispatch_assembly(self,user=None):
+        Modification.objects.create(
+            file=self,
+            modified_from_stage=STAGES[1],
+            modified_to_stage=STAGES[2],
+            by=user
+        )
         pass
 
     @transition(field=stage, source=['Assembly'], target='Reception',conditions=[file_closed],permission=['app.can_disassemble_file'])
-    # TODO notify admins and user who assembled
-    def return_assembly(self):
+
+    def return_assembly(self,user=None,rejection_comment=None):
+        Modification.objects.create(
+            file=self,
+            modified_from_stage=STAGES[2],
+            modified_to_stage=STAGES[1],
+            by=user
+        )
+
+        notification = Notification.objects.create(
+            file=self,
+            comment=rejection_comment
+        )
+        # user who did reception
+        modified=Modification.objects.filter(modified_to_stage=STAGES[1]).last()
+        NotificationSentTo.objects.create(
+            notification=notification,
+            user=modified.by
+        )
+
+        # all admins
+        for user_obj in User.objects.filter(is_superuser=True):
+            NotificationSentTo.objects.create(
+                notification=notification,
+                user=user_obj
+            )
+
+        self.assigned_to = modified.by
+        self.save()
         pass
 
     @transition(field=stage, source=['Assembly'], target='Scanner',conditions=[file_closed],permission=['app.can_disassemble_file'])
-    def dispatch_scanner(self):
+    def dispatch_scanner(self,user):
+        Modification.objects.create(
+            file=self,
+            modified_from_stage=STAGES[2],
+            modified_to_stage=STAGES[3],
+            by=user
+        )
         pass
 
     @transition(field=stage, source=['Scanner'], target='Transcriber',conditions=[file_closed],permission=['app.can_scan_file'])
-    def dispatch_transcriber(self):
+    def dispatch_transcriber(self,user=None):
+        Modification.objects.create(
+            file=self,
+            modified_from_stage=STAGES[3],
+            modified_to_stage=STAGES[4],
+            by=user
+        )
         pass
 
     @transition(field=stage, source=['Transcriber'], target='Quality Assurance',conditions=[file_closed],permission=['app.can_transcribe_file'])
-    def dispatch_qa(self):
+    def dispatch_qa(self,user=None):
+        Modification.objects.create(
+            file=self,
+            modified_from_stage=STAGES[4],
+            modified_to_stage=STAGES[5],
+            by=user
+        )
         pass
 
     @transition(field=stage, source=['Quality Assurance'], target='Validator',conditions=[file_closed],permission=['app.can_qa_file'])
-    def dispatch_validator(self):
+    def dispatch_validator(self,user=None):
+        Modification.objects.create(
+            file=self,
+            modified_from_stage=STAGES[5],
+            modified_to_stage=STAGES[6],
+            by=user
+        )
         pass
 
     @transition(field=stage, source=['Validator'], target='Reception',conditions=[file_closed],permission=['app.can_validate_file'])
@@ -266,8 +379,6 @@ class Modification(models.Model):
 
 
     file = models.ForeignKey(DocumentFile,on_delete=models.CASCADE)
-    modification_started_at = models.DateTimeField(auto_now_add=timezone.now)
-    modification_ended_at = models.DateTimeField(null=True)
     modified_from_stage =FSMField(null=False, protected=True)
     modified_to_stage = FSMField(null=True, protected=True)
     by = models.ForeignKey(User, on_delete=models.CASCADE)

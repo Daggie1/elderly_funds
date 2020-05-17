@@ -15,19 +15,21 @@ def report(request):
     # get all file types
     file_types = DocumentFileType.objects.all()
     # get all users
-    users = User.objects.all()
+    users=User.objects.all()
+
+    file=DocumentFile.objects.first()
+
+
     reject_file = DocumentFile.objects.filter(
-        Q(state_id=400) | Q(state_id=401) | Q(state_id=402) | Q(state_id=403) | Q(state_id=404) | Q(state_id=405) | Q(
-            state_id=406) | Q(state_id=407) | Q(state_id=408))
-    reject_document = DocumentFileDetail.objects.filter(
-        Q(state_id=400) | Q(state_id=401) | Q(state_id=402) | Q(state_id=403) | Q(state_id=404) | Q(state_id=405) | Q(
-            state_id=406) | Q(state_id=407) | Q(state_id=408))
-    registry = DocumentFile.objects.filter(state_id=300);
-    reception = DocumentFile.objects.filter(state_id=301);
-    disassembly = DocumentFile.objects.filter(state_id=302)
-    qa = DocumentFile.objects.filter(state_id=306);
-    scanning = DocumentFile.objects.filter(state_id=303);
-    transcription = DocumentFile.objects.filter(state_id=305);
+        flagged=True)
+
+    registry = DocumentFile.objects.filter(stage=STAGES[0])
+    reception = DocumentFile.objects.filter(stage=STAGES[1])
+    disassembly = DocumentFile.objects.filter(stage=STAGES[2])
+    transcription = DocumentFile.objects.filter(stage=STAGES[3])
+    qa = DocumentFile.objects.filter(stage=STAGES[4])
+    scanning = DocumentFile.objects.filter(stage=STAGES[5])
+
     context = {
         "documents": documents,
         "files": files,
@@ -40,9 +42,10 @@ def report(request):
         "scanning": scanning,
         "transcription": transcription,
         "disassembly": disassembly,
-        "rejected_document": reject_document,
+
         "rejected_file": reject_file,
     }
+
 
     return render(request, "home.html", context)
 

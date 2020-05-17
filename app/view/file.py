@@ -2,8 +2,9 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.models import Permission
 from django.shortcuts import redirect
-
+from django.db.models import Q
 from django.urls import reverse_lazy
+
 from django.utils import timezone
 from django.views.generic import ListView, CreateView
 from django_filters.views import FilterView
@@ -11,7 +12,7 @@ from django_tables2 import SingleTableMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView
 from app.filters import DocumentFileFilter
-from app.models import DocumentFile, Modification
+from app.models import DocumentFile, STAGES,STATES
 from app.tables import DocumentFileTable
 
 
@@ -84,57 +85,29 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     def get_queryset(self):
         if self.request.user.is_superuser:
             return DocumentFile.objects.all()
+        elif self.request.user.has_perm('app.can_create_batch'):
+            return DocumentFile.objects.filter(stage=[0]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         elif self.request.user.has_perm('app.can_receive_file'):
-
-
-
-            q1 = DocumentFile.objects.filter(state_id = 301,
-                                               assigned_to = self.request.user)
-            q2 = DocumentFile.objects.filter(state_id = 301,
-                                               assigned_to = None)
-            return q1.union(q2)
+            return DocumentFile.objects.filter(stage=[1]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         elif self.request.user.has_perm('app.can_disassemble_file'):
-
-            q1 = DocumentFile.objects.filter(state_id=302,
-                                             assigned_to=self.request.user)
-            q2 = DocumentFile.objects.filter(state_id=302,
-                                             assigned_to=None)
-            return q1.union(q2)
+            return DocumentFile.objects.filter(stage=[2]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         elif self.request.user.has_perm('app.can_scan_file'):
 
-            q1 = DocumentFile.objects.filter(state_id=303,
-                                             assigned_to=self.request.user)
-            q2 = DocumentFile.objects.filter(state_id=303,
-                                             assigned_to=None)
-            return q1.union(q2)
-        elif self.request.user.has_perm('app.can_reassemble_file'):
+         return DocumentFile.objects.filter(stage=[3]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
 
-            q1 = DocumentFile.objects.filter(state_id=304,
-                                             assigned_to=self.request.user)
-            q2 = DocumentFile.objects.filter(state_id=304,
-                                             assigned_to=None)
-            return q1.union(q2)
 
         elif self.request.user.has_perm('app.can_transcribe_file'):
 
 
-            return DocumentFile.objects.filter(state_id=305,
-                                             assigned_to=self.request.user)
+            return DocumentFile.objects.filter(stage=[4]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
 
         elif self.request.user.has_perm('app.can_qa_file'):
-            q1 = DocumentFile.objects.filter(state_id=306,
-                                             assigned_to=self.request.user)
-            q2 = DocumentFile.objects.filter(state_id=306,
-                                             assigned_to=None)
-            return q1.union(q2)
+            return DocumentFile.objects.filter(stage=[5]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
 
         elif self.request.user.has_perm('app.can_validate_file'):
-            q1 = DocumentFile.objects.filter(state_id=307,
-                                             assigned_to=self.request.user)
-            q2 = DocumentFile.objects.filter(state_id=307,
-                                             assigned_to=None)
-            return q1.union(q2)
-
+            return DocumentFile.objects.filter(stage=[6]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+        else:
+            return DocumentFile.objects.none()
     filterset_class = DocumentFileFilter
 
 
@@ -144,20 +117,46 @@ class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView)
     template_name = 'file/rejected_file_documents_list.html'
 
     def get_queryset(self):
-        rejected_files=None
+
         if self.request.user.is_superuser:
-            rejected_files = DocumentFile.objects.filter(state_id='400')
-        elif self.request.user.has_perm("app.can_register_batch"):
-            rejected_files = DocumentFile.objects.filter(state_id='400', assigned_to=self.request.user)
+            return DocumentFile.objects.DocumentFile.objects.filter(
+        flagged=True)
+        elif self.request.user.has_perm('app.can_create_batch'):
+            return DocumentFile.objects.filter(flagged=True).filter(
+                                                stage=[0],
+                                                assigned_to=self.request.user)
+        elif self.request.user.has_perm('app.can_receive_file'):
+            return DocumentFile.objects.filter(flagged=True).filter(
+                                                stage=[1],
+                                                assigned_to=self.request.user)
+        elif self.request.user.has_perm('app.can_disassemble_file'):
+            return DocumentFile.objects.filter(flagged=True).filter(
+                                                stage=[2],
+                                                assigned_to=self.request.user)
+        elif self.request.user.has_perm('app.can_scan_file'):
+
+            return DocumentFile.objects.filter(flagged=True).filter(
+                                                stage=[3],
+                                                assigned_to=self.request.user)
+
+
+        elif self.request.user.has_perm('app.can_transcribe_file'):
+
+            return DocumentFile.objects.filter(flagged=True).filter(
+                                                stage=[4],
+                                                assigned_to=self.request.user)
+
+        elif self.request.user.has_perm('app.can_qa_file'):
+            return DocumentFile.objects.filter(flagged=True).filter(
+                                                stage=[5],
+                                                assigned_to=self.request.user)
+
+        elif self.request.user.has_perm('app.can_validate_file'):
+            return DocumentFile.objects.filter(flagged=True).filter(
+                                                stage=[6],
+                                                assigned_to=self.request.user)
         else:
-            rejected_files = DocumentFile.objects.none()
-
-        if rejected_files:
-            unread_notifications = self.request.user.notification_set.filter(read_at=None)
-            unread_notifications.update(read_at=timezone.now())
-
-        print(f'escalated {rejected_files}')
-        return rejected_files
+            return DocumentFile.objects.none()
     filterset_class = DocumentFileFilter
 
 class FileDeleteView(LoginRequiredMixin,SuccessMessageMixin, UserPassesTestMixin, DeleteView):

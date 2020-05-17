@@ -102,11 +102,6 @@ class DocumentTranscribe(LoginRequiredMixin, SingleTableMixin, FilterView):
         context['table'] = self.table
         context['filter'] = self.filter
 
-        file = get_file(self.request, self.kwargs['file_reference'])
-        print(f'at context{file}')
-        file_state_id = file.state_id
-        context['file_state_id'] = file_state_id
-
         context['file_ref_no'] = self.kwargs['file_reference']
         return context
 
@@ -372,12 +367,10 @@ def get_file(request, file_ref=None):
         file = DocumentFile.objects.get(pk=file_ref)
 
         print(f'file ={file}')
-        if file and request.user.has_perm("app." + file.state.permission.codename):
+        if file :
             print(f'has perms to acces file {file}')
             return file
 
-        elif request.user.has_perm("app.can_register_batch"):
-            return file
     return None
 
 

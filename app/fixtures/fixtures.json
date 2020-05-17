@@ -31,14 +31,7 @@
     "content_type": 8
   }
 },
-    {
-  "model": "auth.permission",
-  "fields": {
-    "codename": "can_reassemble_file",
-    "name": "Can Reassemble File",
-    "content_type": 8
-  }
-},
+
    {
   "model": "auth.permission",
   "fields": {
@@ -77,18 +70,16 @@
     "permissions": [65]}},
   {
     "model": "auth.group",
-    "fields": {"name": "Receivers",
-      "permissions": [66]}}, {"model": "auth.group",
-  "fields": {"name": "Disassemblers",
+    "fields": {"name": "Receptionists",
+      "permissions": [66]}},
+
+  {"model": "auth.group",
+  "fields": {"name": "Assemblers",
     "permissions": [67]}},
   {
     "model": "auth.group",
     "fields": {"name": "Scanners",
       "permissions": [68]}},
-  {
-    "model": "auth.group",
-    "fields": {"name": "Reassemblers",
-      "permissions": [69]}},
   {
     "model": "auth.group",
     "fields": {"name": "Transcribers",
@@ -105,58 +96,108 @@
 
 
 
+  {"model": "auth.user", "pk": 1,
+    "fields": {"password": "pbkdf2_sha256$150000$Aj1jAJ0aCd7g$x3UpoUoTJzREFweYHEpeI1oQ/Zlq/YqAcsdQ1yfrKSw=",
+      "last_login": "2020-05-17T12:43:55.840Z",
+      "is_superuser": true, "username": "admin",
+      "first_name": "", "last_name": "", "email": "",
+      "is_staff": true, "is_active": true,
+      "date_joined": "2020-05-17T12:42:39.932Z",
+      "groups": [], "user_permissions": []}},
+
+  {"model": "auth.user", "pk": 2, "fields":
+  {"password": "pbkdf2_sha256$150000$q1hvnOJr7NxU$mwH9TpS//J03uzfnKH9QAdmOGicYQatpoNEBpdT9M+M=",
+    "last_login": null, "is_superuser": false,
+    "username": "33173500", "first_name": "",
+    "last_name": "", "email": "registry@admin.com",
+    "is_staff": false, "is_active": true,
+    "date_joined": "2020-05-17T19:38:46.810Z", "groups": [1],
+    "user_permissions": []}},
+
+  {"model": "auth.user", "pk": 3,
+    "fields": {"password": "pbkdf2_sha256$150000$Jdta6ulPaeYf$f8dsAcPC2k84amvGOaSlifCbGP7rBZYlTYKE6OiAV1U=",
+      "last_login": null, "is_superuser": false,
+      "username": "331735001", "first_name": "",
+      "last_name": "", "email": "receive@admin.com",
+      "is_staff": false, "is_active": true,
+      "date_joined": "2020-05-17T19:43:24.288Z",
+      "groups": [2], "user_permissions": []}},
+
+  {"model": "auth.user", "pk": 4,
+    "fields": {"password": "pbkdf2_sha256$150000$Wvyk4rZ0qiiQ$kSPyYnCG1J2JIw7Dvg33Izr/UTQnNnvqIyg6K3sYtDs=",
+      "last_login": null, "is_superuser": false, "username": "331735002",
+      "first_name": "", "last_name": "",
+      "email": "assembler@admin.com", "is_staff": false,
+      "is_active": true, "date_joined": "2020-05-17T19:44:53.339Z",
+      "groups": [3], "user_permissions": []}},
+
+  {"model": "auth.user", "pk": 5,
+    "fields": {"password": "pbkdf2_sha256$150000$UiKhZt8ITLsh$IYj+XcIiEwHeodEMm+1/Ok2rdumaU+0/62zLpfNlKfU=",
+      "last_login": null, "is_superuser": false, "username": "331735003",
+      "first_name": "", "last_name": "", "email": "scanner@admin.com",
+      "is_staff": false, "is_active": true, "date_joined": "2020-05-17T19:48:40.756Z",
+      "groups": [4], "user_permissions": []}},
+
+  {"model": "auth.user", "pk": 6,
+    "fields": {"password": "pbkdf2_sha256$150000$hwBoRPMkNrpY$Yj570ccMSsflKbHPQVc0U4+9sTz2DheXNB45fdSn4uY=",
+      "last_login": null, "is_superuser": false, "username": "331735004",
+      "first_name": "", "last_name": "",
+      "email": "transcriber@admin.com",
+      "is_staff": false, "is_active": true,
+      "date_joined": "2020-05-17T19:49:48.467Z",
+      "groups": [5], "user_permissions": []}},
+
+  {"model": "auth.user", "pk": 7,
+    "fields": {"password": "pbkdf2_sha256$150000$muoLZI7GPQn6$2pWu/DloEZpDISZ7TGOKVIO+G7FTrn2V5KzfdRasb6E=",
+      "last_login": null, "is_superuser": false,
+      "username": "331735005", "first_name": "",
+      "last_name": "", "email": "qa@admin.com",
+      "is_staff": false, "is_active": true,
+      "date_joined": "2020-05-17T19:51:45.044Z", "groups": [6],
+      "user_permissions": []}},
+
+  {"model": "auth.user", "pk": 8, "fields":
+  {"password": "pbkdf2_sha256$150000$wBVjbbtHAnfs$OdMj8wxXKhLxHIo2IFScmUqJok1rXSX0ZaYy2sy7p5w=",
+    "last_login": null, "is_superuser": false, "username": "331735006",
+    "first_name": "", "last_name": "", "email": "validator@admin.com",
+    "is_staff": false, "is_active": true, "date_joined": "2020-05-17T19:53:05.588Z",
+    "groups": [7], "user_permissions": []}},
 
 
+  {"model": "app.profile",
+    "pk": 1,
+    "fields": {"user": 1, "id_no": null, "phone": null, "full_name": null,
+      "first_login": false, "image": "default.jpg"}},
 
-  {
-    "model": "app.documentstate",
-    "pk": "300",
-    "fields": {
-      "state_name": "Registry",
-      "permission": 65,
-      "state_parameter": "REGISTRY",
-      "state": "REGISTRY"}},
-  {"model": "app.documentstate",
-    "pk": "301",
-    "fields": {"state_name": "Awaiting Receive", "permission": 66, "state_parameter": "AWAITING_RECEIVE", "state": "AWAITING_RECEIVE"}}, {"model": "app.documentstate", "pk": "302", "fields": {"state_name": "Awaiting Disassembler", "permission": 67, "state_parameter": "AWAITING_DISASSEMBLER", "state": "AWAITING_DISASSEMBLER"}}, {"model": "app.documentstate", "pk": "303", "fields": {"state_name": "Awaiting Scanning", "permission": 68, "state_parameter": "AWAITING_SCANNING", "state": "AWAITING_SCANNING"}}, {"model": "app.documentstate", "pk": "304", "fields": {"state_name": "Awaiting Reassembler", "permission": 69, "state_parameter": "AAWAITING_REASSEMBLER", "state": "AWAITING_REASSEMBLER"}}, {"model": "app.documentstate", "pk": "305", "fields": {"state_name": "Awaiting Transcription", "permission": 70, "state_parameter": "AWAITING_TRANSCRIPTION", "state": "AWAITING_TRANSCRIPTION"}}, {"model": "app.documentstate", "pk": "306", "fields": {"state_name": "Awaiting QA", "permission": 71, "state_parameter": "AWAITING_QA", "state": "AWAITING_QA"}}, {"model": "app.documentstate", "pk": "307", "fields": {"state_name": "Awaiting Validation", "permission": 72, "state_parameter": "AWAITING_VALIDATION", "state": "AWAITING_VALIDATION"}},{"model": "app.documentstate", "pk": "400", "fields": {"state_name": "Rejected to Registry", "permission": 65, "state_parameter": "REGISTRY_REJECTED", "state": "REGISTRY_REJECTED"}}, {"model": "app.documentstate", "pk": "401", "fields": {"state_name": "Rejected at Receive", "permission": 66, "state_parameter": "RECEIVE_REJECTED", "state": "RECEIVE_REJECTED"}},
+  {"model": "app.profile", "pk": 2,
+    "fields": {"user": 2, "id_no": "33173500", "phone": "91614457", "full_name": "Registry",
+      "first_login": false, "image": "default.jpg"}},
 
-  {"model": "app.documentstate",
-    "pk": "402",
-    "fields": {"state_name": "Rejected at Disassembler",
-      "permission": 67,
-      "state_parameter": "DISASSEMBLER_REJECTED",
-      "state": "DISASSEMBLER_REJECTED"}},
-  {"model": "app.documentstate",
-    "pk": "403",
-    "fields": {"state_name": "Rejected at Scanner",
-      "permission": 68,
-      "state_parameter": "SCANNER_REJECTED",
-      "state": "SCANNER_REJECTED"}},
+  {"model": "app.profile", "pk": 3,
+    "fields": {"user": 3, "id_no": "331735001", "phone": "91614457", "full_name": "Receptionist",
+      "first_login": true, "image": "default.jpg"}},
 
-  {"model": "app.documentstate",
-    "pk": "404",
-    "fields": {"state_name": "Rejected at Reassembler",
-      "permission": 69,
-      "state_parameter": "REASSEMBLER_REJECTED",
-      "state": "REASSEMBLER_REJECTED"}},
-  {"model": "app.documentstate",
-    "pk": "405",
-    "fields": {"state_name": "Rejected at Transcription",
-      "permission": 70,
-      "state_parameter": "TRANSCRIPTION_REJECTED",
-      "state": "TRANSCRIPTION_REJECTED"}},
-  {"model": "app.documentstate",
-    "pk": "406",
-    "fields": {"state_name": "Rejected at QA",
-      "permission": 71,
-      "state_parameter": "QA_REJECTED",
-      "state": "QA_REJECTED"}},
-  {"model": "app.documentstate",
-    "pk": "407",
-    "fields": {"state_name": "Rejected at Validation",
-      "permission": 72,
-      "state_parameter": "VALIDATION_REJECTED ",
-      "state": "VALIDATION_REJECTED "}}
+  {"model": "app.profile", "pk": 4,
+    "fields": {"user": 4, "id_no": "331735002", "phone": "91614457", "full_name": "Assembler",
+      "first_login": true, "image": "default.jpg"}},
+
+  {"model": "app.profile", "pk": 5,
+    "fields": {"user": 5, "id_no": "331735003", "phone": "91614457", "full_name": "Scanner",
+      "first_login": true, "image": "default.jpg"}},
+
+  {"model": "app.profile", "pk": 6,
+    "fields": {"user": 6, "id_no": "33174545", "phone": "91614457", "full_name": "Transacribe",
+      "first_login": true, "image": "default.jpg"}},
+
+  {"model": "app.profile", "pk": 7,
+    "fields": {"user": 7, "id_no": "331735005", "phone": "91614457", "full_name": "QA",
+      "first_login": true, "image": "default.jpg"}},
+
+  {"model": "app.profile", "pk": 8,
+    "fields": {"user": 8, "id_no": "331735006", "phone": "91614457", "full_name": "Validator",
+      "first_login": true, "image": "default.jpg"}}
+
+
 
 
 ]

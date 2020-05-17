@@ -3,12 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, render
 from django_filters.views import FilterView
-
+from django.http import HttpResponseRedirect
 from django_tables2 import SingleTableMixin, RequestConfig
 from django.urls import reverse, reverse_lazy
 
 from app.forms import BatchCreationForm
-from app.models import Batch,  DocumentFile, DocumentFileDetail
+from app.models import Batch,  DocumentFile, DocumentFileDetail,STATES
 from app.tables import BatchTable, DocumentFileTable, BatchDocumentTable, DocumentTable, BatchFileTable
 from app.filters import BatchFilter, DocumentFileFilter, DocumentFilter
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -28,26 +28,32 @@ class BatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     def get_queryset(self):
 
         if self.request.user.has_perm('app.can_register_batch'):
-            return Batch.objects.all()
+            return Batch.objects.filter(created_by=self.request.user).filter(state__in=[STATES[0],STATES[1],STATES[2]])
         elif self.request.user.has_perm('app.can_receive_file'):
-            return Batch.objects.filter(state_id=301)
+            return Batch.objects.filter(is_return_batch=True).filter(created_by=self.request.user).filter(state__in=[STATES[0], STATES[1], STATES[2]])
+        else:
+            return Batch.objects.none()
 
 
 @login_required
 def create_batch(request):
     if request.method == 'POST':
         form = BatchCreationForm(data=request.POST)
+
         if form.is_valid():
-            batch = form.save()
-            batch.refresh_from_db()
-            batch.created_by = request.user
+            try:
+                batch=Batch.objects.create(batch_no=form.cleaned_data.get('batch_no'),
+                                 description=form.cleaned_data.get('description'),
+                                 created_by=request.user,
+                                 is_return_batch=False)
+                batch.start(user=request.user)
+                batch.save()
+                messages.success(request, f" Batch Created successfully")
 
-            batch.state_id = 300
-            batch.save()
-            messages.success(request, f" Batch Created successfully")
-
-            return redirect(reverse('files.view', kwargs={'batch_id': batch.id}))
-
+                return redirect(reverse('files.view', kwargs={'batch_id': batch.id}))
+            except AttributeError as e:
+                messages.error(request, ' something wrong happened while adding batch')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         form = BatchCreationForm()
     return render(request, 'batch/create.html', {'form': form})
