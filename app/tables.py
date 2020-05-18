@@ -4,7 +4,7 @@ from .models import DocumentFile, DocumentFileDetail, Batch
 
 
 class BatchTable(tables.Table):
-    transitions = tables.Column(accessor='get_transition_options')
+    transitions = tables.Column(accessor='get_transition_options',verbose_name='Transition')
     class Meta:
         attrs = {"class": "table table-bordered table-striped table-responsive"}
         model = Batch
