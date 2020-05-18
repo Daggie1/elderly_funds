@@ -15331,4 +15331,4 @@
 	 */
 
 	return $.fn.dataTable;
-}));
+}))

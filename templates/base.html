@@ -32,6 +32,14 @@
 
 <link rel="stylesheet" href="{% static 'adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css' %}">
 <link rel="stylesheet" href="{% static 'adminlte/plugins/toastr/toastr.min.css' %}">
+    <style rel="stylesheet">
+        * {
+              border-radius: 0 !important;
+            }
+          .dropdown-toggle::after {
+            display: none;
+        }
+    </style>
     {% block css %}
     {% endblock %}
 

@@ -85,9 +85,7 @@ if DOCKER:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-            'NAME': 'postgres',
-
+            'NAME': 'postgress',
             'USER': 'postgres',
             'HOST': 'db',
             'PORT': '5432',
@@ -101,11 +99,11 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'edms08',
+            'NAME': 'work',
             'USER': 'postgres',
             'HOST': 'localhost',
             'PORT': '5432',
-            'PASSWORD': 'toor'
+            'PASSWORD': 'password'
         }
     }
 

@@ -83,15 +83,15 @@
   {
     "model": "auth.group",
     "fields": {"name": "Transcribers",
-      "permissions": [70]}},
+      "permissions": [69]}},
   {
     "model": "auth.group",
     "fields": {"name": "QAs",
-      "permissions": [71]}},
+      "permissions": [70]}},
   {
     "model": "auth.group",
     "fields": {"name": "Validators",
-      "permissions": [72]}
+      "permissions": [71]}
   },
 
 
