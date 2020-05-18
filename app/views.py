@@ -29,7 +29,7 @@ from json2html import *
 from .decorators import unauthenticated_user
 from .forms import LoginForm, UserRegistrationForm, \
     PasswordResetForm, GroupCreationForm
-from .models import DocumentFile, DocumentFileType, DocumentType, DocumentFileDetail, Batch, DocumentState
+from .models import DocumentFile, DocumentFileType, DocumentType, DocumentFileDetail, Batch
 from .tables import DocumentTable
 from .filters import DocumentFilter
 
@@ -101,11 +101,6 @@ class DocumentTranscribe(LoginRequiredMixin, SingleTableMixin, FilterView):
         context = super().get_context_data()
         context['table'] = self.table
         context['filter'] = self.filter
-
-        file = get_file(self.request, self.kwargs['file_reference'])
-        print(f'at context{file}')
-        file_state_id = file.state_id
-        context['file_state_id'] = file_state_id
 
         context['file_ref_no'] = self.kwargs['file_reference']
         return context
@@ -372,12 +367,10 @@ def get_file(request, file_ref=None):
         file = DocumentFile.objects.get(pk=file_ref)
 
         print(f'file ={file}')
-        if file and request.user.has_perm("app." + file.state.permission.codename):
+        if file :
             print(f'has perms to acces file {file}')
             return file
 
-        elif request.user.has_perm("app.can_register_batch"):
-            return file
     return None
 
 
@@ -445,11 +438,6 @@ def change_state(request, file=None, docs=None, is_reject=None, desc=None):
         desc = desc
         new_state = None
         print(f'changes {file.state.state_code} and {docs}')
-        if is_reject:
-            new_state = DocumentState.objects.get(state_code=int(file.state.state_code) + 100)
-
-        else:
-            new_state = DocumentState.objects.get(state_code=int(file.state.state_code) + 1)
 
         if current_state_code == 302 and file.file_scanned_by == request.user:
 

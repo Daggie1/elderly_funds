@@ -12,7 +12,7 @@ from django.utils import timezone
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.models import User
-from app.models import DocumentFile, DocumentFileDetail, Batch, DocumentState
+from app.models import DocumentFile, DocumentFileDetail, Batch
 from app.tables import DocumentFileTable
 from app.views import get_file, get_docs_from_file
 from app.models import Modification, Notification
