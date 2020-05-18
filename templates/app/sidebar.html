@@ -256,35 +256,6 @@
 
             {% endif %}
 
-            <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'rejected_list_document_files'   %} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'rejected_list_document_files' %} active {% endif %}">
-              <i class="nav-icon fas fa-burn"></i>
-              <p>
-                Escalation
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-
-
-            <ul class="nav nav-treeview">
-
-                 <li class="nav-item">
-                <a href="{%  url 'rejected_list_document_files' %}" class="nav-link {% if request.resolver_match.url_name == 'rejected_list_document_files' %} active {% endif %}">
-                  <i class="fas fa-file nav-icon"></i>
-                  <p>Files</p>
-                </a>
-              </li>
-
-
-                 <li class="nav-item">
-                <a href="{%  url 'rejected_list_document_files' %}" class="nav-link {% if request.resolver_match.url_name == 'rejected_list_document_files' %} active {% endif %}">
-                  <i class="fas fa-file-pdf nav-icon"></i>
-                  <p>Documents</p>
-                </a>
-              </li>
-            </ul>
-
-            </li>
 
 
         </ul>

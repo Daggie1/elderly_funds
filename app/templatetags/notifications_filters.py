@@ -1,19 +1,19 @@
 from django import template
-from app.models import Notification
+from app.models import NotificationSentTo
 import urllib
 
 register = template.Library()
 
 
 @register.filter
-def unread_notification_count(all_notifications=Notification.objects.none()):
+def unread_notification_count(all_notifications=NotificationSentTo.objects.none()):
 
 
     print(all_notifications)
     all_notifications=all_notifications.filter(read_at=None)
     return all_notifications.count()
 @register.filter
-def unread_notification_list(all_notifications=Notification.objects.none()):
+def unread_notification_list(all_notifications=NotificationSentTo.objects.none()):
 
 
     print(all_notifications)

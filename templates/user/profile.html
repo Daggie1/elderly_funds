@@ -24,13 +24,13 @@
 
                 <ul class="list-group list-group-unbordered mb-3">
                   <li class="list-group-item">
-                    <b>Files </b> <a class="float-right">89</a>
+                    <b>Files Worked On</b> <a class="float-right">{{user.modification_set.all.count}}</a>
                   </li>
                   <li class="list-group-item">
-                    <b>Documents</b> <a class="float-right">543</a>
+                    <b>Last Time Login</b> <a class="float-right">{{user.last_login}}</a>
                   </li>
                   <li class="list-group-item">
-                    <b>Rejected</b> <a class="float-right">13</a>
+                    <b>Joined</b> <a class="float-right">{{user.date_joined}}</a>
                   </li>
                 </ul>
 {% if user.is_active %}
@@ -132,15 +132,19 @@
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="analysis">
                    <ul class="list-group list-group-unbordered mb-3">
-                  <li class="list-group-item">
-                    <b>Files </b> <a class="float-right">89</a>
+                       <li class="list-group-item">
+                    <b>Is Super User</b> <a class="float-right">{{user.is_superuser}}</a>
                   </li>
                   <li class="list-group-item">
-                    <b>Documents</b> <a class="float-right">543</a>
+                    <b>Files Worked On </b> <a class="float-right">{{user.modification_set.all.count}}</a>
                   </li>
                   <li class="list-group-item">
-                    <b>Rejected</b> <a class="float-right">13</a>
+                    <b>Last Login</b> <a class="float-right">{{ user.last_login }}</a>
                   </li>
+                  <li class="list-group-item">
+                    <b>Joined</b> <a class="float-right">{{user.date_joined}}</a>
+                  </li>
+
                 </ul>
                   </div>
                   <!-- /.tab-pane -->

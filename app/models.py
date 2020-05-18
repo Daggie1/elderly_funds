@@ -211,6 +211,7 @@ class DocumentFile(models.Model):
                     -notify user who created
                     -notify all admins
                                          """
+
         Modification.objects.create(
             file=self,
             modified_from_stage=STAGES[1],
@@ -237,6 +238,7 @@ class DocumentFile(models.Model):
 
 
         self.assigned_to=self.file_created_by
+        self.flagged=True
         self.save()
 
 
@@ -290,8 +292,11 @@ class DocumentFile(models.Model):
                 notification=notification,
                 user=user_obj
             )
-
-        self.assigned_to = modified.by
+        if modified:
+            self.assigned_to = modified.by
+        else:
+            self.assigned_to=None
+        self.flagged=True
         self.save()
         pass
 
