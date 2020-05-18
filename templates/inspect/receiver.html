@@ -2,57 +2,72 @@
 {% block content %}
     <div class="container">
     <div class="row">
-        <div class="col-md-6">
-             <form class="form-inline ml-3" action="." method="get">
-              <div class="input-group input-group-sm">
-                <input name="q" class="form-control form-control-navbar" type="search" placeholder="Search Batch " aria-label="Search">
-                <div class="input-group-append">
-                  <button class="btn btn-navbar" type="submit">
-                    <i class="fas fa-search"></i>
-                  </button>
+        <div class="col-md-6 card">
+            <div class="card-header">
+                <p class="card-title">Receiver</p>
+            <div class="card-tools">
+                  <div >
+                      <form action="." class="input-group input-group-sm" style="width: 250px;" method="get">
+                        <input type="text" name="q" class="form-control float-right" placeholder="Batch No">
+
+                        <div class="input-group-append">
+                          <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                        </div>
+                      </form>
+
+                  </div>
                 </div>
-              </div>
-            </form>
+            </div>
             {% if results %}
+                <div class="card-body">
             <div class="card shadow">
             <div class="card-header">
                 <p class="card-title">Search Results</p>
             </div>
-            <div class="card-body">
+
+
                 <ul class="list-group">
                     {% for result in results %}
                         <li class="list-group-item">{{ result.batch_no }} <a href="{% url 'receive' result.pk %}" class="btn btn-default float-right">Select</a></li>
                     {% endfor %}
+
                 </ul>
+
 
             </div>
             </div>
+                {% elif empty %}
+                <p class="text-info">No Batch Found</p>
             {% endif %}
             {% if documents %}
                 <h4>Counter Check Files in Batch {{ batch.batch_no }}</h4>
             {% endif %}
+            {% if batch %}
             <form>
 
                 <div class="form-group">
                     <label for="barcode">Barcode</label>
-                    <input type="text" class="form-control" id="barcoded" placeholder="Barcode">
+                    <input type="text" class="form-control" id="barcoded" placeholder="Search File By Barcode">
                 </div>
             </form>
-            <div class="row">
+        {% endif %}
+            {% if batch %}
+            <div class="row m-2">
                 <div class="col-md-6">
-                    Missing Files
+                    <Strong>Missing Files</Strong>
                     <ul class="list-group" id="missing">
 
                     </ul>
                 </div>
                 <div class="col-md-6">
-                    Excess Files
-                      <ul class="list-group" id="excess">
+                    <Strong>Existing Files</Strong>
+                      <ol class="list-group text-xs" id="excess">
 
-                    </ul>
+                    </ol>
                 </div>
 
             </div>
+            {% endif %}
         </div>
         <div class="col-md-6">
             <div id="barbadges">
@@ -95,7 +110,7 @@
         }
 
          for(let i = 0; i < excess.length; i++){
-               let li =  "<li class='list-group-item'>"+ excess[i].file_barcode +"</li>"
+               let li =  "<li class='list-group-item'>" + "<i class='fas fa-file p-1 text-maroon'></i>" + excess[i].file_barcode +"</li>"
                $('#excess').append(li)
          }
 
@@ -134,7 +149,7 @@
         }
         function registerMissing(){
            for(let i = 0; i < missing.length; i++){
-               let li =  "<li class='list-group-item bg-gradient-warning'>"+ missing[i] +"</li>"
+               let li =  "<li class='list-group-item bg-gradient-danger'>" + "<i class='fas fa-stop p-1 text-danger'></i>" + missing[i] +"</li>"
                $('#missing').append(li)
            }
         }
@@ -142,7 +157,7 @@
         function registerExcess(){
             $('#excess').empty()
            for(let i = 0; i < excess.length; i++){
-               let li =  "<li class='list-group-item bg-gradient-warning'>"+ excess[i].file_barcode +"</li>"
+               let li =  "<li class='list-group-item'>"+ "<i class='fas fa-file p-1 text-maroon'></i>" + excess[i].file_barcode +"</li>"
                $('#excess').append(li)
            }
         }

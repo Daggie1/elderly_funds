@@ -16,7 +16,7 @@ from django.views.generic import (
     ListView,
     DeleteView
 )
-from app.view.states import initialize_state
+
 
 
 class BatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):

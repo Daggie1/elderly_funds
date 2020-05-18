@@ -14,12 +14,15 @@ from django.http import HttpResponseRedirect
 from django.template.defaultfilters import pprint
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django_filters.views import FilterView
 
-from  app.views import start_scanning
+from app.views import start_scanning
 from app.forms import StorageForm
 from app.models import DocumentFile, DocumentFileDetail, Filer
 from django.shortcuts import render, render_to_response, redirect
-
+from django_tables2 import SingleTableMixin
+from app.tables import ScannerTable
+from app.filters import DocumentFileFilter
 
 @csrf_exempt
 def upload_documents_to_file(request, file_reference):
@@ -37,33 +40,38 @@ def upload_documents_to_file(request, file_reference):
     form = StorageForm(request.POST, request.FILES)
     if form.is_valid():
 
-            new_file = form.save(commit=False)
-            new_file.file_reference = file
-            new_file.save()
+        new_file = form.save(commit=False)
+        new_file.file_reference = file
+        new_file.save()
     else:
-            print(form.errors)
+        print(form.errors)
 
     return render(request, 'upload_document.html', {'file': file})
 
 
+# def get_file_to_upload_documents(request):
+#     if request.method == 'GET':
+#         query = request.GET.get('q')
+#         if query:
+#             qset = (
+#                 Q(file_reference_icontains=query)
+#             )
+#             results = DocumentFile.objects.filter(qset).distinct()
+#         else:
+#             results = []
+#
+#     files = DocumentFile.objects.all().order_by('created_on')[:10]
+#
+#     context = {'files': files, 'results': results}
 
-def get_file_to_upload_documents(request):
-    if request.method == 'GET':
-        query = request.GET.get('q')
-        if query:
-            qset = (
-                Q(file_reference_icontains=query)
-            )
-            results = DocumentFile.objects.filter(qset).distinct()
-        else:
-            results = []
+    # return render(request, 'files_list.html', context=context)
 
-    files = DocumentFile.objects.all().order_by('created_on')[:14]
-
-    context = {'files': files, 'results': results}
-
-    return render(request, 'files_list.html', context=context)
-
+class ScannerTableView(SingleTableMixin,FilterView):
+    table_class = ScannerTable
+    filterset_class = DocumentFileFilter
+    model = DocumentFile
+    template_name = "files_list.html"
+    
 
 def update_file_state(request, id):
     file = DocumentFile.objects.get(pk=id)

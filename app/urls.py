@@ -25,8 +25,8 @@ from app.view.document import DocumentDeleteView, DocumentView, UploadedDocument
 from app.view.document_type import DocumentTypeCreate, DocumentTypeList
 
 from app.view.file_type import FileTypeCreate, FileTypeList
-from app.view.scanner import upload_documents_to_file, get_file_to_upload_documents
-from app.view.transcribe import get_files_from_storage, update_document_file_detail
+from app.view.scanner import upload_documents_to_file, ScannerTableView
+from app.view.transcribe import get_files_from_storage, update_document_file_detail, TranscribeFiles
 from app.view.user import profile,admin_check_user
 from .view.report import report
 from app.view.inspection import  inspect, receive
@@ -54,6 +54,7 @@ urlpatterns = [
     path('batch/<int:batch_id>/files', FilesView.as_view(), name='files.view'),
     path('batch/<int:batch_id>/create_file/', DocumentFileCreate.as_view(), name='create_document_file'),
     path('list_document_files', DocumentFileList.as_view(), name='list_document_files'),
+    path('list/transcribe/files', TranscribeFiles.as_view(), name='list_transcribe_files'),
     path('list_of_escalated_document_files', RejectedDocumentFileList.as_view(), name='rejected_list_document_files'),
     path('delete_file/<pk>/', FileDeleteView.as_view(), name='file_delete'),
 
@@ -65,7 +66,7 @@ urlpatterns = [
     path('file/<file_ref_no>/documents', DocumentView.as_view(), name='document.view'),
     path('file/<file_ref_no>/create_document/', create_document, name='document.create'),
     path('uploaded_documents', UploadedDocumentsList.as_view(), name='uploaded_documents'),
-    path('files/upload/select',get_file_to_upload_documents, name='get_file_to_upload_documents'),
+    path('files/upload/select',ScannerTableView.as_view(), name='get_file_to_upload_documents'),
     path('upload/to/file/<str:file_reference>',upload_documents_to_file, name='upload_document'),
     path('delete_document/<pk>/', DocumentDeleteView.as_view(), name='document_delete'),
 

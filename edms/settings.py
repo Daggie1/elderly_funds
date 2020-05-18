@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     'bootstrap4',
-
+    'django_fsm',
 ]
 JSONFORMS_SCHEMA_DIR = '/static/'
 

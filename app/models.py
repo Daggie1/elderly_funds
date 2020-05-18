@@ -10,8 +10,10 @@ from PIL import Image
 from django.urls import reverse
 
 STAGES = ("Registry", "Reception", "Assembly", "Transcriber", "Quality Assuarance", "Validator")
-STATES = ("Open", "In Progress", "Re Opened", "Done", "Closed")
-BATCH = ("Open", "In Progress", "Done", "Closed")
+PHYSICAL = ("Registry", "Reception", "Assembly")
+STATES = ("Open", "In Progress", "Returned", "Done", "Closed")
+BATCH = ("Open", "In Progress", "Done")
+
 
 # Create your models here.
 class StateOptions(Enum):
@@ -37,7 +39,9 @@ class StateOptions(Enum):
     @classmethod
     def choices(cls):
         return tuple((i.name, i.value) for i in cls)
-#TODO -make barcodes unique
+
+
+# TODO -make barcodes unique
 
 class DocumentState(models.Model):
     state_code = models.CharField(max_length=255, primary_key=True)
@@ -58,7 +62,7 @@ class DocumentState(models.Model):
 
 class Batch(models.Model):
     batch_no = models.CharField(max_length=255, null=False, unique=True)
-    description = models.TextField( null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True,
                                    related_name='created_by')
@@ -66,7 +70,6 @@ class Batch(models.Model):
     assigned_to = models.ForeignKey(User, null=True, blank=True,
                                     on_delete=models.DO_NOTHING,
                                     related_name='batch_assigned_to')
-
 
     def __str__(self):
         return self.batch_no
@@ -103,12 +106,11 @@ class DocumentFile(models.Model):
 
     created_on = models.DateTimeField(auto_now_add=timezone.now)
 
-
-    file_barcode = models.CharField(null=True,unique=True, max_length=255)
+    file_barcode = models.CharField(null=True, unique=True, max_length=255)
     state = models.ForeignKey(DocumentState, null=True, on_delete=models.DO_NOTHING)
     assigned_to = models.ForeignKey(User, null=True, blank=True,
-                                        on_delete=models.DO_NOTHING,
-                                        related_name='file_assigned_to')
+                                    on_delete=models.DO_NOTHING,
+                                    related_name='file_assigned_to')
     file_path = models.CharField(null=True, max_length=100)
 
     def __str__(self):
@@ -120,7 +122,7 @@ class DocumentFile(models.Model):
 
 class DocumentFileDetail(models.Model):
     file_reference = models.ForeignKey(DocumentFile, db_column="file_reference", on_delete=models.CASCADE, null=True)
-    document_barcode = models.CharField(unique=True,max_length=255)
+    document_barcode = models.CharField(unique=True, max_length=255)
 
     document_name = models.CharField(max_length=255, blank=True)
     document_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE, null=True)
@@ -139,11 +141,6 @@ class DocumentFileDetail(models.Model):
 
     def __str__(self):
         return self.document_barcode
-
-
-
-
-
 
 
 class Profile(models.Model):
@@ -191,33 +188,26 @@ class Filer(models.Model):
         return os.path.basename(self.filepond.name)
 
 
-
-
-
 class Modification(models.Model):
-
     """ This tables all the modifications of either batch,file or document-will be used to track the action workflow"""
 
-
     object_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)  # either batch, file, doc
-    object_pk = models.CharField(max_length=255) # the pk of the object being modified
-    modification_started_at = models.DateTimeField(auto_now_add=timezone.now) # time when select to start modifying
-    modification_ended_at = models.DateTimeField(null=True)  # time when you submit object to next state after modification
-    modified_from_state = models.ForeignKey(DocumentState,related_name='modified_from_state', on_delete=models.CASCADE )
-    modified_to_state = models.ForeignKey(DocumentState, related_name='modified_to_state', on_delete=models.CASCADE, null=True)
+    object_pk = models.CharField(max_length=255)  # the pk of the object being modified
+    modification_started_at = models.DateTimeField(auto_now_add=timezone.now)  # time when select to start modifying
+    modification_ended_at = models.DateTimeField(
+        null=True)  # time when you submit object to next state after modification
+    modified_from_state = models.ForeignKey(DocumentState, related_name='modified_from_state', on_delete=models.CASCADE)
+    modified_to_state = models.ForeignKey(DocumentState, related_name='modified_to_state', on_delete=models.CASCADE,
+                                          null=True)
     by = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
-
 class Notification(models.Model):
-
-
     """all notifications"""
 
-
     to = models.ForeignKey(User, on_delete=models.CASCADE)
-    read_at = models.DateTimeField(null=True) # if null means not read
-    modification=models.ForeignKey(Modification,on_delete=models.CASCADE)
+    read_at = models.DateTimeField(null=True)  # if null means not read
+    modification = models.ForeignKey(Modification, on_delete=models.CASCADE)
     comment = models.TextField(null=True)
 
 
