@@ -32,7 +32,7 @@ class Batch(models.Model):
     @transition(field=state, source=[BATCH[2]], target=BATCH[0])
     def open(self, user=None):
 
-        """re-opening a closed closed"""
+        """opening a closed file"""
 
         pass
 
@@ -280,10 +280,11 @@ class DocumentFile(models.Model):
         )
         # user who did reception
         modified=Modification.objects.filter(modified_to_stage=STAGES[1]).last()
-        NotificationSentTo.objects.create(
-            notification=notification,
-            user=modified.by
-        )
+        if modified:
+            NotificationSentTo.objects.create(
+                notification=notification,
+                user=modified.by
+            )
 
         # all admins
         for user_obj in User.objects.filter(is_superuser=True):

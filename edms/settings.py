@@ -101,7 +101,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'edms08',
+            'NAME': 'edms09',
             'USER': 'postgres',
             'HOST': 'localhost',
             'PORT': '5432',
