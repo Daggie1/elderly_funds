@@ -33,6 +33,9 @@ from app.view.inspection import  inspect, receive
 from app.view.qa import  QaFileList
 from app.view.validate import ValidateFileList
 
+from app.view.states_methods import update_state_batch,update_state_file,update_state_document
+from app.view.stages_methods import update_stage_file
+
 urlpatterns = [
     path('', report, name='home'),
     #submits
@@ -131,5 +134,20 @@ urlpatterns = [
     #quality assuarance link
     path('quality/files/', QaFileList.as_view(), name='quality'),
     path('validate/document/files', ValidateFileList.as_view(), name='validation'),
+
+
+    #
+    #stage and states urls
+    #
+    path('update_batch_state/<pk>/<action>/', update_state_batch,name='update_state_batch'),
+    path('update_file_state/<pk>/<action>/', update_state_file,name='update_state_file'),
+    path('update_document_state/<pk>/<action>/', update_state_document,name='update_document_batch'),
+
+    #stage url
+
+    path('update_file_stage/<pk>/<action>/', update_stage_file,name='update_stage_file'),
+
+
+
 ]
 

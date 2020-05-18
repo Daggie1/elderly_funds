@@ -11,13 +11,14 @@ from PIL import Image
 from django.urls import reverse
 
 STAGES = ("Registry", "Reception", "Assembly", "Scanner", "Transcriber", "Quality Assuarance", "Validator")
-STATES = ("Open", "In Progress", "Re Opened", "Done", "Closed",)
-BATCH = ("Open", "In Progress", "Done", "Closed")
+STATES = ("Opened", "Done", "Closed",)
+BATCH = ("Opened", "Done", "Closed")
+
 
 
 class Batch(models.Model):
     batch_no = models.CharField(max_length=255, null=False, unique=True)
-    description = models.TextField(null=True, blank=True)
+    description = models.TextField( null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True,
                                    related_name='created_by')
@@ -25,28 +26,64 @@ class Batch(models.Model):
     state = FSMField(default=BATCH[0], protected=True)
 
     # transition methods
-    @transition(field=state, source=['Open'], target='In Progress')
-    def start(self, user=None):
-        print(f'start user={user}')
+    @transition(field=state, source=[BATCH[2]], target=BATCH[0])
+    def open(self, user=None):
+
+        """opening a closed file"""
+
         pass
 
-    @transition(field=state, source=['In Progress'], target='Done')
+    @transition(field=state, source=[BATCH[0]], target=BATCH[1])
     def done(self):
+
+        """"staging a batch once done adding files and docs
+         -moves state of files in batch to DONE
+        -moves batch state to DONE
+         """
+
+        files = DocumentFile.objects.filter(batch=self)
+        for file in files:
+            file.done()
+            file.save()
+
+    @transition(field=state, source=[BATCH[1]], target=BATCH[0])
+    def continue_editing(self):
+        """"unstaging a staged batch to add/edit/delete some files and docs
+                 -moves state of files in batch to Open
+                -moves batch state to Open
+                 """
+        files = DocumentFile.objects.filter(batch=self)
+        for file in files:
+            file.continue_editing()
+            file.save()
         pass
 
-    @transition(field=state, source=['Done'], target='Closed')
-    def close(self):
-        pass
+    @transition(field=state, source=[BATCH[1]], target=BATCH[2])
+    def close(self,user=None,comment=''):
+
+        """"closes a batch
+                 -moves state of files in batch to CLOSE
+                -moves batch state to CLOSE
+                -moves stage files in batch to RECEPTION
+
+                this action is permanent
+                 """
+        files = DocumentFile.objects.filter(batch=self)
+        if not self.is_return_batch:
+         for file in files:
+                file.close()
+                file.start(user=user)
+                file.save()
+        else:
+            for file in files:
+                file.close()
+                file.return_registry(user=user,rejection_comment=comment)
+                file.save()
+
 
     def __str__(self):
         return self.batch_no
 
-    def get_transition_options(self,**kwargs):
-        transitions = list(self.get_available_state_transitions())
-        available_transitions = []
-        for i in range(len(transitions)):
-            available_transitions.append(transitions[i].target)
-        return available_transitions
 
 class DocumentFileType(models.Model):
     file_type = models.CharField(max_length=100, null=False, primary_key=True)
@@ -81,11 +118,11 @@ class DocumentFile(models.Model):
     state = FSMField(default=STATES[0], protected=True)
 
     file_barcode = models.CharField(unique=True, max_length=255)
-    flagged = models.BooleanField(default=False)
+    flagged=models.BooleanField(default=False)
 
     assigned_to = models.ForeignKey(User, null=True, blank=True,
-                                    on_delete=models.DO_NOTHING,
-                                    related_name='file_assigned_to')
+                                        on_delete=models.DO_NOTHING,
+                                        related_name='file_assigned_to')
     file_path = models.CharField(null=True, max_length=100)
     stage = FSMField(default=STAGES[0], protected=True)
 
@@ -94,68 +131,86 @@ class DocumentFile(models.Model):
 
     def get_absolute_url(self):
         return reverse('view_docs_in_file', kwargs={'file_reference': self.pk})
-
     def file_closed(self):
         if self.state == STATES[4]:
             return True
         return False
 
-    def assigned_to_me(self, user=None):
+    def assigned_to_me(self,user=None):
         if self.assigned_to == user:
             return True
         return False
-
-    def assign_when_not_assigned(self, user=None):
+    def assign_when_not_assigned(self,user=None):
         if self.assigned_to == user:
             return True
         elif self.assigned_to == None:
-            self.assigned_to = user
+            self.assigned_to=user
             self.save()
             return True
 
         return False
 
+
     # transition methods
-    @transition(field=state, source=['Open'], target='In Progress')
-    def start(self, user=None):
+    @transition(field=state, source=[STATES[2]], target=STATES[0])
+    def open(self,user=None):
+        """"changes  file state to OPEN
+       if unassigned: assigns to current user
+                         """
 
         if self.assigned_to == None:
             self.assigned_to = user
             self.save()
         pass
 
-    @transition(field=state, source=['In Progress'], target='Done', )
+    @transition(field=state, source=[STATES[0]], target=STATES[1],)
     def done(self):
+        """"changes  file state to DONE
+
+                                 """
         pass
 
-    @transition(field=state, source=['Done'], target='Closed')
+    @transition(field=state, source=[STATES[1]], target=STATES[0], )
+    def continue_editing(self):
+        """"changes  file state to OPEN
+
+                                 """
+        pass
+
+    @transition(field=state, source=STATES[1], target=STATES[2])
     def close(self):
+        """"changes  file state to OPEN
+               -changes assigned to null
+                                 """
+        self.assigned_to=None
+        self.save()
         pass
 
-    @transition(field=state, source=['Done'], target='Re Opened')
-    def reopen(self):
-        pass
 
-    @transition(field=state, source=['Re Opened'], target='In Progress')
-    def progress(self):
-        pass
+    @transition(field=stage, source=[STAGES[0]], target=STAGES[1],conditions=[file_closed],permission=['app.can_create_batch'])
+    def dispatch_reception(self,user=None):
+        """"changes  file stage to RECEPTION
 
-    @transition(field=stage, source=['Registry'], target='Reception', conditions=[file_closed],
-                permission=['app.can_create_batch'])
-    def dispatch_reception(self, user=None):
-
-        # create log
+            -records this action in Modification Table
+                                 """
+        #create log
         Modification.objects.create(
             file=self,
             modified_from_stage=STAGES[0],
             modified_to_stage=STAGES[0],
             by=user
         )
-        pass
 
-    @transition(field=stage, source=['Reception'], target='Registry', conditions=[file_closed],
-                permission=['app.can_receive_file'])
-    def return_registry(self, user, rejection_comment=''):
+
+    @transition(field=stage, source=[STAGES[1]], target=STAGES[0],conditions=[file_closed],permission=['app.can_receive_file'])
+    def return_registry(self,user,rejection_comment=''):
+
+        """"flags a  file stage to REGISTRY
+
+                    -records this action in Modification Table
+                    -notify user who created
+                    -notify all admins
+                                         """
         Modification.objects.create(
             file=self,
             modified_from_stage=STAGES[1],
@@ -163,30 +218,35 @@ class DocumentFile(models.Model):
             by=user
         )
 
-        notification = Notification.objects.create(
+        notification=Notification.objects.create(
             file=self,
             comment=rejection_comment
         )
-        # user who created
+        #user who created
         NotificationSentTo.objects.create(
             notification=notification,
             user=self.file_created_by
         )
 
-        # all admins
+        #all admins
         for user_obj in User.objects.filter(is_superuser=True):
             NotificationSentTo.objects.create(
                 notification=notification,
                 user=user_obj
             )
 
-        self.assigned_to = self.file_created_by
-        self.save()
-        pass
 
-    @transition(field=stage, source=['Reception'], target='Assembly', conditions=[file_closed],
-                permission=['app.can_receive_file'])
-    def dispatch_assembly(self, user=None):
+        self.assigned_to=self.file_created_by
+        self.save()
+
+
+    @transition(field=stage, source=[STAGES[1]], target=STAGES[2],conditions=[file_closed],permission=['app.can_receive_file'])
+    def dispatch_assembly(self,user=None):
+
+        """"changes  file stage to ASSEMBLY
+
+                    -records this action in Modification Table
+                                         """
         Modification.objects.create(
             file=self,
             modified_from_stage=STAGES[1],
@@ -195,9 +255,16 @@ class DocumentFile(models.Model):
         )
         pass
 
-    @transition(field=stage, source=['Assembly'], target='Reception', conditions=[file_closed],
-                permission=['app.can_disassemble_file'])
-    def return_assembly(self, user=None, rejection_comment=None):
+    @transition(field=stage, source=[STAGES[2]], target=STAGES[1],conditions=[file_closed],permission=['app.can_disassemble_file'])
+
+    def return_reception(self,user=None,rejection_comment=None):
+
+        """"flags a  file stage to RECEPTION
+
+                            -records this action in Modification Table
+                            -notify user who edited at reception
+                            -notify all admins
+                                                 """
         Modification.objects.create(
             file=self,
             modified_from_stage=STAGES[2],
@@ -210,11 +277,12 @@ class DocumentFile(models.Model):
             comment=rejection_comment
         )
         # user who did reception
-        modified = Modification.objects.filter(modified_to_stage=STAGES[1]).last()
-        NotificationSentTo.objects.create(
-            notification=notification,
-            user=modified.by
-        )
+        modified=Modification.objects.filter(modified_to_stage=STAGES[1]).last()
+        if modified:
+            NotificationSentTo.objects.create(
+                notification=notification,
+                user=modified.by
+            )
 
         # all admins
         for user_obj in User.objects.filter(is_superuser=True):
@@ -227,9 +295,12 @@ class DocumentFile(models.Model):
         self.save()
         pass
 
-    @transition(field=stage, source=['Assembly'], target='Scanner', conditions=[file_closed],
-                permission=['app.can_disassemble_file'])
-    def dispatch_scanner(self, user):
+    @transition(field=stage, source=[STAGES[2]], target=STAGES[3],conditions=[file_closed],permission=['app.can_disassemble_file'])
+    def dispatch_scanner(self,user):
+        """"changes  file stage to SCANNER
+
+                    -records this action in Modification Table
+                                         """
         Modification.objects.create(
             file=self,
             modified_from_stage=STAGES[2],
@@ -238,9 +309,13 @@ class DocumentFile(models.Model):
         )
         pass
 
-    @transition(field=stage, source=['Scanner'], target='Transcriber', conditions=[file_closed],
-                permission=['app.can_scan_file'])
-    def dispatch_transcriber(self, user=None):
+    @transition(field=stage, source=[STAGES[3]], target=STAGES[4],conditions=[file_closed],permission=['app.can_scan_file'])
+    def dispatch_transcriber(self,user=None):
+
+        """"changes  file stage to TRANSCRIBER
+
+                    -records this action in Modification Table
+                                         """
         Modification.objects.create(
             file=self,
             modified_from_stage=STAGES[3],
@@ -249,9 +324,13 @@ class DocumentFile(models.Model):
         )
         pass
 
-    @transition(field=stage, source=['Transcriber'], target='Quality Assurance', conditions=[file_closed],
-                permission=['app.can_transcribe_file'])
-    def dispatch_qa(self, user=None):
+    @transition(field=stage, source=[STAGES[4]], target=STAGES[5],conditions=[file_closed],permission=['app.can_transcribe_file'])
+    def dispatch_qa(self,user=None):
+
+        """"changes  file stage to QA
+
+                    -records this action in Modification Table
+                                         """
         Modification.objects.create(
             file=self,
             modified_from_stage=STAGES[4],
@@ -260,9 +339,13 @@ class DocumentFile(models.Model):
         )
         pass
 
-    @transition(field=stage, source=['Quality Assurance'], target='Validator', conditions=[file_closed],
-                permission=['app.can_qa_file'])
-    def dispatch_validator(self, user=None):
+    @transition(field=stage, source=[STAGES[5]], target=STAGES[6],conditions=[file_closed],permission=['app.can_qa_file'])
+    def dispatch_validator(self,user=None):
+        """"changes  file stage to VALIDATOR
+
+                    -records this action in Modification Table
+                                         """
+
         Modification.objects.create(
             file=self,
             modified_from_stage=STAGES[5],
@@ -271,15 +354,14 @@ class DocumentFile(models.Model):
         )
         pass
 
-    @transition(field=stage, source=['Validator'], target='Reception', conditions=[file_closed],
-                permission=['app.can_validate_file'])
+    @transition(field=stage, source=[STAGES[6]], target=STAGES[1],conditions=[file_closed],permission=['app.can_validate_file'])
     def finalize_to_reception(self):
         pass
 
 
 class DocumentFileDetail(models.Model):
     file_reference = models.ForeignKey(DocumentFile, db_column="file_reference", on_delete=models.CASCADE, null=True)
-    document_barcode = models.CharField(unique=True, max_length=255)
+    document_barcode = models.CharField(unique=True,max_length=255)
 
     document_name = models.CharField(max_length=255, blank=True)
     document_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE, null=True)
@@ -291,36 +373,56 @@ class DocumentFileDetail(models.Model):
                                        related_name='doc_created_by')
     created_on = models.DateTimeField(auto_now_add=timezone.now)
 
-    flagged = models.BooleanField(default=False)
+
+
+
     assigned_to = models.ForeignKey(User, null=True, blank=True,
                                     on_delete=models.DO_NOTHING,
                                     related_name='doc_assigned_to')
 
+
     state = FSMField(default=STATES[0], protected=True)
 
+
+
     # transition methods
-    @transition(field=state, source=['Open'], target='In Progress')
-    def start(self):
-        pass
+    @transition(field=state, source=[STATES[2]], target=STATES[0])
+    def open(self):
+        """"changes  document state to Open
 
-    @transition(field=state, source=['In Progress'], target='Done')
+
+                                                 """
+
+
+    @transition(field=state, source=[STATES[0]], target=STATES[1], )
     def done(self):
-        pass
+        """"changes  document state to Done
 
-    @transition(field=state, source=['Done'], target='Closed')
+
+                                                         """
+
+    @transition(field=state, source=[STATES[1]], target=STATES[0], )
+    def continue_editing(self):
+        """"changes  document state  back to Open
+
+
+                                                         """
+
+    @transition(field=state, source=STATES[1], target=STATES[2])
     def close(self):
-        pass
+        """"changes  document state to Close
 
-    @transition(field=state, source=['Done'], target='Re Opened')
-    def reopen(self):
-        pass
 
-    @transition(field=state, source=['Re Opened'], target='In Progress')
-    def progress(self):
+                                                         """
         pass
 
     def __str__(self):
         return self.document_barcode
+
+
+
+
+
 
 
 class Profile(models.Model):
@@ -368,24 +470,35 @@ class Filer(models.Model):
         return os.path.basename(self.filepond.name)
 
 
+
+
+
 class Modification(models.Model):
+
     """ This tables all the modifications of either batch,file or document-will be used to track the action workflow"""
 
-    file = models.ForeignKey(DocumentFile, on_delete=models.CASCADE)
-    modified_from_stage = FSMField(null=False, protected=True)
+
+
+    file = models.ForeignKey(DocumentFile,on_delete=models.CASCADE)
+    modified_from_stage =FSMField(null=False, protected=True)
     modified_to_stage = FSMField(null=True, protected=True)
     by = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
+
 class Notification(models.Model):
+
     """all notifications"""
 
-    file = models.ForeignKey(DocumentFile, on_delete=models.CASCADE)
+    file = models.ForeignKey(DocumentFile,on_delete=models.CASCADE)
     comment = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=timezone.now)
-
-
 class NotificationSentTo(models.Model):
-    notification = models.ForeignKey(Notification, on_delete=models.CASCADE, null=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+
+    notification=models.ForeignKey(Notification,on_delete=models.CASCADE,null=False)
+    user=models.ForeignKey(User,on_delete=models.CASCADE,null=False)
     read_at = models.DateTimeField(null=True)
+
+
+
+
