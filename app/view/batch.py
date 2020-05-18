@@ -46,12 +46,13 @@ def create_batch(request):
                 batch = Batch.objects.create(batch_no=form.cleaned_data.get('batch_no'),
                                              description=form.cleaned_data.get('description'),
                                              created_by=request.user,
-                                             is_return_batch=False, user=request.user)
+                                             is_return_batch=False)
                 batch.save()
                 messages.success(request, f" Batch Created successfully")
 
                 return redirect(reverse('files.view', kwargs={'batch_id': batch.id}))
             except AttributeError as e:
+                print(e)
                 messages.error(request, ' something wrong happened while adding batch')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
