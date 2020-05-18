@@ -1,0 +1,17 @@
+digraph {
+	subgraph cluster_app_DocumentFileDetail_state {
+		graph [label="app.DocumentFileDetail.state"]
+		"app.document_file_detail.state.Closed" [label=Closed shape=doublecircle]
+		"app.document_file_detail.state.In Progress" [label="In Progress" shape=circle]
+		"app.document_file_detail.state.Re Opened" [label="Re Opened" shape=circle]
+		"app.document_file_detail.state.Open" [label=Open shape=circle]
+		"app.document_file_detail.state._initial" [label="" shape=point]
+		"app.document_file_detail.state._initial" -> "app.document_file_detail.state.Open"
+		"app.document_file_detail.state.Done" [label=Done shape=circle]
+		"app.document_file_detail.state.Re Opened" -> "app.document_file_detail.state.In Progress" [label=progress]
+		"app.document_file_detail.state.Done" -> "app.document_file_detail.state.Re Opened" [label=reopen]
+		"app.document_file_detail.state.Done" -> "app.document_file_detail.state.Closed" [label=close]
+		"app.document_file_detail.state.In Progress" -> "app.document_file_detail.state.Done" [label=done]
+		"app.document_file_detail.state.Open" -> "app.document_file_detail.state.In Progress" [label=start]
+	}
+}

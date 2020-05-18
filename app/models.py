@@ -16,8 +16,6 @@ BATCH = ("Open", "In Progress", "Done", "Closed")
 
 
 
-
-
 class Batch(models.Model):
     batch_no = models.CharField(max_length=255, null=False, unique=True)
     description = models.TextField( null=True, blank=True)
