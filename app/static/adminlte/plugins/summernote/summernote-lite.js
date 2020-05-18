@@ -4518,7 +4518,7 @@
                               }
                           }
                       }
-                      continue;
+
                   case TableResultAction.resultAction.RemoveCell:
                       // Do not need remove cell because row will be deleted.
 

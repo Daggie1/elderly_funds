@@ -1,24 +1,44 @@
 
-{% if 'app.can_register_batch' in perms and user.is_superuser %}
-    <a class="btn btn-info btn-sm" href="{% url 'files.view' record.id %}">Open </a>
+<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-v"></i>
+            </button>
+            <div class="dropdown-menu">
+    {% for item in record.value.split %}
+
+        <a class="dropdown-item">Something</a>
+
+{% empty %}
+    <a class="dropdown-item">Nothing to show.</a>
+{% endfor %}
+              <a class="dropdown-item btn btn-info btn-block" href="#">{{ record.available_transitions }}</a>
+                <div role="separator" class="dropdown-divider"></div>
+              <a class="dropdown-item btn btn-info btn-block" href="#">Return</a>
+                <div role="separator" class="dropdown-divider"></div>
+              <a class="dropdown-item text-danger" href="#"><i class="fa fa-exclamation-triangle"></i> Flag</a>
+                <div role="separator" class="dropdown-divider"></div>
+                {% if 'app.can_register_batch' in perms and user.is_superuser %}
+    <a class="btn btn-info btn-block" href="{% url 'files.view' record.id %}">Open </a>
     {% elif 'app.can_register_batch' in perms %}
 
     {% if record.state_id == '300' %}
-    <a class="btn btn-info btn-sm" href="{% url 'files.view' record.id %}">Open </a>
+    <a class="btn btn-info btn-block" href="{% url 'files.view' record.id %}">Open </a>
 
-        <a class="btn btn-info btn-sm" href="{% url 'registry_submit_batch' record.id  %}">submit</a>
-    <a class="btn btn-danger btn-sm" href="{% url 'batch_delete' record.id %}"><i class="fas fa-trash"></i></a>
+        <a class="btn btn-info btn-block" href="{% url 'registry_submit_batch' record.id  %}">submit</a>
+    <a class="btn btn-danger btn-block" href="{% url 'batch_delete' record.id %}"><i class="fas fa-trash"></i></a>
         {% else %}
-        <a class="btn btn-info btn-sm" href="{% url 'batch_files' record.id %}">Open </a>
+        <a class="btn btn-info btn-block" href="{% url 'batch_files' record.id %}">Open </a>
         {% endif %}
 
 
     {% elif 'app.can_receive_file' in perms  %}
 
-            <a class="btn btn-info btn-sm" href="{% url 'batch_files' record.id %}">View</a>
+            <a class="btn btn-info btn-block" href="{% url 'batch_files' record.id %}">View</a>
 
 
 
 
     {% endif %}
+        </div>
+
+
 

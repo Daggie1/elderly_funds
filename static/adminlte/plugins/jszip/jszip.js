@@ -7931,7 +7931,6 @@ module.exports = function inflate_fast(strm, start) {
 
     here = lcode[hold & lmask];
 
-    dolen:
     for (;;) { // Goto emulation
       op = here >>> 24/*here.bits*/;
       hold >>>= op;
@@ -7964,7 +7963,6 @@ module.exports = function inflate_fast(strm, start) {
         }
         here = dcode[hold & dmask];
 
-        dodist:
         for (;;) { // goto emulation
           op = here >>> 24/*here.bits*/;
           hold >>>= op;

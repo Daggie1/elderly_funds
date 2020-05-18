@@ -85,6 +85,17 @@ class Batch(models.Model):
         return self.batch_no
 
 
+    def get_transition_options(self):
+        batch = self.objects.get(pk=self.id)
+        print(batch.batch_no)
+        transitions = list(batch.get_available_state_transitions())
+        available_transitions = []
+        for _ in transitions:
+            available_transitions.append(_)
+        return available_transitions
+
+
+
 class DocumentFileType(models.Model):
     file_type = models.CharField(max_length=100, null=False, primary_key=True)
     file_description = models.CharField(max_length=255)

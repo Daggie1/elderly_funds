@@ -4,8 +4,9 @@ from .models import DocumentFile, DocumentFileDetail, Batch
 
 
 class BatchTable(tables.Table):
+    transitions = tables.Column(accessor='get_transition_options')
     class Meta:
-        attrs = {"class": "table table-bordered table-striped"}
+        attrs = {"class": "table table-bordered table-striped table-responsive"}
         model = Batch
         template_name = "django_tables2/bootstrap4.html"
         fields = ("batch_no", "name", "created_on", "created_by", "state", "description")

@@ -8,7 +8,7 @@ from django_tables2 import SingleTableMixin, RequestConfig
 from django.urls import reverse, reverse_lazy
 
 from app.forms import BatchCreationForm
-from app.models import Batch,  DocumentFile, DocumentFileDetail,STATES
+from app.models import Batch, DocumentFile, DocumentFileDetail, STATES
 from app.tables import BatchTable, DocumentFileTable, BatchDocumentTable, DocumentTable, BatchFileTable
 from app.filters import BatchFilter, DocumentFileFilter, DocumentFilter
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -16,7 +16,6 @@ from django.views.generic import (
     ListView,
     DeleteView
 )
-
 
 
 class BatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
@@ -28,9 +27,11 @@ class BatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     def get_queryset(self):
 
         if self.request.user.has_perm('app.can_register_batch'):
-            return Batch.objects.filter(created_by=self.request.user).filter(state__in=[STATES[0],STATES[1],STATES[2]])
+            return Batch.objects.filter(created_by=self.request.user).filter(
+                state__in=[STATES[0], STATES[1], STATES[2]])
         elif self.request.user.has_perm('app.can_receive_file'):
-            return Batch.objects.filter(is_return_batch=True).filter(created_by=self.request.user).filter(state__in=[STATES[0], STATES[1], STATES[2]])
+            return Batch.objects.filter(is_return_batch=True).filter(created_by=self.request.user).filter(
+                state__in=[STATES[0], STATES[1], STATES[2]])
         else:
             return Batch.objects.none()
 
@@ -42,16 +43,16 @@ def create_batch(request):
 
         if form.is_valid():
             try:
-                batch=Batch.objects.create(batch_no=form.cleaned_data.get('batch_no'),
-                                 description=form.cleaned_data.get('description'),
-                                 created_by=request.user,
-                                 is_return_batch=False)
-                batch.start(user=request.user)
+                batch = Batch.objects.create(batch_no=form.cleaned_data.get('batch_no'),
+                                             description=form.cleaned_data.get('description'),
+                                             created_by=request.user,
+                                             is_return_batch=False)
                 batch.save()
                 messages.success(request, f" Batch Created successfully")
 
                 return redirect(reverse('files.view', kwargs={'batch_id': batch.id}))
             except AttributeError as e:
+                print(e)
                 messages.error(request, ' something wrong happened while adding batch')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
@@ -126,6 +127,7 @@ class BatchDocumentsView(LoginRequiredMixin, SingleTableMixin, FilterView):
 
         context['file_ref_no'] = self.kwargs['file_reference']
         return context
+
 
 def get_file(request, file_ref=None):
     if not file_ref == None:
