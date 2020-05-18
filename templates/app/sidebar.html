@@ -123,8 +123,8 @@
             </ul>
 {% endif %}
                 {% if 'app.can_scan_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
-            <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'create_document_type' or request.resolver_match.url_name == 'get_file_to_upload_documents' %} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'create_document_type'  or request.resolver_match.url_name == 'get_file_to_upload_documents' %} active {% endif %}">
+            <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'create_document_type' or request.resolver_match.url_name == 'get_file_to_upload_documents' or request.resolver_match.url_name  == 'list_transcribe_files'%} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'create_document_type'  or request.resolver_match.url_name == 'get_file_to_upload_documents' or request.resolver_match.url_name  == 'list_transcribe_files' %} active {% endif %}">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Documents
@@ -143,7 +143,7 @@
                 {% endif %}
             {% if  'app.can_transcribe_file' in perms  %}
                   <li class="nav-item">
-                <a href="{% url 'list_document_files' %}" class="nav-link">
+                <a href="{% url 'list_transcribe_files' %}" class="nav-link">
                   <i class="fas fa-glasses nav-icon"></i>
                   <p>Transcribe Documents</p>
                 </a>

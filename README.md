@@ -26,3 +26,20 @@ Then execute the following necessary commands
 _Please dont automate this with a bash script_
 
 Remember to create a superuser
+
+./manage.py graph_transitions -o blog_transitions.png myapp.Blog
+
+
+Library Used
+
+[Django-fsm](https://github.com/viewflow/django-fsm)
+
+**File State Graph**
+![alt text](file_transitions.png "File Process")
+
+
+**Document State Graph**
+![alt text](document_transitions.png "Document Process")
+
+**Batch State Graph**
+![alt text](batch_transitions.png "Batch Process")

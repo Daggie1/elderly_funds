@@ -3,20 +3,23 @@
     <div class="container">
     <div class="row">
         <div class="col-md-6 card">
-            <div class="row m-1">
-                <h5 class="text-center">Search File By Barcode</h5>
-            </div>
-            <div class="row m-1">
-                <form class="form-inline ml-3" action="." method="get">
-              <div class="input-group input-group-sm">
+            <div class="card-header">
+                <p class="card-title">Assembler</p>
+
+        <div class="card-tools">
+            <div>
+                <form class="form-inline ml-3  input-group-sm" action="." method="get">
+
                 <input name="q" class="form-control form-control-navbar" type="search" placeholder="Search Document" aria-label="Search">
                 <div class="input-group-append">
                   <button class="btn btn-navbar" type="submit">
-                    <i class="fas fa-search"></i>
+                    <i class="fas fa-search p-1"></i>
                   </button>
                 </div>
-              </div>
+
             </form>
+            </div>
+        </div>
             </div>
 
             {% if results %}
@@ -45,17 +48,17 @@
                 </div>
             </form>
             {% endif %}
-            <div class="row">
+            <div class="row m-1">
                 {% if file %}
                 <div class="col-md-6">
-                    Missing Documents
-                    <ul class="list-group" id="missing">
+                    <strong>Missing Documents</strong>
+                    <ul class="list-group text-xs" id="missing">
 
                     </ul>
                 </div>
                 <div class="col-md-6">
-                    Excess Documents
-                 <ul class="list-group" id="excess">
+                   <strong>Excess Documents</strong>
+                 <ul class="list-group text-xs" id="excess">
 
                     </ul>
                 </div>
@@ -156,6 +159,7 @@
         let excess = []
         excess= documents
         let scanned = []
+        console.log(documents)
 
         for(let i = 0; i < documents.length; i++){
             barItem = "<span class='badge badge-secondary'>"+ documents[i] +"</span>"
@@ -163,7 +167,7 @@
         }
 
          for(let i = 0; i < excess.length; i++){
-               let li =  "<li class='list-group-item'>"+ excess[i] +"</li>"
+               let li =  "<li class='list-group-item'>"+"<i class='fas fa-file p-1 text-maroon'></i>" + excess[i] +"</li>"
                $('#excess').append(li)
          }
 
@@ -210,7 +214,7 @@
         }
         function registerMissing(){
            for(let i = 0; i < missing.length; i++){
-               let li =  "<li class='list-group-item bg-gradient-warning'>"+ missing[i] +"</li>"
+               let li =  "<li class='list-group-item bg-gradient-warning'>" + "<i class='fas fa-stop p-1 text-danger'></i>" + missing[i] +"</li>"
                $('#missing').append(li)
            }
         }
@@ -218,7 +222,7 @@
         function registerExcess(){
             $('#excess').empty()
            for(let i = 0; i < excess.length; i++){
-               let li =  "<li class='list-group-item bg-gradient-warning'>"+ excess[i] +"</li>"
+               let li =  "<li class='list-group-item'>" + "<i class='fas fa-file p-1 text-maroon'></i>" + excess[i] +"</li>"
                $('#excess').append(li)
            }
         }

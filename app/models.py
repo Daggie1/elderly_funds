@@ -16,9 +16,6 @@ BATCH = ("Opened", "Done", "Closed")
 
 
 
-
-
-
 class Batch(models.Model):
     batch_no = models.CharField(max_length=255, null=False, unique=True)
     description = models.TextField( null=True, blank=True)
@@ -110,6 +107,7 @@ class DocumentFile(models.Model):
     file_reference = models.CharField(primary_key=True, max_length=100)
     file_type = models.ForeignKey(DocumentFileType, on_delete=models.CASCADE)
     document = models.FileField(upload_to='documents')
+    file_status = models.CharField(max_length=100, null=True)
 
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True, blank=True)
     file_created_by = models.ForeignKey(User, null=True, blank=True,

@@ -3,6 +3,10 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
+from django_filters.views import FilterView
+from django_tables2 import SingleTableMixin
+from app.tables import TranscribeTable
+from app.filters import DocumentFileFilter
 
 from app.models import Filer, DocumentFile, DocumentFileDetail, DocumentType
 
@@ -26,7 +30,7 @@ def get_files_from_storage(request, file_reference):
     domain = request.get_host()
 
     context = {'scanned_documents': list(scanned_documents),
-               'digital_documents': map_keys_to_value_digital(digital_documents), 'file': file, 'domain':domain,
+               'digital_documents': map_keys_to_value_digital(digital_documents), 'file': file, 'domain': domain,
                'document_type': list(document_type)}
 
     return render(request, 'transcribe_document.html', context=context)
@@ -53,10 +57,17 @@ def update_document_file_detail(request, document):
         document.document_type = document_type_instance
         document.document_file_path = document_path
         document.save()
-        response = JsonResponse({'success':'update was success'})
+        response = JsonResponse({'success': 'update was success'})
         response.status_code = 200
         return response
     else:
-        response =  JsonResponse({'error':'update failed'})
-        response.status_code  = 500
+        response = JsonResponse({'error': 'update failed'})
+        response.status_code = 500
         return response
+
+
+class TranscribeFiles(SingleTableMixin, FilterView):
+    table_class = TranscribeTable
+    filterset_class = DocumentFileFilter
+    model = DocumentFile
+    template_name = "transcribe_list.html"
