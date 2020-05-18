@@ -74,10 +74,10 @@
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
-          <span class="badge badge-warning navbar-badge">{%  if  user.notification_set.all.count > 0 %} {{user.notification_set.all | unread_notification_count  }}   {% endif %}</span>
+          <span class="badge badge-warning navbar-badge">{%  if  user.notificationsentto_set.all.count > 0 %} {{user.notificationsentto_set.all | unread_notification_count  }}   {% endif %}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">{%  if  user.notification_set.all.count > 0 %}{{ user.notification_set.all | unread_notification_count  }}
+          <span class="dropdown-item dropdown-header">{%  if  user.notificationsentto_set.all.count > 0 %}{{ user.notificationsentto_set.all | unread_notification_count  }}
               new notification(s)
               {% else %}
               no new notifications
@@ -85,17 +85,17 @@
           <div class="dropdown-divider"></div>
 
 
-        {% for notification in  user.notification_set.all   %}
-          <a href="{%  url 'rejected_list_document_files' %}" class="dropdown-item">
-            <i class="fas fa-file-pdf mr-2"></i> {{ notification.modification.object_type }} Flagged
-            <span class="float-right text-muted text-sm">{{ notification.modification.modification_ended_at }}</span>
+        {% for notification in  user.notificationsentto_set.all   %}
+          <a href="{%  url 'list_document_files' %}" class="dropdown-item">
+            <i class="fas fa-file-pdf mr-2"></i> {{ notification.notification.file }} Flagged
+            <span class="float-right text-muted text-sm">{{ notification.notification.created_at }}</span>
           </a>
           <div class="dropdown-divider"></div>
         {% endfor %}
-{%  if  user.notification_set.all.count > 0 %}
+{%  if  user.notificationsentto_set.all.count > 0 %}
 
 
-          <a href="{%  url 'rejected_list_document_files' %}" class="dropdown-item dropdown-footer">See All Notifications</a>
+          <a href="{%  url 'list_document_files' %}" class="dropdown-item dropdown-footer">See All Notifications</a>
         {% endif %}
         </div>
       </li>
