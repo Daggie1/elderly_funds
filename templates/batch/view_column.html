@@ -10,11 +10,11 @@
               <a class="dropdown-item text-danger" href="#"><i class="fa fa-exclamation-triangle"></i> Flag</a>
                 <div role="separator" class="dropdown-divider"></div>
                 {% if 'app.can_register_batch' in perms and user.is_superuser %}
-    <a class="btn btn-info btn-block" href="{% url 'files.view' record.id %}">Open </a>
+    <a class="btn btn-info btn-block" href="{% url 'batch_files' record.id %}">Open </a>
     {% elif 'app.can_register_batch' in perms %}
 
     {% if record.state_id == '300' %}
-    <a class="btn btn-info btn-block" href="{% url 'files.view' record.id %}">Open </a>
+    <a class="btn btn-info btn-block" href="{% url 'batch_files' record.id %}">Open </a>
 
         <a class="btn btn-info btn-block" href="{% url 'registry_submit_batch' record.id  %}">submit</a>
     <a class="btn btn-danger btn-block" href="{% url 'batch_delete' record.id %}"><i class="fas fa-trash"></i></a>

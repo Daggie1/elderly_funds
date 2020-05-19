@@ -27,7 +27,7 @@
 
                     <button class="btn btn-warning" id="return_btn" onclick="hideUnhideReturnRejectedFile()">Take Action on this File</button>
                 {% endif %}
-                {% if 'app.can_register_batch' in perms and not user.is_superuser %}
+                {% if 'app.can_register_batch' in perms or user.is_superuser %}
 
                     <a href="{% url 'document.create' file_ref_no %}" class="btn btn-primary">Add Document</a>
                 {% endif %}

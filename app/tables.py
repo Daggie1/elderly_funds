@@ -9,7 +9,7 @@ class BatchTable(tables.Table):
         attrs = {"class": "table table-bordered table-striped table-responsive"}
         model = Batch
         template_name = "django_tables2/bootstrap4.html"
-        fields = ("batch_no", "name", "created_on", "created_by", "state", "description")
+        fields = ("batch_no", "created_on", "created_by", "state", "description")
 
     files = TemplateColumn(template_name='batch/total_column.html')
     actions = TemplateColumn(template_name='batch/view_column.html')
@@ -31,7 +31,7 @@ class BatchDocumentTable(tables.Table):
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFileDetail
         template_name = "django_tables2/bootstrap4.html"
-        fields = ("file_reference_id", "document_barcode", "document_name_id", "document_file_path")
+        fields = ("file_reference_id", "document_barcode", "state","document_name_id", "document_file_path")
 
     actions = TemplateColumn(template_name='app/document_transcribe.html')
 
