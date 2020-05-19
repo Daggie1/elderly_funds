@@ -3,11 +3,9 @@
                 <i class="fa fa-ellipsis-v"></i>
             </button>
             <div class="dropdown-menu">
-            {% if record.id == 2 %}
-              <a class="dropdown-item btn btn-info btn-block" href="#">{{ table|get_fields }}</a>
-            {% endif %}
+              <div class="dropdown-item btn btn-info btn-block">{{ record.id|get_actions_batch }}</div>
                 <div role="separator" class="dropdown-divider"></div>
-              <a class="dropdown-item btn btn-info btn-block" href="#">Return</a>
+              <div class="dropdown-item btn btn-info btn-block">Return</div>
                 <div role="separator" class="dropdown-divider"></div>
               <a class="dropdown-item text-danger" href="#"><i class="fa fa-exclamation-triangle"></i> Flag</a>
                 <div role="separator" class="dropdown-divider"></div>

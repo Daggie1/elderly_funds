@@ -82,7 +82,6 @@ class Batch(models.Model):
 
     def get_transition_options(self):
         transition = list(self.get_available_state_transitions())
-        print(transition[0].target)
         # "Opened", "Done", "Closed"
         # 'Open', 'Done', 'Continue_Editing', 'Close'
         if transition[0].target == "Opened":

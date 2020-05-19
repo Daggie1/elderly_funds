@@ -1,8 +1,12 @@
 from django import template
 import urllib
 
-register = template.Library()
+from django.utils.html import format_html
+from django.urls import reverse_lazy
 
+from app.models import DocumentFile, Batch, DocumentFileDetail
+register = template.Library()
+ACTIONS=['Open','Done','Continue_Editing','Close']
 
 @register.filter
 def concat_string(value_1, value_2):
@@ -13,10 +17,16 @@ def concat_string(value_1, value_2):
 
 @register.filter
 def get_fields(obj):
-    print(obj)
+    # print(dir(obj))
+    print(obj.__dict__)
+    print(obj.data.__dict__)
     # return [(field.name, field.value_to_string(obj)) for field in obj._meta.fields]
     return "nothing"
 
 @register.filter
-def get_actions(obj):
-    pass
+def get_actions_batch(id):
+    batch = Batch.objects.get(pk=id)
+    transitions = list(batch.get_available_state_transitions())
+    if transitions[0].target == "Done":
+        return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Mark As Complete</a>', reverse_lazy('update_state_batch',args=[id, ACTIONS[1]]))
+    get_actions_batch.allow_tags = True
