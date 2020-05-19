@@ -116,10 +116,7 @@ class DocumentFile(models.Model):
     file_reference = models.CharField(primary_key=True, max_length=100)
     file_type = models.ForeignKey(DocumentFileType, on_delete=models.CASCADE)
     document = models.FileField(upload_to='documents')
-<<<<<<< HEAD
 
-=======
->>>>>>> e025dabe2c207edb67a43a4d2071fd5bb020d91f
 
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True, blank=True)
     file_created_by = models.ForeignKey(User, null=True, blank=True,
@@ -135,7 +132,7 @@ class DocumentFile(models.Model):
     assigned_to = models.ForeignKey(User, null=True, blank=True,
                                     on_delete=models.DO_NOTHING,
                                     related_name='file_assigned_to')
-    lock = models.BooleanField(default=False)
+    # lock = models.BooleanField(default=False)
     file_path = models.CharField(null=True, max_length=100)
     stage = FSMField(default=STAGES[0], protected=True)
 
@@ -213,18 +210,13 @@ class DocumentFile(models.Model):
             modified_to_stage=STAGES[0],
             by=user
         )
-<<<<<<< HEAD
+
         self.flagged=False
         self.save()
 
     @transition(field=stage, source=[STAGES[1]], target=STAGES[0],conditions=[file_closed],permission=['app.can_receive_file'])
     def return_registry(self,user,rejection_comment=''):
-=======
 
-    @transition(field=stage, source=[STAGES[1]], target=STAGES[0], conditions=[file_closed],
-                permission=['app.can_receive_file'])
-    def return_registry(self, user, rejection_comment=''):
->>>>>>> e025dabe2c207edb67a43a4d2071fd5bb020d91f
 
         """"flags a  file stage to REGISTRY
 
@@ -407,7 +399,7 @@ class DocumentFileDetail(models.Model):
                                        on_delete=models.DO_NOTHING,
                                        related_name='doc_created_by')
     created_on = models.DateTimeField(auto_now_add=timezone.now)
-    flagged = models.BooleanField(default=False)
+    # flagged = models.BooleanField(default=False)
 
     assigned_to = models.ForeignKey(User, null=True, blank=True,
                                     on_delete=models.DO_NOTHING,
