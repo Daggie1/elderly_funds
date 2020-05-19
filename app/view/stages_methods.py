@@ -21,7 +21,6 @@ def update_stage_file(request, pk, action):
     if file:
         try:
             if action == ACTIONS[0]:
-
                 file.dispatch_reception(user=user)
                 file.save()
                 messages.success(request, ' File moved successfully')

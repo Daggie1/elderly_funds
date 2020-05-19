@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from app.models import DocumentFile, Batch, STAGES
 
 register = template.Library()
+
 ACTIONS = ['Open', 'Done', 'Continue_Editing', 'Close']
 ACTIONS_STAGE = ['Dispatch to Reception',
                  'Return to Registry', 'Dispatch to Assembler', 'Return to Reception', 'Dispatch to Scanner',
@@ -14,6 +15,8 @@ ACTIONS_STAGE = ['Dispatch to Reception',
                  'Dispatch to QA',
                  'Dispatch to Validator',
                  'Finalize to Reception']
+
+
 
 
 @register.filter
@@ -50,6 +53,7 @@ def get_actions_file(id):
     file = DocumentFile.objects.get(pk=id)
     transitions = list(file.get_available_state_transitions())
     stage_transitions = list(file.get_available_stage_transitions())
+
     print(f'file={file}stage_transitions={stage_transitions}')
     for transition in stage_transitions:
         print(f'transition source={transition.source}')
@@ -81,4 +85,5 @@ def get_actions_file(id):
         if transition.source== STAGES[6] and transition.target == STAGES[7]:
             return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Finalize To Reception</a>',
                            reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[8]]))
+
 
