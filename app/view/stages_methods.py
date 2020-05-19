@@ -1,12 +1,12 @@
-from app.models import STATES, STAGES,Batch,DocumentFile,DocumentFileDetail
-from django.shortcuts import redirect, render
-from django.urls import reverse, reverse_lazy
+from app.models import DocumentFile
+from django.shortcuts import redirect
+from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 
 ACTIONS=['Dispatch to Reception',
-         'Return to Registry','Dispatch to Assembler'
-         'Return to Reception','Dispatch to Scanner',
+         'Return to Registry', 'Dispatch to Assembler',
+         'Return to Reception', 'Dispatch to Scanner',
          'Dispatch to Transcriber',
          'Dispatch to QA',
          'Dispatch to Validator',

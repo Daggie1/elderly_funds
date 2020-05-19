@@ -71,7 +71,7 @@ class Batch(models.Model):
         if not self.is_return_batch:
             for file in files:
                 file.close()
-                file.start(user=user)
+                file.dispatch_reception(user=user)
                 file.save()
         else:
             for file in files:
@@ -204,17 +204,18 @@ class DocumentFile(models.Model):
             -records this action in Modification Table
                                  """
         # create log
-        Modification.objects.create(
+        print(f'file being moved={self}')
+        log=Modification.objects.create(
             file=self,
             modified_from_stage=STAGES[0],
-            modified_to_stage=STAGES[0],
+            modified_to_stage=STAGES[1],
             by=user
         )
-
+        print(f'log created={log}')
         self.flagged=False
         self.save()
 
-    @transition(field=stage, source=[STAGES[1]], target=STAGES[0],conditions=[file_closed],permission=['app.can_receive_file'])
+    @transition(field=stage, source=[STAGES[1]], target=STAGES[0], permission=['app.can_receive_file'])
     def return_registry(self,user,rejection_comment=''):
 
 
@@ -252,7 +253,7 @@ class DocumentFile(models.Model):
         self.flagged = True
         self.save()
 
-    @transition(field=stage, source=[STAGES[1]], target=STAGES[2], conditions=[file_closed],
+    @transition(field=stage, source=[STAGES[1]], target=STAGES[2],
                 permission=['app.can_receive_file'])
     def dispatch_assembly(self, user=None):
 
@@ -269,7 +270,9 @@ class DocumentFile(models.Model):
         self.flagged = False
         self.save()
 
-    @transition(field=stage, source=[STAGES[2]], target=STAGES[1], conditions=[file_closed],
+#TODO remember conditions=[file_closed] hahah.....
+
+    @transition(field=stage, source=[STAGES[2]], target=STAGES[1],
                 permission=['app.can_disassemble_file'])
     def return_reception(self, user=None, rejection_comment=None):
 
@@ -312,7 +315,7 @@ class DocumentFile(models.Model):
         self.save()
         pass
 
-    @transition(field=stage, source=[STAGES[2]], target=STAGES[3], conditions=[file_closed],
+    @transition(field=stage, source=[STAGES[2]], target=STAGES[3],
                 permission=['app.can_disassemble_file'])
     def dispatch_scanner(self, user):
         """"changes  file stage to SCANNER
@@ -328,7 +331,7 @@ class DocumentFile(models.Model):
         self.flagged = False
         self.save()
 
-    @transition(field=stage, source=[STAGES[3]], target=STAGES[4], conditions=[file_closed],
+    @transition(field=stage, source=[STAGES[3]], target=STAGES[4],
                 permission=['app.can_scan_file'])
     def dispatch_transcriber(self, user=None):
 
@@ -345,7 +348,7 @@ class DocumentFile(models.Model):
         self.flagged = False
         self.save()
 
-    @transition(field=stage, source=[STAGES[4]], target=STAGES[5], conditions=[file_closed],
+    @transition(field=stage, source=[STAGES[4]], target=STAGES[5],
                 permission=['app.can_transcribe_file'])
     def dispatch_qa(self, user=None):
 
@@ -362,7 +365,7 @@ class DocumentFile(models.Model):
         self.flagged = False
         self.save()
 
-    @transition(field=stage, source=[STAGES[5]], target=STAGES[6], conditions=[file_closed],
+    @transition(field=stage, source=[STAGES[5]], target=STAGES[6],
                 permission=['app.can_qa_file'])
     def dispatch_validator(self, user=None):
         """"changes  file stage to VALIDATOR
@@ -379,7 +382,7 @@ class DocumentFile(models.Model):
         self.flagged = False
         self.save()
 
-    @transition(field=stage, source=[STAGES[6]], target=STAGES[1], conditions=[file_closed],
+    @transition(field=stage, source=[STAGES[6]], target=STAGES[1],
                 permission=['app.can_validate_file'])
     def finalize_to_reception(self):
         self.flagged = False
@@ -493,6 +496,7 @@ class Modification(models.Model):
     modified_from_stage = FSMField(null=False, protected=True)
     modified_to_stage = FSMField(null=True, protected=True)
     by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=timezone.now)
 
 
 class Notification(models.Model):
