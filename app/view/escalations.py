@@ -19,7 +19,7 @@ from app.tables import DocumentFileTable
 
 
 
-class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
+class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     permission_required = 'app.view_documentfile'
 
     table_class = DocumentFileTable

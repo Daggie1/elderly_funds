@@ -36,7 +36,7 @@ from app.view.validate import ValidateFileList
 from app.view.states_methods import update_state_batch,update_state_file,update_state_document
 from app.view.stages_methods import update_stage_file
 from app.view.file_history import get_file_history,get_each_user_history,get_loggedin_user_history
-from app.view.escalations import get_my_ecalated_files
+from app.view.escalations import RejectedDocumentFileList
 
 urlpatterns = [
     path('', report, name='home'),
@@ -160,7 +160,7 @@ urlpatterns = [
     path('user/<pk>',get_each_user_history,name='get_user_history'),
 
 #get escalated files
-    path('my_escalated files',get_my_ecalated_files,name='logged_in_user_history')
+    path('my_escalated files',RejectedDocumentFileList.as_view(), name='my_escalated_files')
 
 
 
