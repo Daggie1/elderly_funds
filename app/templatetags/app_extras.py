@@ -27,6 +27,16 @@ def get_fields(obj):
 def get_actions_batch(id):
     batch = Batch.objects.get(pk=id)
     transitions = list(batch.get_available_state_transitions())
+    # stage_transitions = list(batch.get_available_stage_transitions())
+
     if transitions[0].target == "Done":
         return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Mark As Complete</a>', reverse_lazy('update_state_batch',args=[id, ACTIONS[1]]))
     get_actions_batch.allow_tags = True
+
+@register.filter
+def get_actions_file(id):
+    file = DocumentFile.objects.get(pk=id)
+    transitions = list(file.get_available_state_transitions())
+    stage_transitions = list(file.get_available_stage_transitions())
+    if stage_transitions[0].target == "Reception":
+        return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Send To Reception</a>', reverse_lazy('update_stage_file',args=[id, ACTIONS[1]]))

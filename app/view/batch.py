@@ -50,7 +50,8 @@ def create_batch(request):
                 batch.save()
                 messages.success(request, f" Batch Created successfully")
 
-                return redirect(reverse('files.view', kwargs={'batch_id': batch.id}))
+                # return redirect(reverse('files.view', kwargs={'batch_id': batch.id}))
+                return redirect('batch_index')
             except AttributeError as e:
                 print(e)
                 messages.error(request, ' something wrong happened while adding batch')
@@ -122,8 +123,6 @@ class BatchDocumentsView(LoginRequiredMixin, SingleTableMixin, FilterView):
 
         file = get_file(self.request, self.kwargs['file_reference'])
         print(f'at context{file}')
-        file_state_id = file.state_id
-        context['file_state_id'] = file_state_id
 
         context['file_ref_no'] = self.kwargs['file_reference']
         return context
@@ -134,7 +133,7 @@ def get_file(request, file_ref=None):
         file = DocumentFile.objects.get(pk=file_ref)
 
         print(f'file ={file}')
-        if file and request.user.has_perm("app." + file.state.permission.codename):
+        if file:
             print(f'has perms to acces file {file}')
             return file
 

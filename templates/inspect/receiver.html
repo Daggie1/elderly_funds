@@ -139,7 +139,7 @@
                     excess.splice(index, 1);
                     let urlMask = "{% url 'change_file_status_to_accept_ajax' 87 %}".replace(/87/, file_referece);
                     $('#form_data').attr('action', urlMask);
-                    $( "#accept" ).trigger( "click" );
+                    {#$( "#accept" ).trigger( "click" );#}
                 }
                 registerExcess()
                 listItem = "<li class='list-group-item bg-success'>" +barcode+ "</li>"
