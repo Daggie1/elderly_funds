@@ -11,7 +11,7 @@ def report(request):
     # get all files
     files = DocumentFile.objects.all()
     # get all document types
-    document_types = DocumentType.objects.all();
+    document_types = DocumentType.objects.all()
     # get all file types
     file_types = DocumentFileType.objects.all()
     # get all users

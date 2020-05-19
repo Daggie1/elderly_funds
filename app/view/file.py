@@ -24,6 +24,7 @@ class DocumentFileCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.file_created_by = self.request.user
+
         form.instance.batch_id = self.kwargs['batch_id']
         # file=form.save()
         # print(file.file_reference)
@@ -40,8 +41,10 @@ class FilesView(LoginRequiredMixin, SingleTableMixin, FilterView):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the books
-        context['batch_id'] = int(self.kwargs['batch_id'])
-        print(context)
+
+        context['batch_id']=int(self.kwargs['batch_id'])
+
+
         return context
 
     def get_queryset(self):
@@ -70,25 +73,29 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
         if self.request.user.is_superuser:
             return DocumentFile.objects.all()
         elif self.request.user.has_perm('app.can_create_batch'):
-            return DocumentFile.objects.filter(stage=[0]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            return DocumentFile.objects.filter(stage=STAGES[0],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         elif self.request.user.has_perm('app.can_receive_file'):
-            return DocumentFile.objects.filter(stage=[1]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            return DocumentFile.objects.filter(stage=STAGES[1],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         elif self.request.user.has_perm('app.can_disassemble_file'):
-            return DocumentFile.objects.filter(stage=[2]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            return DocumentFile.objects.filter(stage=STAGES[2],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         elif self.request.user.has_perm('app.can_scan_file'):
 
-            return DocumentFile.objects.filter(stage=[3]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+         return DocumentFile.objects.filter(stage=STAGES[3],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+
 
 
         elif self.request.user.has_perm('app.can_transcribe_file'):
 
-            return DocumentFile.objects.filter(stage=[4]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+
+
+            return DocumentFile.objects.filter(stage=STAGES[4],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+
 
         elif self.request.user.has_perm('app.can_qa_file'):
-            return DocumentFile.objects.filter(stage=[5]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            return DocumentFile.objects.filter(stage=STAGES[5],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
 
         elif self.request.user.has_perm('app.can_validate_file'):
-            return DocumentFile.objects.filter(stage=[6]).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            return DocumentFile.objects.filter(stage=STAGES[6],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         else:
             return DocumentFile.objects.none()
 

@@ -117,6 +117,7 @@ class DocumentFile(models.Model):
     file_type = models.ForeignKey(DocumentFileType, on_delete=models.CASCADE)
     document = models.FileField(upload_to='documents')
 
+
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True, blank=True)
     file_created_by = models.ForeignKey(User, null=True, blank=True,
                                         on_delete=models.DO_NOTHING,
@@ -131,7 +132,7 @@ class DocumentFile(models.Model):
     assigned_to = models.ForeignKey(User, null=True, blank=True,
                                     on_delete=models.DO_NOTHING,
                                     related_name='file_assigned_to')
-    lock = models.BooleanField(default=False)
+    # lock = models.BooleanField(default=False)
     file_path = models.CharField(null=True, max_length=100)
     stage = FSMField(default=STAGES[0], protected=True)
 
@@ -210,9 +211,12 @@ class DocumentFile(models.Model):
             by=user
         )
 
-    @transition(field=stage, source=[STAGES[1]], target=STAGES[0], conditions=[file_closed],
-                permission=['app.can_receive_file'])
-    def return_registry(self, user, rejection_comment=''):
+        self.flagged=False
+        self.save()
+
+    @transition(field=stage, source=[STAGES[1]], target=STAGES[0],conditions=[file_closed],permission=['app.can_receive_file'])
+    def return_registry(self,user,rejection_comment=''):
+
 
         """"flags a  file stage to REGISTRY
 
@@ -262,7 +266,8 @@ class DocumentFile(models.Model):
             modified_to_stage=STAGES[2],
             by=user
         )
-        pass
+        self.flagged = False
+        self.save()
 
     @transition(field=stage, source=[STAGES[2]], target=STAGES[1], conditions=[file_closed],
                 permission=['app.can_disassemble_file'])
@@ -320,7 +325,8 @@ class DocumentFile(models.Model):
             modified_to_stage=STAGES[3],
             by=user
         )
-        pass
+        self.flagged = False
+        self.save()
 
     @transition(field=stage, source=[STAGES[3]], target=STAGES[4], conditions=[file_closed],
                 permission=['app.can_scan_file'])
@@ -336,7 +342,8 @@ class DocumentFile(models.Model):
             modified_to_stage=STAGES[4],
             by=user
         )
-        pass
+        self.flagged = False
+        self.save()
 
     @transition(field=stage, source=[STAGES[4]], target=STAGES[5], conditions=[file_closed],
                 permission=['app.can_transcribe_file'])
@@ -352,7 +359,8 @@ class DocumentFile(models.Model):
             modified_to_stage=STAGES[5],
             by=user
         )
-        pass
+        self.flagged = False
+        self.save()
 
     @transition(field=stage, source=[STAGES[5]], target=STAGES[6], conditions=[file_closed],
                 permission=['app.can_qa_file'])
@@ -368,12 +376,14 @@ class DocumentFile(models.Model):
             modified_to_stage=STAGES[6],
             by=user
         )
-        pass
+        self.flagged = False
+        self.save()
 
     @transition(field=stage, source=[STAGES[6]], target=STAGES[1], conditions=[file_closed],
                 permission=['app.can_validate_file'])
     def finalize_to_reception(self):
-        pass
+        self.flagged = False
+        self.save()
 
 
 class DocumentFileDetail(models.Model):
@@ -389,7 +399,7 @@ class DocumentFileDetail(models.Model):
                                        on_delete=models.DO_NOTHING,
                                        related_name='doc_created_by')
     created_on = models.DateTimeField(auto_now_add=timezone.now)
-    flagged = models.BooleanField(default=False)
+    # flagged = models.BooleanField(default=False)
 
     assigned_to = models.ForeignKey(User, null=True, blank=True,
                                     on_delete=models.DO_NOTHING,
