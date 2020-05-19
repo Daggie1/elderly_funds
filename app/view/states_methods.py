@@ -57,7 +57,7 @@ def update_state_file(request, pk, action):
                 file.save()
                 messages.success(request, ' File status changed successfully')
                 return redirect(reverse('list_document_files'))
-            elif action == ACTIONS[3]:
+            elif action == ACTIONS[2]:
                 file.continue_editing()
                 file.save()
                 messages.success(request, ' File status changed successfully')

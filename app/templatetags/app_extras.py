@@ -4,7 +4,7 @@ import urllib
 from django.utils.html import format_html
 from django.urls import reverse_lazy
 
-from app.models import DocumentFile, Batch, STAGES
+from app.models import DocumentFile, Batch, STAGES,BATCH
 
 register = template.Library()
 
@@ -41,11 +41,19 @@ def get_actions_batch(id):
     batch = Batch.objects.get(pk=id)
     transitions = list(batch.get_available_state_transitions())
     # stage_transitions = list(batch.get_available_stage_transitions())
-
-    if transitions[0].target == "Done":
-        return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Mark As Complete</a>',
-                           reverse_lazy('update_state_batch', args=[id, ACTIONS[1]]))
-    get_actions_batch.allow_tags = True
+    for transition in transitions:
+        print(f'batch transition source={transition.source}')
+        print(f'batch transition target={transition.target}')
+        if transition.source == BATCH[0] and transition.target == BATCH[1]:
+            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Done Editing</a>',
+                               reverse_lazy('update_state_batch', args=[id, ACTIONS[1]]))
+        if transition.source == BATCH[1] and transition.target == BATCH[0]:
+            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Continue Editing</a>',
+                               reverse_lazy('update_state_batch', args=[id, ACTIONS[2]]))
+        if transition.source == BATCH[1] and transition.target == BATCH[2]:
+            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Close(Complete)</a>',
+                               reverse_lazy('update_state_batch', args=[id, ACTIONS[3]]))
+        get_actions_batch.allow_tags = True
 
 
 @register.filter
