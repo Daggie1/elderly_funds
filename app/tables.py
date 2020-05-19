@@ -20,7 +20,7 @@ class BatchFileTable(tables.Table):
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
         template_name = "django_tables2/bootstrap.html"
-        fields = ("file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
+        fields = ("file_reference", "file_type", "state", "stage","captured_by", "file_barcode", "created_on")
 
     docs = TemplateColumn(template_name='file/total_column.html')
     action = TemplateColumn(template_name='batch/file_view_column.html')
