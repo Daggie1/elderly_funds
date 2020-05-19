@@ -119,7 +119,7 @@ class DocumentFile(models.Model):
     file_reference = models.CharField(primary_key=True, max_length=100)
     file_type = models.ForeignKey(DocumentFileType, on_delete=models.CASCADE)
     document = models.FileField(upload_to='documents')
-    file_status = models.CharField(max_length=100, null=True)
+
 
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True, blank=True)
     file_created_by = models.ForeignKey(User, null=True, blank=True,
@@ -212,7 +212,8 @@ class DocumentFile(models.Model):
             modified_to_stage=STAGES[0],
             by=user
         )
-
+        self.flagged=False
+        self.save()
 
     @transition(field=stage, source=[STAGES[1]], target=STAGES[0],conditions=[file_closed],permission=['app.can_receive_file'])
     def return_registry(self,user,rejection_comment=''):
@@ -266,7 +267,8 @@ class DocumentFile(models.Model):
             modified_to_stage=STAGES[2],
             by=user
         )
-        pass
+        self.flagged = False
+        self.save()
 
     @transition(field=stage, source=[STAGES[2]], target=STAGES[1],conditions=[file_closed],permission=['app.can_disassemble_file'])
 
@@ -323,7 +325,8 @@ class DocumentFile(models.Model):
             modified_to_stage=STAGES[3],
             by=user
         )
-        pass
+        self.flagged = False
+        self.save()
 
     @transition(field=stage, source=[STAGES[3]], target=STAGES[4],conditions=[file_closed],permission=['app.can_scan_file'])
     def dispatch_transcriber(self,user=None):
@@ -338,7 +341,8 @@ class DocumentFile(models.Model):
             modified_to_stage=STAGES[4],
             by=user
         )
-        pass
+        self.flagged = False
+        self.save()
 
     @transition(field=stage, source=[STAGES[4]], target=STAGES[5],conditions=[file_closed],permission=['app.can_transcribe_file'])
     def dispatch_qa(self,user=None):
@@ -353,7 +357,8 @@ class DocumentFile(models.Model):
             modified_to_stage=STAGES[5],
             by=user
         )
-        pass
+        self.flagged = False
+        self.save()
 
     @transition(field=stage, source=[STAGES[5]], target=STAGES[6],conditions=[file_closed],permission=['app.can_qa_file'])
     def dispatch_validator(self,user=None):
@@ -368,11 +373,13 @@ class DocumentFile(models.Model):
             modified_to_stage=STAGES[6],
             by=user
         )
-        pass
+        self.flagged = False
+        self.save()
 
     @transition(field=stage, source=[STAGES[6]], target=STAGES[1],conditions=[file_closed],permission=['app.can_validate_file'])
     def finalize_to_reception(self):
-        pass
+        self.flagged = False
+        self.save()
 
 
 class DocumentFileDetail(models.Model):
