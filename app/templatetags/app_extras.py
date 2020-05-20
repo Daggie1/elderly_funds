@@ -8,6 +8,7 @@ from app.models import DocumentFile, Batch, STAGES,BATCH
 
 register = template.Library()
 
+FILES_ACTIONS_STATE = []
 ACTIONS = ['Open', 'Done', 'Continue_Editing', 'Close']
 ACTIONS_STAGE = ['Dispatch to Reception',
                  'Return to Registry', 'Dispatch to Assembler', 'Return to Reception', 'Dispatch to Scanner',
@@ -94,4 +95,22 @@ def get_actions_file(id):
             return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Finalize To Reception</a>',
                            reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[8]]))
 
+
+@register.filter
+def get_actions_file_state(id):
+    file = DocumentFile.objects.get(pk=id)
+    transitions = list(file.get_available_state_transitions())
+    for transition in transitions:
+        print(f'batch transition source={transition.source}')
+        print(f'batch transition target={transition.target}')
+        if transition.source == BATCH[0] and transition.target == BATCH[1]:
+            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Done Editing</a>',
+                               reverse_lazy('update_state_batch', args=[id, ACTIONS[1]]))
+        if transition.source == BATCH[1] and transition.target == BATCH[0]:
+            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Continue Editing</a>',
+                               reverse_lazy('update_state_batch', args=[id, ACTIONS[2]]))
+        if transition.source == BATCH[1] and transition.target == BATCH[2]:
+            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Close(Complete)</a>',
+                               reverse_lazy('update_state_batch', args=[id, ACTIONS[3]]))
+        get_actions_batch.allow_tags = True
 

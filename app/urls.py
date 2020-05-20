@@ -154,15 +154,13 @@ urlpatterns = [
     path('file_history/<pk>/',get_file_history,name='file_history'),
 
     #get logged user history
-    path('my_history',get_loggedin_user_history,name='logged_in_user_history'),
+    path('my/history/',get_loggedin_user_history,name='logged_in_user_history'),
 
 #get  user history
     path('user/<pk>',get_each_user_history,name='get_user_history'),
 
 #get escalated files
-    path('my_escalated files',RejectedDocumentFileList.as_view(), name='my_escalated_files')
-
-
+    path('my_escalated files',RejectedDocumentFileList.as_view(), name='my_escalated_files'),
 
 ]
 

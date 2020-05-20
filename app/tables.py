@@ -1,6 +1,6 @@
 import django_tables2 as tables
 from django_tables2 import TemplateColumn
-from .models import DocumentFile, DocumentFileDetail, Batch
+from .models import DocumentFile, DocumentFileDetail, Batch, Modification
 
 
 class BatchTable(tables.Table):
@@ -20,7 +20,7 @@ class BatchFileTable(tables.Table):
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
         template_name = "django_tables2/bootstrap.html"
-        fields = ("file_reference", "file_type", "state", "stage","captured_by", "file_barcode", "created_on")
+        fields = ("file_reference", "file_type", "state", "stage", "captured_by", "file_barcode", "created_on")
 
     docs = TemplateColumn(template_name='file/total_column.html')
     action = TemplateColumn(template_name='batch/file_view_column.html')
@@ -31,7 +31,7 @@ class BatchDocumentTable(tables.Table):
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFileDetail
         template_name = "django_tables2/bootstrap4.html"
-        fields = ("file_reference_id", "document_barcode", "state","document_name_id", "document_file_path")
+        fields = ("file_reference_id", "document_barcode", "state", "document_name_id", "document_file_path")
 
     actions = TemplateColumn(template_name='app/document_transcribe.html')
 
@@ -100,3 +100,13 @@ class TranscribeTable(tables.Table):
 
     docs = TemplateColumn(template_name='file/total_column.html')
     transcribe = TemplateColumn(template_name='app/document_action_column.html')
+
+
+class HistoryTable(tables.Table):
+    class Meta:
+        attrs = {"class": "table table-bordered table-striped"}
+        model = Modification
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("file", "modified_from_stage", "modified_to_stage", "by", "created_at")
+
+    view = TemplateColumn(template_name='file/view_history.html')

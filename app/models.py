@@ -132,7 +132,7 @@ class DocumentFile(models.Model):
     assigned_to = models.ForeignKey(User, null=True, blank=True,
                                     on_delete=models.DO_NOTHING,
                                     related_name='file_assigned_to')
-    # lock = models.BooleanField(default=False)
+    lock = models.BooleanField(default=False)
     file_path = models.CharField(null=True, max_length=100)
     stage = FSMField(default=STAGES[0], protected=True)
 
@@ -402,12 +402,10 @@ class DocumentFileDetail(models.Model):
                                        on_delete=models.DO_NOTHING,
                                        related_name='doc_created_by')
     created_on = models.DateTimeField(auto_now_add=timezone.now)
-    # flagged = models.BooleanField(default=False)
-
+    flagged = models.BooleanField(default=False)
     assigned_to = models.ForeignKey(User, null=True, blank=True,
                                     on_delete=models.DO_NOTHING,
                                     related_name='doc_assigned_to')
-
     state = FSMField(default=STATES[0], protected=True)
 
     # transition methods

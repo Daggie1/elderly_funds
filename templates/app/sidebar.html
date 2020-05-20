@@ -2,8 +2,8 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-             <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'home' %} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' %} active {% endif %} ">
+             <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'logged_in_user_history' %} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'logged_in_user_history' %} active {% endif %} ">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
@@ -15,6 +15,12 @@
                 <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %} active {% endif %}">
                   <i class="fas fa-flag nav-icon"></i>
                   <p>Reports</p>
+                </a>
+              </li>
+             <li class="nav-item">
+                <a href="{% url 'logged_in_user_history' %}" class="nav-link {% if request.resolver_match.url_name == 'logged_in_user_history' %} active {% endif %}">
+                  <i class="fas fa-chart-pie nav-icon"></i>
+                  <p>Analytics</p>
                 </a>
               </li>
             </ul>
