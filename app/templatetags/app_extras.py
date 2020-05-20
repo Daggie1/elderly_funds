@@ -4,11 +4,10 @@ import urllib
 from django.utils.html import format_html
 from django.urls import reverse_lazy
 
-from app.models import DocumentFile, Batch, STAGES,BATCH
+from app.models import DocumentFile, Batch, STAGES,BATCH, STATES
 
 register = template.Library()
 
-FILES_ACTIONS_STATE = []
 ACTIONS = ['Open', 'Done', 'Continue_Editing', 'Close']
 ACTIONS_STAGE = ['Dispatch to Reception',
                  'Return to Registry', 'Dispatch to Assembler', 'Return to Reception', 'Dispatch to Scanner',
@@ -101,16 +100,19 @@ def get_actions_file_state(id):
     file = DocumentFile.objects.get(pk=id)
     transitions = list(file.get_available_state_transitions())
     for transition in transitions:
-        print(f'batch transition source={transition.source}')
-        print(f'batch transition target={transition.target}')
-        if transition.source == BATCH[0] and transition.target == BATCH[1]:
+        print(f'file transition source={transition.source}')
+        print(f'file transition target={transition.target}')
+        if transition.source == STATES[0] and transition.target == STATES[1]:
             return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Done Editing</a>',
-                               reverse_lazy('update_state_batch', args=[id, ACTIONS[1]]))
-        if transition.source == BATCH[1] and transition.target == BATCH[0]:
-            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Continue Editing</a>',
-                               reverse_lazy('update_state_batch', args=[id, ACTIONS[2]]))
-        if transition.source == BATCH[1] and transition.target == BATCH[2]:
-            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Close(Complete)</a>',
-                               reverse_lazy('update_state_batch', args=[id, ACTIONS[3]]))
+                               reverse_lazy('update_state_file', args=[id, ACTIONS[1]]))
+        if transition.source == STATES[1] and transition.target == STATES[0]:
+            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Continue  Editing</a>',
+                               reverse_lazy('update_state_file', args=[id, ACTIONS[2]]))
+        if transition.source == STATES[1] and transition.target == STATES[2]:
+            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Close</a>',
+                               reverse_lazy('update_state_file', args=[id, ACTIONS[3]]))
+        if transition.source == STATES[2] and transition.target == STATES[0]:
+            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Re-Open</a>',
+                               reverse_lazy('update_state_file', args=[id, ACTIONS[0]]))
         get_actions_batch.allow_tags = True
 

@@ -11,7 +11,7 @@ from PIL import Image
 from django.urls import reverse
 
 STAGES = ("Registry", "Reception", "Assembly", "Scanner", "Transcriber", "Quality Assuarance", "Validator")
-STATES = ("Opened", "In Progress","Done", "Closed",)
+STATES = ("Opened", "Done", "Closed",)
 BATCH = ("Opened","Done","Closed")
 
 

@@ -16,12 +16,12 @@ def update_state_batch(request, pk, action):
                 batch.open(user=user)
                 batch.save()
                 messages.success(request, ' Batch status changed successfully')
-                return redirect(reverse('files.view', kwargs={'batch_id': batch.id}))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif action == ACTIONS[1]:
                 batch.done()
                 batch.save()
                 messages.success(request, ' Batch status changed successfully')
-                return redirect(reverse('files.view', kwargs={'batch_id': batch.id}))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif action == ACTIONS[2]:
                 batch.continue_editing()
                 batch.save()
@@ -31,7 +31,7 @@ def update_state_batch(request, pk, action):
                 batch.close(user=user,comment='')
                 batch.save()
                 messages.success(request, ' Batch status changed successfully')
-                return redirect(reverse('batch_index'))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
                 messages.error(request, ' No action selected')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -51,22 +51,22 @@ def update_state_file(request, pk, action):
                 file.open(user=user)
                 file.save()
                 messages.success(request, ' File status changed successfully')
-                return redirect(reverse('list_document_files'))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif action == ACTIONS[1]:
                 file.done()
                 file.save()
                 messages.success(request, ' File status changed successfully')
-                return redirect(reverse('list_document_files'))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif action == ACTIONS[2]:
                 file.continue_editing()
                 file.save()
                 messages.success(request, ' File status changed successfully')
-                return redirect(reverse('list_document_files'))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif action == ACTIONS[3]:
                 file.close()
                 file.save()
                 messages.success(request, ' File status changed successfully')
-                return redirect(reverse('list_document_files'))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
                 messages.error(request, ' No action selected')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -94,7 +94,7 @@ def update_state_document(request, pk, action):
                 document.continue_editing()
                 document.save()
                 messages.success(request, ' Document status changed successfully')
-                return redirect(reverse('list_document_files'))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             elif action == ACTIONS[3]:
                 document.close()

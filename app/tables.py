@@ -23,7 +23,9 @@ class BatchFileTable(tables.Table):
         fields = ("file_reference", "file_type", "state", "stage", "captured_by", "file_barcode", "created_on")
 
     docs = TemplateColumn(template_name='file/total_column.html')
-    action = TemplateColumn(template_name='batch/file_view_column.html')
+    change_state = TemplateColumn(template_name='batch/file_state_column.html')
+    move_stage = TemplateColumn(template_name='batch/file_view_column.html')
+
 
 
 class BatchDocumentTable(tables.Table):
@@ -34,6 +36,7 @@ class BatchDocumentTable(tables.Table):
         fields = ("file_reference_id", "document_barcode", "state", "document_name_id", "document_file_path")
 
     actions = TemplateColumn(template_name='app/document_transcribe.html')
+
 
 
 class DocumentFileTable(tables.Table):
