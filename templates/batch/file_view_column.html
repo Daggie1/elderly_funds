@@ -4,11 +4,7 @@
                 <i class="fa fa-ellipsis-v"></i>
             </button>
             <div class="dropdown-menu">
-              <div class="dropdown-item btn btn-info btn-block">{{ record.file_reference|get_actions_file }}</div>
-                <div role="separator" class="dropdown-divider"></div>
-              <div class="dropdown-item btn btn-info btn-block">Return</div>
-                <div role="separator" class="dropdown-divider"></div>
-              <a class="dropdown-item text-danger" href="#"><i class="fa fa-exclamation-triangle"></i> Flag</a>
+              {{ record.file_reference|get_actions_file }}
                 <div role="separator" class="dropdown-divider"></div>
                 {% if 'app.can_register_batch' in perms %}
                  {% if record.state_id == 300 %}
