@@ -40,20 +40,38 @@ def get_fields(obj):
 def get_actions_batch(id):
     batch = Batch.objects.get(pk=id)
     transitions = list(batch.get_available_state_transitions())
-    # stage_transitions = list(batch.get_available_stage_transitions())
-    for transition in transitions:
-        print(f'batch transition source={transition.source}')
-        print(f'batch transition target={transition.target}')
-        if transition.source == BATCH[0] and transition.target == BATCH[1]:
-            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Done Editing</a>',
-                               reverse_lazy('update_state_batch', args=[id, ACTIONS[1]]))
-        if transition.source == BATCH[1] and transition.target == BATCH[0]:
-            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Continue Editing</a>',
-                               reverse_lazy('update_state_batch', args=[id, ACTIONS[2]]))
-        if transition.source == BATCH[1] and transition.target == BATCH[2]:
-            return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Close(Complete)</a>',
-                               reverse_lazy('update_state_batch', args=[id, ACTIONS[3]]))
-        get_actions_batch.allow_tags = True
+    if len(transitions) > 1:
+        for transition in transitions:
+            if transition.target == BATCH[0] or transition.target == BATCH[2]:
+                return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
+                                   u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
+                                   u'}">Continue editing</a></div><div role="separator" '
+                                   u'class="dropdown-divider"></div><div class="dropdown-item '
+                                   u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
+                                   u'}">Close</a></div>',
+                                   reverse_lazy('update_state_batch', args=[id, ACTIONS[1]]),reverse_lazy('update_state_batch', args=[id, ACTIONS[1]]) )
+
+            # if transition.source == BATCH[1] and transition.target == BATCH[0]:
+            #     return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Continue Editing</a>',
+            #                        reverse_lazy('update_state_batch', args=[id, ACTIONS[2]]))
+            # if transition.source == BATCH[1] and transition.target == BATCH[2]:
+            #     return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Close(Complete)</a>',
+            #                        reverse_lazy('update_state_batch', args=[id, ACTIONS[3]]))
+            get_actions_batch.allow_tags = True
+    else:
+        for transition in transitions:
+            print(f'batch transition source={transition.source}')
+            print(f'batch transition target={transition.target}')
+            if transition.source == BATCH[0] and transition.target == BATCH[1]:
+                return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Done Editing</a>',
+                                   reverse_lazy('update_state_batch', args=[id, ACTIONS[1]]))
+            if transition.source == BATCH[1] and transition.target == BATCH[0]:
+                return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Continue Editing</a>',
+                                   reverse_lazy('update_state_batch', args=[id, ACTIONS[2]]))
+            if transition.source == BATCH[1] and transition.target == BATCH[2]:
+                return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Close(Complete)</a>',
+                                   reverse_lazy('update_state_batch', args=[id, ACTIONS[3]]))
+            get_actions_batch.allow_tags = True
 
 
 @register.filter

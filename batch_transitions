@@ -1,14 +1,14 @@
 digraph {
 	subgraph cluster_app_Batch_state {
 		graph [label="app.Batch.state"]
-		"app.batch.state.Closed" [label=Closed shape=doublecircle]
-		"app.batch.state.Open" [label=Open shape=circle]
+		"app.batch.state.Opened" [label=Opened shape=circle]
 		"app.batch.state._initial" [label="" shape=point]
-		"app.batch.state._initial" -> "app.batch.state.Open"
+		"app.batch.state._initial" -> "app.batch.state.Opened"
 		"app.batch.state.Done" [label=Done shape=circle]
-		"app.batch.state.In Progress" [label="In Progress" shape=circle]
-		"app.batch.state.In Progress" -> "app.batch.state.Done" [label=done]
+		"app.batch.state.Closed" [label=Closed shape=circle]
+		"app.batch.state.Closed" -> "app.batch.state.Opened" [label=open]
+		"app.batch.state.Opened" -> "app.batch.state.Done" [label=done]
+		"app.batch.state.Done" -> "app.batch.state.Opened" [label=continue_editing]
 		"app.batch.state.Done" -> "app.batch.state.Closed" [label=close]
-		"app.batch.state.Open" -> "app.batch.state.In Progress" [label=start]
 	}
 }

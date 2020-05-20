@@ -3,11 +3,7 @@
                 <i class="fa fa-ellipsis-v"></i>
             </button>
             <div class="dropdown-menu">
-              <div class="dropdown-item btn btn-info btn-block">{{ record.id|get_actions_batch }}</div>
-                <div role="separator" class="dropdown-divider"></div>
-              <div class="dropdown-item btn btn-info btn-block">Return</div>
-                <div role="separator" class="dropdown-divider"></div>
-              <a class="dropdown-item text-danger" href="#"><i class="fa fa-exclamation-triangle"></i> Flag</a>
+                {{ record.id|get_actions_batch }}
                 <div role="separator" class="dropdown-divider"></div>
                 {% if 'app.can_register_batch' in perms and user.is_superuser %}
     <a class="btn btn-info btn-block" href="{% url 'batch_files' record.id %}">Open </a>
