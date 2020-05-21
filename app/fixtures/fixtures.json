@@ -196,8 +196,4 @@
   {"model": "app.profile", "pk": 8,
     "fields": {"user": 8, "id_no": "321007", "phone": "07000000", "full_name": "Validator",
       "first_login": false, "image": "default.jpg"}}
-
-
-
-
 ]

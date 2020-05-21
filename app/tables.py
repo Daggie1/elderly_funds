@@ -113,3 +113,12 @@ class HistoryTable(tables.Table):
         fields = ("file", "modified_from_stage", "modified_to_stage", "by", "created_at")
 
     view = TemplateColumn(template_name='file/view_history.html')
+
+class AdminTable(tables.Table):
+    class Meta:
+        attrs = {"class":"table table-bordered table-striped"}
+        model = DocumentFile
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("file",)
+
+    actions = TemplateColumn(template_name='file/view_history.html')

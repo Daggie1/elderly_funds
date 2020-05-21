@@ -160,7 +160,7 @@ urlpatterns = [
     path('user/<pk>',get_each_user_history,name='get_user_history'),
 
 #get escalated files
-    path('my_escalated files',RejectedDocumentFileList.as_view(), name='my_escalated_files'),
+    path('user/escalated/files',RejectedDocumentFileList.as_view(), name='my_escalated_files'),
 
 ]
 

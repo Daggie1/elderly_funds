@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from app.models import DocumentFile, Modification
 from django.shortcuts import render
 from app.tables import HistoryTable
+from django.db.models import Count
 
 
 def get_file_history(request, pk):
@@ -28,7 +29,8 @@ def get_loggedin_user_history(request):
     user = request.user
 
     if user:
-        table = HistoryTable(user.modification_set.all())
+        # table = HistoryTable(Modification.objects.filter(by=user))
+        table = HistoryTable(Modification.objects.annotate(files = Count('file_id')))
     else:
         table = HistoryTable(Modification.objects.none())
     return render(request, 'user/history.html', {'table': table})
