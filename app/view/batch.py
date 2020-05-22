@@ -9,7 +9,8 @@ from django.urls import reverse, reverse_lazy
 
 from app.forms import BatchCreationForm
 from app.models import Batch, DocumentFile, DocumentFileDetail, STATES
-from app.tables import BatchTable, DocumentFileTable, BatchDocumentTable, DocumentTable, BatchFileTable
+from app.tables import BatchTable, DocumentFileTable, BatchDocumentTable, DocumentTable, BatchFileTable, \
+    ReturnBatchTable
 from app.filters import BatchFilter, DocumentFileFilter, DocumentFilter
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
@@ -32,6 +33,20 @@ class BatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
         elif self.request.user.has_perm('app.can_receive_file'):
             return Batch.objects.filter(is_return_batch=True).filter(created_by=self.request.user).filter(
                 state__in=[STATES[0], STATES[1], STATES[2]])
+        else:
+            return Batch.objects.none()
+
+
+class ReturnBatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
+    permission_required = 'app.view_batch'
+    table_class = ReturnBatchTable
+    template_name = 'batch/return_batch.html'
+    filterset_class = BatchFilter
+
+    def get_queryset(self):
+
+        if self.request.user.has_perm('app.can_receive_file'):
+            return Batch.objects.filter(is_return_batch=True)
         else:
             return Batch.objects.none()
 

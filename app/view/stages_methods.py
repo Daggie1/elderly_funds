@@ -1,22 +1,24 @@
-from app.models import DocumentFile
+import uuid
+
+from app.models import DocumentFile, Batch
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 
-ACTIONS=['Dispatch to Reception',
-         'Return to Registry', 'Dispatch to Assembler',
-         'Return to Reception', 'Dispatch to Scanner',
-         'Dispatch to Transcriber',
-         'Dispatch to QA',
-         'Dispatch to Validator',
-         'Finalize to Reception']
+ACTIONS = ['Dispatch to Reception',
+           'Return to Registry', 'Dispatch to Assembler',
+           'Return to Reception', 'Dispatch to Scanner',
+           'Dispatch to Transcriber',
+           'Dispatch to QA',
+           'Dispatch to Validator',
+           'Finalize to Reception']
 
 
 def update_stage_file(request, pk, action):
-    rejection_comment=''
+    rejection_comment = ''
     """update the stages of the batch"""
-    file= DocumentFile.objects.get(pk=pk)
+    file = DocumentFile.objects.get(pk=pk)
     user = request.user
     if file:
         try:
@@ -26,7 +28,7 @@ def update_stage_file(request, pk, action):
                 messages.success(request, ' File moved successfully')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif action == ACTIONS[1]:
-                file.return_registry(user=user,rejection_comment=rejection_comment)
+                file.return_registry(user=user, rejection_comment=rejection_comment, batch_id=create_return_batch())
                 file.save()
                 messages.success(request, ' File moved successfully')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -36,7 +38,7 @@ def update_stage_file(request, pk, action):
                 messages.success(request, ' File moved successfully')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif action == ACTIONS[3]:
-                file.return_reception(user=user,rejection_comment=rejection_comment)
+                file.return_reception(user=user, rejection_comment=rejection_comment)
                 file.save()
                 messages.success(request, ' File moved successfully')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -71,3 +73,21 @@ def update_stage_file(request, pk, action):
         except AttributeError as e:
             messages.error(request, ' something wrong happened while updating file status')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def create_return_batch():
+    MAX_FILES = 10;
+    batch_no = str(uuid.uuid4())[:8]
+    # fetch last return batch and test its length
+    last_return_batch = Batch.objects.filter(is_return_batch=True).last()
+    if last_return_batch:
+        whole_batch = Batch.objects.filter(pk=last_return_batch.id)
+        whole_batch_count = whole_batch.count()
+
+    if whole_batch_count > MAX_FILES:
+        new_return_batch = Batch.objects.create(batch_no=batch_no, is_return_batch=True,
+                                                description="Batch Was Returned Due to Issues With Files here in")
+        new_return_batch.save()
+        return new_return_batch.id
+    else:
+        return last_return_batch.id

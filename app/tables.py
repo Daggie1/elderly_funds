@@ -14,6 +14,16 @@ class BatchTable(tables.Table):
     files = TemplateColumn(template_name='batch/total_column.html')
     actions = TemplateColumn(template_name='batch/view_column.html')
 
+class ReturnBatchTable(tables.Table):
+    # transitions = tables.Column(accessor='get_transition_options',verbose_name='Transition')
+    class Meta:
+        attrs = {"class": "table table-bordered table-striped table-responsive"}
+        model = Batch
+        template_name = "django_tables2/bootstrap4.html"
+        fields = ("batch_no", "created_on", "created_by", "state", "description")
+
+    files = TemplateColumn(template_name='batch/total_column.html')
+    actions = TemplateColumn(template_name='batch/view_column.html')
 
 class BatchFileTable(tables.Table):
     class Meta:
@@ -50,6 +60,20 @@ class DocumentFileTable(tables.Table):
     action = TemplateColumn(template_name='file/view_column.html')
     # transcribe = TemplateColumn(template_name='app/document_action_column.html')
 
+class EscalatedFileTable(tables.Table):
+
+    class Meta:
+        attrs = {"class": "table table-bordered table-striped"}
+        row_attrs = {
+            "class": lambda record: "bg-red" if record.flagged else "bg-default"
+        }
+        model = DocumentFile
+        template_name = "django_tables2/bootstrap.html"
+        fields = ("file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
+
+    docs = TemplateColumn(template_name='file/total_column.html')
+    action = TemplateColumn(template_name='file/view_column.html')
+    # transcribe = TemplateColumn(template_name='app/document_action_column.html')
 
 class DocumentTable(tables.Table):
     class Meta:
