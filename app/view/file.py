@@ -31,7 +31,7 @@ class DocumentFileCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('files.view', kwargs={'batch_id': self.kwargs['batch_id']})
+        return reverse('batch_files', kwargs={'batch_id': self.kwargs['batch_id']})
 
 class FilesView(LoginRequiredMixin, SingleTableMixin, FilterView):
     template_name = 'file/index.html'
