@@ -48,8 +48,8 @@ def get_actions_batch(id):
                                    u'class="dropdown-divider"></div><div class="dropdown-item '
                                    u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
                                    u'}">Close</a></div>',
-                                   reverse_lazy('update_state_batch', args=[id, ACTIONS[1]]),
-                                   reverse_lazy('update_state_batch', args=[id, ACTIONS[1]]))
+                                   reverse_lazy('update_state_batch', args=[id, ACTIONS[2]]),
+                                   reverse_lazy('update_state_batch', args=[id, ACTIONS[3]]))
             get_actions_batch.allow_tags = True
     else:
         for transition in transitions:
