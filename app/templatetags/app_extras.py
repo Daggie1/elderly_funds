@@ -10,12 +10,12 @@ register = template.Library()
 
 ACTIONS = ['Open', 'Done', 'Continue_Editing', 'Close']
 ACTIONS_STAGE = ['Dispatch to Reception',
-         'Return to Registry', 'Dispatch to Assembler',
-         'Return to Reception', 'Dispatch to Scanner',
-         'Dispatch to Transcriber',
-         'Dispatch to QA',
-         'Dispatch to Validator',
-         'Finalize to Reception']
+                 'Return to Registry', 'Dispatch to Assembler',
+                 'Return to Reception', 'Dispatch to Scanner',
+                 'Dispatch to Transcriber',
+                 'Dispatch to QA',
+                 'Dispatch to Validator',
+                 'Finalize to Reception']
 
 
 @register.filter
@@ -72,17 +72,17 @@ def get_actions_file(id):
     file = DocumentFile.objects.get(pk=id)
     stage_transitions = list(file.get_available_stage_transitions())
     if len(stage_transitions) > 1:
-            print(stage_transitions[0].target)
-            print(stage_transitions[1].target)
-            if stage_transitions[0].target == STAGES[2] and stage_transitions[1].target == STAGES[0]:
-                return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
-                                   u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
-                                   u'}">Return Registry</a></div><div role="separator" '
-                                   u'class="dropdown-divider"></div><div class="dropdown-item '
-                                   u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
-                                   u'}">Dispatch To Assembly</a></div>',
-                                   reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[1]]),
-                                   reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[2]]))
+        print(stage_transitions[0].target)
+        print(stage_transitions[1].target)
+        if stage_transitions[0].target == STAGES[2] and stage_transitions[1].target == STAGES[0]:
+            return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
+                               u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
+                               u'}">Return Registry</a></div><div role="separator" '
+                               u'class="dropdown-divider"></div><div class="dropdown-item '
+                               u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
+                               u'}">Dispatch To Assembly</a></div>',
+                               reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[1]]),
+                               reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[2]]))
     else:
         for transition in stage_transitions:
             print(f'transition source={transition.source}')

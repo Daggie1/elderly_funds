@@ -12,17 +12,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView
 from app.filters import DocumentFileFilter
 from app.models import DocumentFile, STAGES,STATES
-from app.tables import DocumentFileTable
-
-
-
-
+from app.tables import DocumentFileTable, EscalatedFileTable
 
 
 class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     permission_required = 'app.view_documentfile'
 
-    table_class = DocumentFileTable
+    table_class = EscalatedFileTable
     template_name = 'view_document_files.html'
 
     def get_queryset(self):
