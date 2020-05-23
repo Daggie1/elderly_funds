@@ -4,7 +4,7 @@ from app.serializers import DocumentSerializer
 from django.contrib.auth.models import User
 from app.models import DocumentFile, Modification
 from django.shortcuts import render
-from app.tables import HistoryTable
+from app.tables import HistoryTable,SpecificFileUserHistoryTable
 from django.db.models import Count
 
 
@@ -28,9 +28,18 @@ def get_each_user_history(request, pk):
 def get_loggedin_user_history(request):
     user = request.user
 
-    if user:
+    if user.is_superuser:
         # table = HistoryTable(Modification.objects.filter(by=user))
-        table = HistoryTable(Modification.objects.annotate(files = Count('file_id')))
+        table = HistoryTable(Modification.objects.distinct('file'))
+
     else:
-        table = HistoryTable(Modification.objects.none())
+        table = HistoryTable(Modification.objects.filter(by=user).distinct('file'))
     return render(request, 'user/history.html', {'table': table})
+
+def user_specific_file_history(request,pk):
+    user = request.user
+    file=DocumentFile.objects.get(pk=pk)
+    if user and file:
+        table = SpecificFileUserHistoryTable(Modification.objects.filter(by=user,file=file))
+        return render(request, 'user/specific_user_file_history.html', {'table': table,
+                                                     'file':file.__str__()})
