@@ -44,7 +44,6 @@ class ReturnBatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     filterset_class = BatchFilter
 
     def get_queryset(self):
-
         if self.request.user.has_perm('app.can_receive_file'):
             return Batch.objects.filter(is_return_batch=True)
         else:

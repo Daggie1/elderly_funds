@@ -407,7 +407,8 @@ class DocumentFileDetail(models.Model):
                                     on_delete=models.DO_NOTHING,
                                     related_name='doc_assigned_to')
     state = FSMField(default=STATES[0], protected=True)
-
+    passed_qa = models.BooleanField(default=False)
+    passed_validated = models.BooleanField(default=False)
     # transition methods
     @transition(field=state, source=[STATES[2]], target=STATES[0])
     def open(self):
