@@ -93,7 +93,7 @@ class ValidationTable(tables.Table):
         fields = ("file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
 
     docs = TemplateColumn(template_name='file/total_column.html')
-    validate = TemplateColumn(template_name='file/view_column.html')
+    validate = TemplateColumn(template_name='file/validator_column.html')
 
 
 class QaTable(tables.Table):
@@ -104,7 +104,7 @@ class QaTable(tables.Table):
         fields = ("file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
 
     docs = TemplateColumn(template_name='file/total_column.html')
-    action = TemplateColumn(template_name='file/view_column.html')
+    action = TemplateColumn(template_name='file/qa_column.html')
 
 
 class ScannerTable(tables.Table):

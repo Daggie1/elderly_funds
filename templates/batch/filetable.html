@@ -55,48 +55,40 @@
           <!-- /.card -->
         </div>
         <!-- /.col -->
+
+           <div class="modal fade" id="modal-lg">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Provide return reasons</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form action=""  method="get">
+                    <div class="form-group">
+                      <textarea class="form-control"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-warning">Return</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
       </div>
       <!-- /.row -->
 
 {% endblock %}
 
 {% block js %}
-<script src="{% static 'adminlte/plugins/datatables/jquery.dataTables.js' %}"></script>
-<script src="{% static 'adminlte/plugins/datatables/jquery.dataTables.js' %}"></script>
-
     <script>
-  $(function () {
-    $("#example1").DataTable();
-  });
-
-</script>
-    <script>
-function hideUnhide() {
-  var action_row = document.getElementById("action_row");
-  var action_btn = document.getElementById("action_btn");
-  if (action_row.style.display === "none") {
-    action_row.style.display = "block";
-    action_btn.textContent="Hide Action Form";
-  } else {
-    action_row.style.display = "none";
-action_btn.textContent="Take Action on this Batch";
-  }
-}
-function check() {
-    var textarea_desc=document.getElementById('desc');
-    var btn_submit =document.getElementById('btn_submit');
-
-    if(textarea_desc.style.display ==='none'){
-        textarea_desc.style.display = "block"
-        textarea_desc.setAttribute('required','true');
-        btn_submit.style.display = "block"
-
-    }
-    else {
-       textarea_desc.style.display = "none";
-        textarea_desc.setAttribute('required','false');
-        btn_submit.style.display = "none"
-    }
-}
+   $('#id').click()
 </script>
 {% endblock %}

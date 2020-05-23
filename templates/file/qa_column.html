@@ -1,0 +1,14 @@
+
+{% load app_extras %}
+<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-v"></i>
+            </button>
+            <div class="dropdown-menu">
+              {{ record.file_reference|get_qa_buttons }}
+                <div role="separator" class="dropdown-divider"></div>
+            </div>
+
+
+
+
+

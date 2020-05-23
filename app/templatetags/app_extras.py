@@ -76,8 +76,9 @@ def get_actions_file(id):
         print(stage_transitions[1].target)
         if stage_transitions[0].target == STAGES[2] and stage_transitions[1].target == STAGES[0]:
             return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
-                               u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
-                               u'}">Return Registry</a></div><div role="separator" '
+                               u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="#" '
+                               u'id="return"  data-toggle="modal" data-target="#modal-lg">Return '
+                               u'Registry</a></div><div role="separator" '
                                u'class="dropdown-divider"></div><div class="dropdown-item '
                                u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
                                u'}">Dispatch To Assembly</a></div>',
@@ -187,3 +188,27 @@ def get_actions_file_state(id):
                                    u'}">Re-Open</a></div>',
                                    reverse_lazy('update_state_file', args=[id, ACTIONS[0]]))
             get_actions_batch.allow_tags = True
+
+
+@register.filter
+def get_validate_buttons(id):
+    return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
+                       u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
+                       u'}">Approve</a></div><div role="separator" '
+                       u'class="dropdown-divider"></div><div class="dropdown-item '
+                       u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block text-warning" href="{'
+                       u'}">Reject and Return</a></div>',
+                       reverse_lazy('update_state_file', args=[id, ACTIONS[2]]),
+                       reverse_lazy('update_state_file', args=[id, ACTIONS[3]]))
+
+
+@register.filter
+def get_qa_buttons(id):
+    return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
+                       u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
+                       u'}">Approve</a></div><div role="separator" '
+                       u'class="dropdown-divider"></div><div class="dropdown-item '
+                       u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block text-warning" href="{'
+                       u'}">Reject and Return</a></div>',
+                       reverse_lazy('update_state_file', args=[id, ACTIONS[2]]),
+                       reverse_lazy('update_state_file', args=[id, ACTIONS[3]]))

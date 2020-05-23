@@ -18,7 +18,7 @@ from django.views.generic import (
     DeleteView
 )
 
-
+# TODO remove restriction of quering batch
 class BatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     permission_required = 'app.view_batch'
     table_class = BatchTable
@@ -97,7 +97,6 @@ class BatchFilesView(LoginRequiredMixin, SingleTableMixin, FilterView):
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the books
         context['batch_id'] = int(self.kwargs['batch_id'])
-        print(context)
         return context
 
     def get_queryset(self):

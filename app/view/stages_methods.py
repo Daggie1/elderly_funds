@@ -1,6 +1,6 @@
 import uuid
 
-from app.models import DocumentFile, Batch
+from app.models import DocumentFile, Batch, Notification
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -91,3 +91,12 @@ def create_return_batch():
         return new_return_batch.id
     else:
         return last_return_batch.id
+
+
+def approve_file():
+    pass
+
+
+def assure_file():
+    pass
+

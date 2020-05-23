@@ -6,7 +6,7 @@ from django.forms import Form, SelectMultiple, NumberInput, HiddenInput, TextInp
 from django.forms.models import modelformset_factory, formset_factory
 from django_jsonforms.forms import JSONSchemaField
 
-from .models import Batch, Filer
+from .models import Batch, Filer, Notification
 from .models import DocumentFileType, DocumentType, Profile, DocumentFileDetail
 
 
@@ -126,6 +126,11 @@ class PasswordResetForm(PasswordChangeForm):
     class Meta:
         model = User
         fields = ['new_password1', 'new_password2']
+
+class StorageForm(forms.ModelForm):
+    class Meta:
+        model = Notification
+        fields = ('comment',)
 
 
 class StorageForm(forms.ModelForm):
