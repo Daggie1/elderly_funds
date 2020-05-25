@@ -43,3 +43,10 @@ def user_specific_file_history(request,pk):
         table = SpecificFileUserHistoryTable(Modification.objects.filter(by=user,file=file))
         return render(request, 'user/specific_user_file_history.html', {'table': table,
                                                      'file':file.__str__()})
+
+def file_details(request,pk):
+    file=DocumentFile.objects.get(pk=pk)
+    data={}
+    if file:
+        data.update({'file': file})
+    return  render(request,'file/details.html',data)

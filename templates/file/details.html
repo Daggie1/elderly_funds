@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block content %}
+     <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">File Detail {{ file }}</h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+              <i class="fas fa-minus"></i></button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+              <i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12 col-md-12 col-lg-8 order-2 order-md-1">
+              <div class="row">
+                <div class="col-12 col-sm-4">
+                  <div class="info-box bg-light">
+                    <div class="info-box-content">
+                      <span class="info-box-text text-center text-muted">Current Stage</span>
+                      <span class="info-box-number text-center text-muted mb-0">{{ file.stage }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                  <div class="info-box bg-light">
+                    <div class="info-box-content">
+                      <span class="info-box-text text-center text-muted">Current State</span>
+                      <span class="info-box-number text-center text-muted mb-0">{{file.state}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                  <div class="info-box bg-light">
+                    <div class="info-box-content">
+                      <span class="info-box-text text-center text-muted">Total documents</span>
+                      <span class="info-box-number text-center text-muted mb-0">{{file.documentfiledetail_set.all.count}} <span>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <h4>Recent Activity</h4>
+
+                    {%  for modification in file.modification_set.all %}
+                    <div class="post">
+                      <div class="user-block">
+                        <img class="img-circle img-bordered-sm" src="{{modification.by.profile.image.url}}" alt="user image">
+                        <span class="username">
+                          <a href="#">{{modification.by.username}}</a>
+                        </span>
+                        <span class="description">{{ modification.created_at }}</span>
+                      </div>
+                      <!-- /.user-block -->
+                      <p>
+                       {{ modification.modified_from_stage }} -> {{ modification.modified_to_stage  }}
+                      </p>
+
+
+                    </div>
+{% endfor %}
+
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
+              <h3 class="text-primary">{% if file.flagged %}
+                  <i class="fas fa-exclamation-triangle text-danger "></i>
+                  {% else %}
+                  <i class="fas fa-check-square text-success"></i>
+                  {% endif %}
+                  {{file}}</h3>
+{% if file.flagged %}
+   <p><span class=" text-danger h6">Reason for flagging:</span>{{ file.notification_set.all.last.comment }}</p>
+            <br>
+            {% endif %}
+
+              <div class="text-muted">
+                <p class="text-sm">Currently assigned to
+                  <b class="d-block">{{file.assigned_to}}</b>
+                </p>
+                <p class="text-sm">Created At
+                  <b class="d-block">{{ file.created_on }}</b>
+                </p>
+              </div>
+
+              <div class="text-center mt-5 mb-3">
+                <a href="#" class="btn btn-sm btn-primary">Assign to new user</a>
+                <a href="#" class="btn btn-sm btn-warning">Move To next stage</a>
+                  <a href="#" class="btn btn-sm btn-danger">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+{% endblock %}
