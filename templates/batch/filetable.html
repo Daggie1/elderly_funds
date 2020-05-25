@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load app_extras %}
 {% load render_table from django_tables2 %}
 {% block content %}
 
@@ -66,16 +67,17 @@
               </button>
             </div>
             <div class="modal-body">
-                <form action=""  method="get">
+                <form action="#"  method="GET" id="returnform">
                     <div class="form-group">
-                      <textarea class="form-control"></textarea>
+                      <textarea name="reasons" class="form-control"></textarea>
                     </div>
-                </form>
+
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-warning">Return</button>
+              <button type="submit" class="btn btn-warning">Return</button>
             </div>
+               </form>
           </div>
           <!-- /.modal-content -->
         </div>
@@ -89,6 +91,12 @@
 
 {% block js %}
     <script>
-   $('#id').click()
+    var url = '';
+    var hostname = $(location).attr('host');
+   $(".return").click(function() {
+       let id = this.id
+       url = 'http://'+hostname + id
+       $('#returnform').attr('action', url)
+});
 </script>
 {% endblock %}

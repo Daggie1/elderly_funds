@@ -16,7 +16,7 @@ ACTIONS = ['Dispatch to Reception',
 
 
 def update_stage_file(request, pk, action):
-    rejection_comment = ''
+    rejection_comment =  request.GET['reasons']
     """update the stages of the batch"""
     file = DocumentFile.objects.get(pk=pk)
     user = request.user
@@ -28,7 +28,7 @@ def update_stage_file(request, pk, action):
                 messages.success(request, ' File moved successfully')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif action == ACTIONS[1]:
-                file.return_registry(user=user, rejection_comment=rejection_comment, batch_id=create_return_batch())
+                file.return_registry(user=user, rejection_comment=rejection_comment)
                 file.save()
                 messages.success(request, ' File moved successfully')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

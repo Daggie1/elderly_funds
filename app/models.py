@@ -59,7 +59,6 @@ class Batch(models.Model):
 
     @transition(field=state, source=[BATCH[1]], target=BATCH[2])
     def close(self, user=None, comment=''):
-
         """"closes a batch
                  -moves state of files in batch to CLOSE
                 -moves batch state to CLOSE
@@ -224,7 +223,7 @@ class DocumentFile(models.Model):
                     -records this action in Modification Table
                     -notify user who created
                     -notify all admins
-                                         """
+                               """
         Modification.objects.create(
             file=self,
             modified_from_stage=STAGES[1],
