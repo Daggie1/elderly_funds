@@ -1,8 +1,12 @@
+import json
+
 from django import template
 import urllib
 
+from django.http import HttpResponseRedirect
 from django.utils.html import format_html
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.utils.safestring import mark_safe
 
 from app.models import DocumentFile, Batch, STAGES, BATCH, STATES
 
@@ -76,9 +80,7 @@ def get_actions_file(id):
         print(stage_transitions[1].target)
         if stage_transitions[0].target == STAGES[2] and stage_transitions[1].target == STAGES[0]:
             return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
-                               u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="#" '
-                               u'id="return"  data-toggle="modal" data-target="#modal-lg">Return '
-                               u'Registry</a></div><div role="separator" '
+                               u'btn btn-info btn-block"><button class="dropdown-item return btn btn-info btn-block" id="{}"  data-toggle="modal" data-target="#modal-lg">Return Registry</button></div><div role="separator" '
                                u'class="dropdown-divider"></div><div class="dropdown-item '
                                u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
                                u'}">Dispatch To Assembly</a></div>',
