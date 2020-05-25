@@ -36,7 +36,7 @@ from app.view.validate import ValidateFileList
 from app.view.states_methods import update_state_batch,update_state_file,update_state_document
 from app.view.stages_methods import update_stage_file
 from app.view.file_history import (get_file_history,get_each_user_history,
-    get_loggedin_user_history,user_specific_file_history,file_details)
+    get_loggedin_user_history,user_specific_file_history,file_details,assign_file)
 from app.view.escalations import RejectedDocumentFileList
 
 urlpatterns = [
@@ -170,6 +170,10 @@ urlpatterns = [
     #file details
 
     path('file_details/<pk>',file_details, name='file_details'),
+
+#file details
+
+    path('assign_file/<pk>',assign_file, name='file_assign'),
 
 ]
 
