@@ -140,7 +140,7 @@
                 page = page -1
             }
             let pageText = "page <block>" + page +"</block>";
-            let uri = "http://" + domain + "/media/ "+ scannedDocuments[count].filepond + "#toolbar=0";
+            let uri = "http://" + domain + "/media/"+ scannedDocuments[count].filepond + "#toolbar=0";
             let url = encodeURI(uri);
             $('#page').html(pageText);
             $('#pdf').empty();
