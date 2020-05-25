@@ -32,11 +32,8 @@ def upload_documents_to_file(request, file_reference):
     validate all documents are of pdf type
     """
     file_ref = urllib.parse.unquote(file_reference)
-    print(file_ref)
     file = DocumentFile.objects.get(pk=file_ref)
-
-    print(file)
-
+    file_documents  = Filer.objects.filter(file_reference=file_ref)
     form = StorageForm(request.POST, request.FILES)
     if form.is_valid():
 
@@ -45,8 +42,7 @@ def upload_documents_to_file(request, file_reference):
         new_file.save()
     else:
         print(form.errors)
-
-    return render(request, 'upload_document.html', {'file': file})
+    return render(request, 'upload_document.html', {'file': file, 'documents':file_documents})
 
 
 # def get_file_to_upload_documents(request):

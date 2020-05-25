@@ -74,7 +74,7 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
         if self.request.user.is_superuser:
             return DocumentFile.objects.all()
         elif self.request.user.has_perm('app.can_create_batch'):
-            return DocumentFile.objects.filter(stage=STAGES[0],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[2]))
+            return DocumentFile.objects.filter(stage=STAGES[0],flagged=False).filter(Q(assigned_to=self.request.user) |Q(assigned_to__isnull=True)| Q(state=STATES[2]))
         elif self.request.user.has_perm('app.can_receive_file'):
             return DocumentFile.objects.filter(stage=STAGES[1],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[2]))
         elif self.request.user.has_perm('app.can_disassemble_file'):

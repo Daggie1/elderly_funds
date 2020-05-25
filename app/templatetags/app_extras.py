@@ -214,3 +214,14 @@ def get_qa_buttons(id):
                        u'}">Reject and Return</a></div>',
                        reverse_lazy('update_state_file', args=[id, ACTIONS[2]]),
                        reverse_lazy('update_state_file', args=[id, ACTIONS[3]]))
+
+
+@register.filter
+def dispatch_to_transcriber(id):
+    return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Dispatch To Transcriber</a>',
+                       reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[5]]))
+
+@register.filter
+def preview_document(url):
+    
+    return format_html(u'<embed id="pdf" src="{}"  width= "100%" height= "800">')
