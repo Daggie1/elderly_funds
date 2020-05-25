@@ -68,5 +68,5 @@ def assign_file(request,pk):
             if file:
                 file.assigned_to=user
                 file.save()
-                messages.warning(request, 'Assigned successfully ')
+                messages.success(request, 'Assigned successfully ')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
