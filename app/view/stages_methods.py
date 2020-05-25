@@ -16,7 +16,11 @@ ACTIONS = ['Dispatch to Reception',
 
 
 def update_stage_file(request, pk, action):
-    rejection_comment =  request.GET['reasons']
+    rejection_comment = ''
+    try:
+        rejection_comment = request.GET['reasons']
+    except:
+        pass
     """update the stages of the batch"""
     file = DocumentFile.objects.get(pk=pk)
     user = request.user
