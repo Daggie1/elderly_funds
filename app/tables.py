@@ -1,4 +1,5 @@
 import django_tables2 as tables
+from django.utils.html import format_html
 from django_tables2 import TemplateColumn
 from .models import DocumentFile, DocumentFileDetail, Batch, Modification
 
@@ -56,8 +57,12 @@ class DocumentFileTable(tables.Table):
         template_name = "django_tables2/bootstrap.html"
         fields = ("file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
 
+
     docs = TemplateColumn(template_name='file/total_column.html')
     action = TemplateColumn(template_name='file/view_column.html')
+
+    def render_file_reference(self, value, record):
+        return format_html('<a href="{}">{}</a>'.format('file_details/{}'.format(record.pk),value))
     # transcribe = TemplateColumn(template_name='app/document_action_column.html')
 
 class EscalatedFileTable(tables.Table):
