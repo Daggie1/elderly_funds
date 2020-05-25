@@ -487,6 +487,7 @@ class Filer(models.Model):
         return os.path.basename(self.filepond.name)
 
 
+
 class Modification(models.Model):
     """ This tables all the modifications of either batch,file or document-will be used to track the action workflow"""
 

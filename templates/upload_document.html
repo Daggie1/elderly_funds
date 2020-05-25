@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load app_extras %}
 {% block css %}
     <link rel="stylesheet" href="{% static '/filepond.css' %}">
 {% endblock %}
@@ -31,11 +32,9 @@
               <div class="card-header">
                 <h3 class="card-title">Documents</h3>
                   <div class="card-tools">
-                      <form method="post" action="{%  url 'change_file_status_to_accept'  file.pk %}">
-                          {% csrf_token %}
-                          <input required value="{{ file.state_id }}" type="hidden" name="modified_to_state_id">
-                    <button type="submit" class="btn btn-primary">Done Scanning</button>
-                          </form>
+
+                         {{ file.file_reference|dispatch_to_transcriber }}
+
                 </div>
               </div>
               <!-- /.card-header -->
@@ -43,20 +42,21 @@
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                      <th>Document</th>
-                      <th>View</th>
+                      <th>Page</th>
+                      <th>Preview</th>
                       <th>Delete</th>
                     </tr>
                   </thead>
                   <tbody>
+                  {% for document in documents %}
                     <tr>
-
-                      <td>Update software</td>
+                      <td>{{ forloop.counter }}</td>
                       <td>
-                          <a href="" class="btn btn-sm btn-info"><span class="fas fa-eye"></span></a>
+                          <button class="btn btn-sm preview" id="{{ document.filepond.url }}" ><span class="fas fa-eye"></span></button>
                       </td>
-                      <td><span class="fas fa-trash"></span></td>
+                      <td><a href="" class="btn btn-sm"><span class="fas fa-trash text-danger"></span></a></td>
                     </tr>
+                  {% endfor %}
                   </tbody>
                 </table>
               </div>
@@ -64,7 +64,28 @@
 
             </div>
         </div>
+     <div class="modal fade" id="modal-lg">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Document Preview</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="preview">
+                <embed id="pdf" src=""  width= "100%" height= "800">
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
 
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
     </div>
 {% endblock content %}
 
@@ -82,5 +103,22 @@
           }
       }
   })
+      $('.filepond').on('FilePond:processfile', function(e) {
+    location.reload();
+});
+   $('.preview').click(function(){
+       let id = $(this).attr('id')
+       console.log(id)
+        $('#pdf').attr('src', id)
+       $('#modal-lg').modal('show')
+
+   }
+   )
+      $('#modal-lg').on('hidden.bs.modal', function () {
+       location.reload()
+});
+
+
+
   </script>
 {% endblock%}

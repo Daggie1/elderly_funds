@@ -79,7 +79,7 @@
     <script>
         var document_type = '';
         var document = '';
-
+        var domain = $(location).attr('host');
 
          $(function(){
              let scannedDocuments = {{ scanned_documents | safe }};
@@ -93,7 +93,7 @@
              let statistics = matched.length + " of " + scannedDocuments.length;
              let list = scannedDocuments.length - matched.length + " more to go";
              let count = 0;
-             let uri = "http://127.0.0.1:8000/media/" + scannedDocuments[count].filepond + "#toolbar=0";
+             let uri = "http://" +domain+ "/media/" + scannedDocuments[count].filepond + "#toolbar=0";
              let url = encodeURI(uri);
              $('#pdf').append("<embed id='pdf' src=" + url +"  width= '100%' height= '800'>");
              $('#statistics').html(statistics);
@@ -140,8 +140,7 @@
                 page = page -1
             }
             let pageText = "page <block>" + page +"</block>";
-            {#let uri = "http://127.0.0.1:8000/media/" + scannedDocuments[count].filepond + "#toolbar=0";#}
-            let uri = "http://127.0.0.1:9000/media/ "+ scannedDocuments[count].filepond + "#toolbar=0";
+            let uri = "http://" + domain + "/media/ "+ scannedDocuments[count].filepond + "#toolbar=0";
             let url = encodeURI(uri);
             $('#page').html(pageText);
             $('#pdf').empty();
@@ -157,7 +156,7 @@
                  }
              }
              let pageText = "page <block>" + page +"</block>";
-             let uri = "http://127.0.0.1:8000/media/" + scannedDocuments[count].filepond + "#toolbar=0";
+             let uri = "http://" + domain + "/media/" + scannedDocuments[count].filepond + "#toolbar=0";
              let url = encodeURI(uri);
             $('#page').html(pageText);
             $('#pdf').empty();
