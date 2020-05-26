@@ -1,10 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
 
 from app.filters import DocumentFileFilter
-from app.models import DocumentFile
-from app.tables import QaTable
+from app.models import DocumentFile, DocumentFileDetail
+from app.tables import QaTable,ValidateQADocTable
 
 
 class QaFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
@@ -67,3 +68,9 @@ class QaFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
             return q1.union(q2)
 
     filterset_class = DocumentFileFilter
+
+
+def open_file_for_qa(request,id):
+    file = DocumentFile.objects.get(pk=id)
+    table= ValidateQADocTable(DocumentFileDetail.objects.filter(file_reference=id))
+    return render(request, 'qa/documents.html', {'file':file,'table':table})

@@ -30,7 +30,7 @@ from app.view.transcribe import get_files_from_storage, update_document_file_det
 from app.view.user import profile,admin_check_user
 from .view.report import report
 from app.view.inspection import  inspect, receive
-from app.view.qa import  QaFileList
+from app.view.qa import  QaFileList, open_file_for_qa
 from app.view.validate import ValidateFileList
 
 from app.view.states_methods import update_state_batch,update_state_file,update_state_document
@@ -82,7 +82,7 @@ urlpatterns = [
     path('view_docs_in_file/<str:file_reference>', DocumentTranscribe.as_view(), name='view_docs_in_file'),
     path('transcription_lab/<int:doc_id>/<str:file_type>',get_document_and_document_type, name='transcription_lab'),
     path('update_doc_content/<int:doc_id>', update_document_content, name='update_doc_content' ),
-    path('validate_doc_content/<int:doc_id>', validate_document_content, name='validate_doc_content'),
+    path('validate/doc/content/<int:doc_id>', validate_document_content, name='validate_doc_content'),
 
     path('file/document/storage/<str:file_reference>', get_files_from_storage, name='get_files_from_storage'),
     path('update/document/<int:document>',update_document_file_detail, name='update_document_file_detail'),
@@ -175,5 +175,7 @@ urlpatterns = [
 
     path('assign_file/<pk>',assign_file, name='file_assign'),
 
+    # open files for qa
+    path('file/qa/open/<int:id>', open_file_for_qa, name='open_qa_file'),
 ]
 

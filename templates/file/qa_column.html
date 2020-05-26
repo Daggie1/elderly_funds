@@ -6,6 +6,7 @@
             <div class="dropdown-menu">
               {{ record.file_reference|get_qa_buttons }}
                 <div role="separator" class="dropdown-divider"></div>
+                <a href="{% url 'open_qa_file' record.file_reference %}" class="btn btn-sm btn-info btn-block">Open</a>
             </div>
 
 

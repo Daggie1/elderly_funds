@@ -132,6 +132,7 @@ def update_document_content(request, doc_id):
 def validate_document_content(request, doc_id):
     document = DocumentFileDetail.objects.get(id=doc_id)
     content = document.document_content
+    print(content)
     table_data = json2html.convert(json=content, table_attributes="id=\"info-table\" class=\"table table-bordered "
                                                                   "table-hover\"")
     return render(request, 'validate.html', {'table_data': table_data, 'document': document})
@@ -526,7 +527,7 @@ def start_scanning(request, file_ref):
 
 def start_qa(request, file_ref):
     file = get_file(request, urllib.parse.unquote(file_ref))
-    if file and file.state.state_code == '304' and file.file_qa_by == None:
+    if file:
 
         docs = get_docs_from_file(request, file)
 
