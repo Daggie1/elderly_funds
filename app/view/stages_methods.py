@@ -6,13 +6,12 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 
-ACTIONS = ['Dispatch to Reception',
-           'Return to Registry', 'Dispatch to Assembler',
-           'Return to Reception', 'Dispatch to Scanner',
-           'Dispatch to Transcriber',
-           'Dispatch to QA',
-           'Dispatch to Validator',
-           'Finalize to Reception']
+ACTIONS = ['Dispatch to Reception', 'Return to Registry', 'Dispatch to Assembler',
+                'Return to Reception', 'Dispatch to Scanner',
+                 'Dispatch to Transcriber',
+                 'Return to Scanner', 'Dispatch to QA',
+                 'Return to Transcriber', 'Dispatch to Validator',
+                 'Return to QA', 'Finalize to Reception']
 
 
 def update_stage_file(request, pk, action):
@@ -57,16 +56,28 @@ def update_stage_file(request, pk, action):
                 messages.success(request, ' File moved successfully')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif action == ACTIONS[6]:
+                file.return_scanner(user=user)
+                file.save()
+                messages.success(request, ' File moved successfully')
+            elif action == ACTIONS[7]:
                 file.dispatch_qa(user=user)
                 file.save()
                 messages.success(request, ' File moved successfully')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-            elif action == ACTIONS[7]:
+            elif action == ACTIONS[8]:
+                file.return_transcriber(user=user)
+                file.save()
+                messages.success(request, ' File moved successfully')
+            elif action == ACTIONS[9]:
                 file.dispatch_validator(user=user)
                 file.save()
                 messages.success(request, ' File moved successfully')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-            elif action == ACTIONS[8]:
+            elif action == ACTIONS[10]:
+                file.return_qa(user=user)
+                file.save()
+                messages.success(request, ' File moved successfully')
+            elif action == ACTIONS[11]:
                 file.finalize_to_reception()
                 file.save()
                 messages.success(request, ' File moved successfully')

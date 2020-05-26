@@ -1,8 +1,8 @@
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import viewsets
-from app.serializers import DocumentSerializer
-from django.contrib.auth.models import User
-from app.models import DocumentFile, Modification
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+from django.contrib.auth.models import User,Permission
+from app.models import DocumentFile, Modification,STAGES
 from django.shortcuts import render
 from app.tables import HistoryTable,SpecificFileUserHistoryTable
 from django.db.models import Count
@@ -49,4 +49,24 @@ def file_details(request,pk):
     data={}
     if file:
         data.update({'file': file})
+        stage=file.stage
+        pk=56
+        kl=list()
+
+        stage_index=STAGES.index(file.stage)
+        print(stage_index)
+        users=User.objects.filter(groups__permissions=65 + int(stage_index))
+        data.update({'users': users})
+
     return  render(request,'file/details.html',data)
+def assign_file(request,pk):
+    if request.method == 'POST':
+        user=User.objects.get(pk=request.POST.get('assigned_user'))
+        print (f'user={user}')
+        file=DocumentFile.objects.get(pk=pk)
+        if user :
+            if file:
+                file.assigned_to=user
+                file.save()
+                messages.success(request, 'Assigned successfully ')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
