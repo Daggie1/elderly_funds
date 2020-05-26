@@ -329,7 +329,46 @@ class DocumentFile(models.Model):
         )
         self.flagged = False
         self.save()
+    def return_reception(self, user=None, rejection_comment=None):
 
+        """"flags a  file stage to RECEPTION
+
+                            -records this action in Modification Table
+                            -notify user who edited at reception
+                            -notify all admins
+                                                 """
+        Modification.objects.create(
+            file=self,
+            modified_from_stage=STAGES[2],
+            modified_to_stage=STAGES[1],
+            by=user
+        )
+
+        notification = Notification.objects.create(
+            file=self,
+            comment=rejection_comment
+        )
+        # user who did reception
+        modified = Modification.objects.filter(modified_to_stage=STAGES[1]).last()
+        if modified:
+            NotificationSentTo.objects.create(
+                notification=notification,
+                user=modified.by
+            )
+
+        # all admins
+        for user_obj in User.objects.filter(is_superuser=True):
+            NotificationSentTo.objects.create(
+                notification=notification,
+                user=user_obj
+            )
+        if modified:
+            self.assigned_to = modified.by
+        else:
+            self.assigned_to = None
+        self.flagged = True
+        self.save()
+        pass
     @transition(field=stage, source=[STAGES[3]], target=STAGES[4],
                 permission=['app.can_scan_file'])
     def dispatch_transcriber(self, user=None):
@@ -345,6 +384,48 @@ class DocumentFile(models.Model):
             by=user
         )
         self.flagged = False
+        self.save()
+
+    @transition(field=stage, source=[STAGES[4]], target=STAGES[3],
+                permission=['app.can_transcribe_file'])
+    def return_scanner(self, user=None, rejection_comment=None):
+
+        """"flags a  file stage to SCANNER
+
+                            -records this action in Modification Table
+                            -notify user who edited at reception
+                            -notify all admins
+                                                 """
+        Modification.objects.create(
+            file=self,
+            modified_from_stage=STAGES[4],
+            modified_to_stage=STAGES[3],
+            by=user
+        )
+
+        notification = Notification.objects.create(
+            file=self,
+            comment=rejection_comment
+        )
+        # user who did reception
+        modified = Modification.objects.filter(modified_to_stage=STAGES[3]).last()
+        if modified:
+            NotificationSentTo.objects.create(
+                notification=notification,
+                user=modified.by
+            )
+
+        # all admins
+        for user_obj in User.objects.filter(is_superuser=True):
+            NotificationSentTo.objects.create(
+                notification=notification,
+                user=user_obj
+            )
+        if modified:
+            self.assigned_to = modified.by
+        else:
+            self.assigned_to = None
+        self.flagged = True
         self.save()
 
     @transition(field=stage, source=[STAGES[4]], target=STAGES[5],
@@ -364,6 +445,48 @@ class DocumentFile(models.Model):
         self.flagged = False
         self.save()
 
+    @transition(field=stage, source=[STAGES[5]], target=STAGES[4],
+                permission=['app.can_qa_file'])
+    def return_transcriber(self, user=None, rejection_comment=None):
+
+        """"flags a  file stage to TRANSCRIBER
+
+                            -records this action in Modification Table
+                            -notify user who edited at reception
+                            -notify all admins
+                                                 """
+        Modification.objects.create(
+            file=self,
+            modified_from_stage=STAGES[5],
+            modified_to_stage=STAGES[4],
+            by=user
+        )
+
+        notification = Notification.objects.create(
+            file=self,
+            comment=rejection_comment
+        )
+        # user who did reception
+        modified = Modification.objects.filter(modified_to_stage=STAGES[4]).last()
+        if modified:
+            NotificationSentTo.objects.create(
+                notification=notification,
+                user=modified.by
+            )
+
+        # all admins
+        for user_obj in User.objects.filter(is_superuser=True):
+            NotificationSentTo.objects.create(
+                notification=notification,
+                user=user_obj
+            )
+        if modified:
+            self.assigned_to = modified.by
+        else:
+            self.assigned_to = None
+        self.flagged = True
+        self.save()
+
     @transition(field=stage, source=[STAGES[5]], target=STAGES[6],
                 permission=['app.can_qa_file'])
     def dispatch_validator(self, user=None):
@@ -379,6 +502,48 @@ class DocumentFile(models.Model):
             by=user
         )
         self.flagged = False
+        self.save()
+
+    @transition(field=stage, source=[STAGES[6]], target=STAGES[5],
+                permission=['app.can_validate_file'])
+    def return_qa(self, user=None, rejection_comment=None):
+
+        """"flags a  file stage to QA
+
+                            -records this action in Modification Table
+                            -notify user who edited at reception
+                            -notify all admins
+                                                 """
+        Modification.objects.create(
+            file=self,
+            modified_from_stage=STAGES[6],
+            modified_to_stage=STAGES[5],
+            by=user
+        )
+
+        notification = Notification.objects.create(
+            file=self,
+            comment=rejection_comment
+        )
+        # user who did reception
+        modified = Modification.objects.filter(modified_to_stage=STAGES[5]).last()
+        if modified:
+            NotificationSentTo.objects.create(
+                notification=notification,
+                user=modified.by
+            )
+
+        # all admins
+        for user_obj in User.objects.filter(is_superuser=True):
+            NotificationSentTo.objects.create(
+                notification=notification,
+                user=user_obj
+            )
+        if modified:
+            self.assigned_to = modified.by
+        else:
+            self.assigned_to = None
+        self.flagged = True
         self.save()
 
     @transition(field=stage, source=[STAGES[6]], target=STAGES[1],
