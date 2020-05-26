@@ -269,10 +269,7 @@ class DocumentFile(models.Model):
         self.flagged = False
         self.save()
 
-#TODO remember conditions=[file_closed] hahah.....
-
-    @transition(field=stage, source=[STAGES[2]], target=STAGES[1],
-                permission=['app.can_disassemble_file'])
+    @transition(field=stage, source=[STAGES[2]], target=STAGES[1], permission=['app.can_disassemble_file'])
     def return_reception(self, user=None, rejection_comment=None):
 
         """"flags a  file stage to RECEPTION
@@ -312,7 +309,6 @@ class DocumentFile(models.Model):
             self.assigned_to = None
         self.flagged = True
         self.save()
-        pass
 
     @transition(field=stage, source=[STAGES[2]], target=STAGES[3],
                 permission=['app.can_disassemble_file'])
@@ -329,46 +325,7 @@ class DocumentFile(models.Model):
         )
         self.flagged = False
         self.save()
-    def return_reception(self, user=None, rejection_comment=None):
 
-        """"flags a  file stage to RECEPTION
-
-                            -records this action in Modification Table
-                            -notify user who edited at reception
-                            -notify all admins
-                                                 """
-        Modification.objects.create(
-            file=self,
-            modified_from_stage=STAGES[2],
-            modified_to_stage=STAGES[1],
-            by=user
-        )
-
-        notification = Notification.objects.create(
-            file=self,
-            comment=rejection_comment
-        )
-        # user who did reception
-        modified = Modification.objects.filter(modified_to_stage=STAGES[1]).last()
-        if modified:
-            NotificationSentTo.objects.create(
-                notification=notification,
-                user=modified.by
-            )
-
-        # all admins
-        for user_obj in User.objects.filter(is_superuser=True):
-            NotificationSentTo.objects.create(
-                notification=notification,
-                user=user_obj
-            )
-        if modified:
-            self.assigned_to = modified.by
-        else:
-            self.assigned_to = None
-        self.flagged = True
-        self.save()
-        pass
     @transition(field=stage, source=[STAGES[3]], target=STAGES[4],
                 permission=['app.can_scan_file'])
     def dispatch_transcriber(self, user=None):
