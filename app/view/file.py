@@ -48,17 +48,9 @@ class FilesView(LoginRequiredMixin, SingleTableMixin, FilterView):
         return context
 
     def get_queryset(self):
-        if self.request.user.has_perm('app.can_register_batch'):
-            return DocumentFile.objects.filter(batch_id=int(self.kwargs['batch_id']))
-        elif self.request.user.has_perm('app.can_receive_file'):
 
-            q1 = DocumentFile.objects.filter(state_id=301,
-                                             batch_id=int(self.kwargs['batch_id']),
-                                             assigned_to=self.request.user)
-            q2 = DocumentFile.objects.filter(state_id=301,
-                                             batch_id=int(self.kwargs['batch_id']),
-                                             assigned_to=None)
-            return q1.union(q2)
+        return DocumentFile.objects.filter(batch_id=int(self.kwargs['batch_id']))
+
 
     filterset_class = DocumentFileFilter
 
@@ -74,14 +66,14 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
         if self.request.user.is_superuser:
             return DocumentFile.objects.all()
         elif self.request.user.has_perm('app.can_create_batch'):
-            return DocumentFile.objects.filter(stage=STAGES[0],flagged=False).filter(Q(assigned_to=self.request.user) |Q(assigned_to__isnull=True)| Q(state=STATES[2]))
+            return DocumentFile.objects.filter(stage=STAGES[0],flagged=False).filter(Q(assigned_to=self.request.user) |Q(assigned_to__isnull=True) | Q(state=STATES[2]))
         elif self.request.user.has_perm('app.can_receive_file'):
-            return DocumentFile.objects.filter(stage=STAGES[1],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[2]))
+            return DocumentFile.objects.filter(stage=STAGES[1],flagged=False).filter(Q(assigned_to=self.request.user) |Q(assigned_to__isnull=True) | Q(state=STATES[2]))
         elif self.request.user.has_perm('app.can_disassemble_file'):
-            return DocumentFile.objects.filter(stage=STAGES[2],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[2]))
+            return DocumentFile.objects.filter(stage=STAGES[2],flagged=False).filter(Q(assigned_to=self.request.user) |Q(assigned_to__isnull=True) | Q(state=STATES[2]))
         elif self.request.user.has_perm('app.can_scan_file'):
 
-         return DocumentFile.objects.filter(stage=STAGES[3],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[2]))
+         return DocumentFile.objects.filter(stage=STAGES[3],flagged=False).filter(Q(assigned_to=self.request.user) |Q(assigned_to__isnull=True) | Q(state=STATES[2]))
 
 
 
@@ -89,14 +81,14 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
 
 
 
-            return DocumentFile.objects.filter(stage=STAGES[4],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            return DocumentFile.objects.filter(stage=STAGES[4],flagged=False).filter(Q(assigned_to=self.request.user) |Q(assigned_to__isnull=True) | Q(state=STATES[2]))
 
 
         elif self.request.user.has_perm('app.can_qa_file'):
-            return DocumentFile.objects.filter(stage=STAGES[5],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            return DocumentFile.objects.filter(stage=STAGES[5],flagged=False).filter(Q(assigned_to=self.request.user) |Q(assigned_to__isnull=True) | Q(state=STATES[2]))
 
         elif self.request.user.has_perm('app.can_validate_file'):
-            return DocumentFile.objects.filter(stage=STAGES[6],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            return DocumentFile.objects.filter(stage=STAGES[6],flagged=False).filter(Q(assigned_to=self.request.user) |Q(assigned_to__isnull=True) | Q(state=STATES[2]))
         else:
             return DocumentFile.objects.none()
 
@@ -113,38 +105,38 @@ class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView)
             return DocumentFile.objects.DocumentFile.objects.filter(
                 flagged=True)
         elif self.request.user.has_perm('app.can_create_batch'):
-            return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[0],
+            return DocumentFile.objects.filter(stage=[0]).filter(
+                flagged=True,
                 assigned_to=self.request.user)
         elif self.request.user.has_perm('app.can_receive_file'):
-            return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[1],
+            return DocumentFile.objects.filter(stage=[1]).filter(
+                flagged=True,
                 assigned_to=self.request.user)
         elif self.request.user.has_perm('app.can_disassemble_file'):
-            return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[2],
+            return DocumentFile.objects.filter(stage=[2]).filter(
+                flagged=True,
                 assigned_to=self.request.user)
         elif self.request.user.has_perm('app.can_scan_file'):
 
-            return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[3],
+            return DocumentFile.objects.filter(stage=[3]).filter(
+                flagged=True,
                 assigned_to=self.request.user)
 
 
         elif self.request.user.has_perm('app.can_transcribe_file'):
 
-            return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[4],
+            return DocumentFile.objects.filter(stage=[4]).filter(
+                flagged=True,
                 assigned_to=self.request.user)
 
         elif self.request.user.has_perm('app.can_qa_file'):
-            return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[5],
+            return DocumentFile.objects.filter(stage=[5]).filter(
+                flagged=True,
                 assigned_to=self.request.user)
 
         elif self.request.user.has_perm('app.can_validate_file'):
-            return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[6],
+            return DocumentFile.objects.filter(stage=[6]).filter(
+                flagged=True,
                 assigned_to=self.request.user)
         else:
             return DocumentFile.objects.none()

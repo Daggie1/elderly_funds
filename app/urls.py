@@ -41,8 +41,7 @@ from app.view.escalations import RejectedDocumentFileList
 
 urlpatterns = [
     path('', report, name='home'),
-    #submits
-    path('submit/<int:batch_id>', registry_submit, name='submit.registry'),
+
 
     # batches
     path('batches/', BatchListView.as_view(), name='batch_index'),
