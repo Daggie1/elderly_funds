@@ -1,19 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load app_extras %}
-
-{% block css %}
-<link rel="stylesheet" href="{% static 'adminlte/plugins/select2/css/select2.min.css' %}">
-  <link rel="stylesheet" href="{% static 'adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
-    <link rel="stylesheet" href="{% static 'summernote/summernote.css' %}">
-{% endblock %}
-{% block header %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-     <script src="https://unpkg.com/pdfjs-dist@2.0.489/build/pdf.min.js"></script>
-    <link rel="stylesheet" href="{% static 'scripts/pdf.css' %}">
-{% endblock %}
-
 {% block content %}
     <div class="row">
     <div class="col-md-6">
@@ -27,209 +14,16 @@
                 {{ table_data|safe }}
             </div>
         </div>
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-header">Document Status</h3>
-            </div>
-            <div class="card-body">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <form action="{% url 'change_document_status_to_accept' document.pk %}" method="post"  id="form_data">
-                    {% csrf_token %}
-                    <!-- Default unchecked -->
-
-
-<!-- Default checked -->
-                <div class="row ">
-
-                    <div class="col-md-6 ">
-                        <input required value="{{ document.state_id }}" type="hidden" name="modified_to_state_id">
-                        <div class="form-group">
-                        <button class="btn btn-success"  type="submit"> Accept</button>
-                        </div>
-
-                    </div>
-                    <input type="hidden" name="is_reject" value="nothing">
-                    <div class="col-md-6">
-                        <button type="button" class="btn btn-danger" onclick="check()" > Reject</button>
-
-                    </div>
-                </div>
-
-
-
-
-                </form>
-
-                    </div>
-                       <form action="" method="post"  id="form_data">
-                    {% csrf_token %}
-                           <input required value="{{ document.state_id }}" type="hidden" name="modified_to_state_id">
-                          <div class="form-group" style="display: none" id="desc">
-                          <label for="is_reject_description">Reason for reject *</label>
-                    <textarea  class="form-control" id= "is_reject_description" required name="is_reject_description" rows="5">
-
-                    </textarea>
-                              <br>
-                              <div class="row">
-    <div class="col-md-8 offset-2">
-                               <div class="form-group ">
-                         <div class="form-group">
-                        <label>The root of escalation *</label>
-                        <select class="form-control select2bs4" name="modified_to_state_id" data-dropdown-css-class="select2-primary" data-placeholder="Select Group" required="required">
-                            {% if 'app.can_receive_file' in perms %}
-                        <option value="400">Missing File</option>
-
-                            {% elif  'app.can_disassemble_file' in perms  or 'app.can_reassemble_file' in perms  %}
-
-                                <option value="400">Unknown Document</option>
-                                {% elif  'app.can_validate_file' in perms or 'app.can_qa_file' in perms  %}
-                                <option value="305">Wrong Transcription</option>
-                                <option value="304">Wrong Scanning</option>
-                            {% endif %}
-
-
-                        </select>
-                      </div>
-
-                      </div>
-
-                          </div>
-                              </div>
-<div class="row">
-    <div class="col-md-3 offset-4">
-         <div class="form-group">
-                               <button class="btn btn-sm btn-primary" type="submit">Submit Validation</button>
-                           </div>
-    </div>
-</div>
-
-                  </div>
-
-                      </form>
-                  </div>
-
-            </div>
-            <div class="card-footer">
-
-            </div>
-        </div>
     </div>
     </div>
 
-  {#    modals#}
 
-          <div class="modal fade" id="modal-primary">
-        <div class="modal-dialog">
-          <div class="modal-content ">
-            <div class="modal-header">
-              <h4 class="modal-title">File Rejection Form</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span></button>
-            </div>
-              <div class="modal-body">
-                  <form action="" method="post"  id="form_data">
-                    {% csrf_token %}
-                      <div class="form-group">
-                          <label for="is_reject_description">Reason for reject *</label>
-                    <textarea  class="form-control" id= "is_reject_description" required name="is_reject_description" rows="5">
-
-                    </textarea>
-                  </div>
-                      <div class="form-group ">
-                         <div class="form-group">
-                        <label>The root of escalation *</label>
-                        <select class="form-control select2bs4" name="modified_to_state_id" data-dropdown-css-class="select2-primary" data-placeholder="Select Group" required="required">
-                            {% if 'app.can_receive_file' in perms %}
-                        <option value="400">Missing File</option>
-
-                            {% elif  'app.can_disassemble_file' in perms  or 'app.can_reassemble_file' in perms  %}
-
-                                <option value="400">Unknown Document</option>
-                            {% endif %}
-
-
-                        </select>
-                      </div>
-
-                      </div>
-                      <div class="row">
-                      <div class="form-group col-md-6 pull-left">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close Form</button>
-                          </div>
-                      <div class="form-group col-md-4 offset-2">
-
-              <button type="submit" class="btn btn-success">Submit changes</button>
-                      </div>
-                          </div>
-                </form>
-              </div>
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
       </div>
 {% endblock content %}
 {% block js %}
 
 
     <script>
-  $(function () {
-    $("#example1").DataTable();
-  });
-
-</script>
-    <script>
-  function  hideUnhideReturnRejectedFile()
-     {
-  var form_div = document.getElementById("return_form_row");
-  var return_btn = document.getElementById("return_btn");
-  if (form_div.style.display === "none") {
-    form_div.style.display = "block";
-    return_btn.textContent="Hide Action Form";
-  } else {
-    form_div.style.display = "none";
-return_btn.textContent="Take Action on this File";
-  }
-}
-function hideUnhide() {
-  var action_row = document.getElementById("action_row");
-  var action_btn = document.getElementById("action_btn");
-  if (action_row.style.display === "none") {
-    action_row.style.display = "block";
-    action_btn.textContent="Hide Action Form";
-  } else {
-    action_row.style.display = "none";
-action_btn.textContent="Take Action on this Batch";
-  }
-}
-function check() {
-    var textarea_desc=document.getElementById('desc');
-    var btn_submit =document.getElementById('btn_submit');
-
-    if(textarea_desc.style.display ==='none'){
-        textarea_desc.style.display = "block"
-        textarea_desc.setAttribute('required','true');
-        btn_submit.style.display = "block"
-
-    }
-    else {
-       textarea_desc.style.display = "none";
-        textarea_desc.setAttribute('required','false');
-        btn_submit.style.display = "none"
-    }
-}
-</script>
-<script src="{% static 'adminlte/plugins/select2/js/select2.full.min.js' %}"></script>
- <script src="{% static 'summernote/summernote.min.js' %}"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('#is_reject_description').summernote({
-                    placeholder: 'Explain your reason',
-                }
-            );
-        });
 
 
     </script>
