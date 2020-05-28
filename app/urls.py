@@ -29,7 +29,7 @@ from app.view.scanner import upload_documents_to_file, ScannerTableView
 from app.view.transcribe import get_files_from_storage, update_document_file_detail, TranscribeFiles
 from app.view.user import profile,admin_check_user
 from .view.report import report
-from app.view.inspection import  inspect, receive
+from app.view.inspection import  inspect, receive, ReceiveBatch, OpenBatchFiles, DessembleFiles, DessemblerDocuments
 from app.view.qa import  QaFileList, open_file_for_qa
 from app.view.validate import ValidateFileList
 
@@ -130,10 +130,15 @@ urlpatterns = [
     # path('api/v1/',ApiViewSet.as_view(), name='api'),
 
     # run file and document inspection
-    re_path(r'^inspect/file/$', inspect, name='inspect'),
-    re_path(r'^inspect/file/(?P<id>\w+)/$', inspect, name='inspect'),
-    re_path(r'^receive/batch/$', receive, name='receive'),
-    re_path(r'^receive/batch/(?P<id>\w+)/$', receive, name='receive'),
+    # re_path(r'^inspect/file/$', inspect, name='inspect'),
+    # re_path(r'^inspect/file/(?P<id>\w+)/$', inspect, name='inspect'),
+    # re_path(r'^receive/batch/$', receive, name='receive'),
+    # re_path(r'^receive/batch/(?P<id>\w+)/$', receive, name='receive'),
+
+    re_path(r'^inspect/file/$', DessembleFiles.as_view(), name='inspect'),
+    re_path(r'^inspect/file/(?P<id>\w+)/$', DessemblerDocuments.as_view(), name='inspect'),
+    re_path(r'^receive/batch/$', ReceiveBatch.as_view(), name='receive'),
+    re_path(r'^receive/batch/(?P<id>\w+)/$', OpenBatchFiles.as_view(), name='receive'),
 
     #quality assuarance link
     path('quality/files/', QaFileList.as_view(), name='quality'),

@@ -103,9 +103,9 @@
           }
       }
   })
-      $('.filepond').on('FilePond:processfile', function(e) {
+      $('.filepond').on('FilePond:processfiles', function(e) {
     location.reload();
-});
+        });
    $('.preview').click(function(){
        let id = $(this).attr('id')
        console.log(id)

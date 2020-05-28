@@ -81,7 +81,7 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
             return DocumentFile.objects.filter(stage=STAGES[2],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[2]))
         elif self.request.user.has_perm('app.can_scan_file'):
 
-         return DocumentFile.objects.filter(stage=STAGES[3],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[2]))
+            return DocumentFile.objects.filter(stage=STAGES[3],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[2]))
 
 
 

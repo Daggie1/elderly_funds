@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load app_extras %}
+{% load render_table from django_tables2 %}
+{% block content %}
+
+         <div class="row">
+        <div class="col-12">
+    <div class="card">
+           <div class="card-header">
+                <h3 class="card-title">Files for this batch</h3>
+
+           {% if 'app.can_register_batch' in perms %}
+               <div class="card-tools">
+                    <a href="{% url 'create_document_file' batch_id %}" class="btn btn-primary">Add File</a>
+                </div>
+           {% endif %}
+              </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+            <div class="row" id="action_row" style="display: none">
+                <div class="col-md-4">
+
+            <form action="{% url 'receiver_submit_batch' batch_id %}" method="post"  id="form_data">
+                    {% csrf_token %}
+                    <!-- Default unchecked -->
+
+
+<!-- Default checked -->
+                <div class="row ">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                        <button class="btn btn-success"  type="submit"> Accept</button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="is_reject" value="nothing">
+                    <div class="col-md-6">
+                        <button class="btn btn-danger" onclick="check()" type="button"> Reject</button>
+                    </div>
+                </div>
+
+                    <div class="form-group green-border-focus" style="display: none" id="desc">
+
+  <textarea class="form-control" id="exampleFormControlTextarea5" rows="3" placeholder="reason for reject" name="desc"></textarea>
+</div>
+                     <div class="form-group">
+                        <button type="submit"  id ="btn_submit" class="btn btn-primary btn-block" style="display: none">Submit</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+                {% render_table table %}
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+
+           <div class="modal fade" id="modal-lg">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Provide return reasons</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form action="#"  method="GET" id="returnform">
+                    <div class="form-group">
+                      <textarea name="reasons" class="form-control"></textarea>
+                    </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-warning">Return</button>
+            </div>
+               </form>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
+      </div>
+      <!-- /.row -->
+
+{% endblock %}
+
+{% block js %}
+    <script>
+    var url = '';
+    var hostname = $(location).attr('host');
+   $(".return").click(function() {
+       let id = this.id
+       url = 'http://'+hostname + id
+       $('#returnform').attr('action', url)
+});
+</script>
+{% endblock %}

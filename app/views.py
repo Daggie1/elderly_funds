@@ -34,6 +34,8 @@ from .tables import DocumentTable
 from .filters import DocumentFilter
 
 
+
+
 @login_required
 def edit_file(request, file_type):
     if file_type:
