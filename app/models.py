@@ -12,7 +12,7 @@ from django.urls import reverse
 
 STAGES = ("Registry", "Reception", "Assembly", "Scanner", "Transcriber", "Quality Assuarance", "Validator")
 STATES = ("Opened", "Done", "Closed",)
-BATCH = ("Opened","Done","Closed")
+BATCH = ("Opened", "Done", "Closed")
 
 
 class Batch(models.Model):
@@ -116,7 +116,6 @@ class DocumentFile(models.Model):
     file_type = models.ForeignKey(DocumentFileType, on_delete=models.CASCADE)
     document = models.FileField(upload_to='documents')
 
-
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True, blank=True)
     file_created_by = models.ForeignKey(User, null=True, blank=True,
                                         on_delete=models.DO_NOTHING,
@@ -204,19 +203,18 @@ class DocumentFile(models.Model):
                                  """
         # create log
         print(f'file being moved={self}')
-        log=Modification.objects.create(
+        log = Modification.objects.create(
             file=self,
             modified_from_stage=STAGES[0],
             modified_to_stage=STAGES[1],
             by=user
         )
         print(f'log created={log}')
-        self.flagged=False
+        self.flagged = False
         self.save()
 
     @transition(field=stage, source=[STAGES[1]], target=STAGES[0], permission=['app.can_receive_file'])
-    def return_registry(self,user,rejection_comment=''):
-
+    def return_registry(self, user, rejection_comment=''):
 
         """"flags a  file stage to REGISTRY
 
@@ -530,6 +528,7 @@ class DocumentFileDetail(models.Model):
     state = FSMField(default=STATES[0], protected=True)
     passed_qa = models.BooleanField(default=False)
     passed_validated = models.BooleanField(default=False)
+
     # transition methods
     @transition(field=state, source=[STATES[2]], target=STATES[0])
     def open(self):
@@ -609,7 +608,6 @@ class Filer(models.Model):
         return os.path.basename(self.filepond.name)
 
 
-
 class Modification(models.Model):
     """ This tables all the modifications of either batch,file or document-will be used to track the action workflow"""
 
@@ -623,12 +621,18 @@ class Modification(models.Model):
 class Notification(models.Model):
     """all notifications"""
 
-    file = models.ForeignKey(DocumentFile, on_delete=models.CASCADE)
+    file = models.ForeignKey(DocumentFile, on_delete=models.CASCADE, null=True, blank=True)
     comment = models.TextField(null=True)
-    created_at = models.DateTimeField(auto_now_add=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=timezone.now, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    resolved = models.BooleanField(default=False)
+    resolved_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resolver', blank=True, null=True)
 
 
 class NotificationSentTo(models.Model):
     notification = models.ForeignKey(Notification, on_delete=models.CASCADE, null=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     read_at = models.DateTimeField(null=True)
+
+
+
