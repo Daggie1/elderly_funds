@@ -2,8 +2,8 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-             <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'logged_in_user_history' or request.resolver_match.url_name == 'my_escalated_files' or request.resolver_match.url_name == 'messages'%} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'logged_in_user_history' or request.resolver_match.url_name == 'my_escalated_files' or request.resolver_match.url_name == 'messages' %} active {% endif %} ">
+             <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'browser' or request.resolver_match.url_name == 'logged_in_user_history' or request.resolver_match.url_name == 'user_specific_file_history' or request.resolver_match.url_name == 'file_details' or request.resolver_match.url_name == 'my_escalated_files' or request.resolver_match.url_name == 'messages'%} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'browser'  or request.resolver_match.url_name == 'logged_in_user_history' or request.resolver_match.url_name == 'user_specific_file_history'  or request.resolver_match.url_name == 'file_details' or request.resolver_match.url_name == 'my_escalated_files' or request.resolver_match.url_name == 'messages' %} active {% endif %} ">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
@@ -20,13 +20,13 @@
               </li>
             {% endif %}
              <li class="nav-item">
-                <a href="{% url 'logged_in_user_history' %}" class="nav-link {% if request.resolver_match.url_name == 'logged_in_user_history' %} active {% endif %}">
+                <a href="{% url 'logged_in_user_history' %}" class="nav-link {% if request.resolver_match.url_name == 'logged_in_user_history'  or request.resolver_match.url_name == 'user_specific_file_history'%} active {% endif %}">
                   <i class="fas fa-chart-pie nav-icon"></i>
                   <p>Analytics</p>
                 </a>
               </li>
             <li class="nav-item">
-                <a href="{% url 'my_escalated_files' %}" class="nav-link {% if request.resolver_match.url_name == 'my_escalated_files' %} active {% endif %}">
+                <a href="{% url 'my_escalated_files' %}" class="nav-link {% if request.resolver_match.url_name == 'my_escalated_files'  or request.resolver_match.url_name == 'file_details'%} active {% endif %}">
                   <i class="fas fa-radiation nav-icon"></i>
                   <p>Escalated Issues</p>
                 </a>
@@ -37,12 +37,18 @@
                   <p>Messages</p>
                 </a>
               </li>
+            <li class="nav-item">
+                <a href="{% url 'browser' %}" class="nav-link {% if request.resolver_match.url_name == 'browser' %} active {% endif %}">
+                  <i class="fas fa-memory nav-icon"></i>
+                  <p>File Manager</p>
+                </a>
+              </li>
             </ul>
              </li>
 
     {% if "app.can_register_batch" in perms or "app.can_receive_file" in perms  %}
-        <li class="nav-item has-treeview  {% if request.resolver_match.url_name == 'batch_index'  or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch_create' %} menu-open {% endif %}" >
-            <a href="#" class="nav-link  {% if request.resolver_match.url_name == 'batch_index' or request.resolver_match.url_name == 'create_document_file' or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch_create' %} active {% endif %}">
+        <li class="nav-item has-treeview  {% if request.resolver_match.url_name == 'batch_index'  or request.resolver_match.url_name == 'batch_files'  or request.resolver_match.url_name == 'view_docs_in_file'   or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch_create' %} menu-open {% endif %}" >
+            <a href="#" class="nav-link  {% if request.resolver_match.url_name == 'batch_index'  or request.resolver_match.url_name == 'batch_files'  or request.resolver_match.url_name == 'view_docs_in_file'  or request.resolver_match.url_name == 'create_document_file' or request.resolver_match.url_name == 'document.create'  or request.resolver_match.url_name == 'batch_create' %} active {% endif %}">
               <i class="nav-icon fas fa-file-pdf"></i>
               <p>
                 Batches
@@ -142,8 +148,8 @@
             </ul>
 {% endif %}
                 {% if 'app.can_scan_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
-            <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'create_document_type' or request.resolver_match.url_name == 'get_file_to_upload_documents' or request.resolver_match.url_name  == 'list_transcribe_files'%} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'create_document_type'  or request.resolver_match.url_name == 'get_file_to_upload_documents' or request.resolver_match.url_name  == 'list_transcribe_files' %} active {% endif %}">
+            <li class="nav-item has-treeview {% if  request.resolver_match.url_name == 'get_file_to_upload_documents' or request.resolver_match.url_name  == 'list_transcribe_files'%} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if  request.resolver_match.url_name == 'get_file_to_upload_documents' or request.resolver_match.url_name  == 'list_transcribe_files' %} active {% endif %}">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Documents
@@ -172,8 +178,8 @@
                 </li>
         {% endif %}
         {% if 'app.can_qa_file' in perms or 'app.can_validate_file' in perms or "app.can_receive_file" in perms or 'app.can_disassemble_file' in perms or 'app.can_reassemble_file' in perms %}
-             <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'quality' or request.resolver_match.url_name == 'inspect' or request.resolver_match.url_name == 'receive' or request.resolver_match.url_name == 'validation'  %} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'quality' or request.resolver_match.url_name == 'inspect' or request.resolver_match.url_name == 'receive' or request.resolver_match.url_name == 'validation' %} active {% endif %}">
+             <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'quality' or request.resolver_match.url_name == 'validate_doc_content' or request.resolver_match.url_name == 'open_qa_file' or request.resolver_match.url_name == 'inspect' or request.resolver_match.url_name == 'receive' or request.resolver_match.url_name == 'validation'  %} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'quality' or request.resolver_match.url_name == 'validate_doc_content' or request.resolver_match.url_name == 'open_qa_file' or request.resolver_match.url_name == 'inspect' or request.resolver_match.url_name == 'receive' or request.resolver_match.url_name == 'validation' %} active {% endif %}">
               <i class="nav-icon fas fa-microscope"></i>
               <p>
                 Quality Control

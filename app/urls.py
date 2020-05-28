@@ -186,7 +186,7 @@ urlpatterns = [
 
     #file details
 
-    path('file_details/<pk>',file_details, name='file_details'),
+    path('file/details/<pk>',file_details, name='file_details'),
 
 #file details
 
