@@ -98,7 +98,7 @@
 
 
         {% for notification in  user.notificationsentto_set.all   %}
-          <a href="{%  url 'list_document_files' %}" class="dropdown-item">
+          <a href="{%  url 'my_escalated_files' %}" class="dropdown-item">
             <i class="fas fa-file-pdf mr-2"></i> {{ notification.notification.file }} Flagged
             <span class="float-right text-muted text-sm">{{ notification.notification.created_at }}</span>
           </a>
@@ -107,7 +107,7 @@
 {%  if  user.notificationsentto_set.all.count > 0 %}
 
 
-          <a href="{%  url 'list_document_files' %}" class="dropdown-item dropdown-footer">See All Notifications</a>
+          <a href="{%  url 'my_escalated_files' %}" class="dropdown-item dropdown-footer">See All Notifications</a>
         {% endif %}
         </div>
       </li>
