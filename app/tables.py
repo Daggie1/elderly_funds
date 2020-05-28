@@ -34,7 +34,8 @@ class BatchFileTable(tables.Table):
         model = DocumentFile
         template_name = "django_tables2/bootstrap.html"
         fields = ("file_reference", "file_type", "state", "stage", "captured_by", "file_barcode", "created_on")
-
+    def render_file_reference(self, value, record):
+        return format_html('<a href="{}" ><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
     docs = TemplateColumn(template_name='file/total_column.html')
     change_state = TemplateColumn(template_name='batch/file_state_column.html')
     move_stage = TemplateColumn(template_name='batch/file_view_column.html')
@@ -61,7 +62,7 @@ class DocumentFileTable(tables.Table):
     action = TemplateColumn(template_name='file/view_column.html')
 
     def render_file_reference(self, value, record):
-        return format_html('<a href="{}">{}</a>'.format('file_details/{}'.format(record.pk), value))
+        return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
     # transcribe = TemplateColumn(template_name='app/document_action_column.html')
 
 
@@ -74,6 +75,10 @@ class EscalatedFileTable(tables.Table):
         model = DocumentFile
         template_name = "django_tables2/bootstrap.html"
         fields = ("file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
+
+    def render_file_reference(self, value, record):
+        return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
+
 
     docs = TemplateColumn(template_name='file/total_column.html')
     action = TemplateColumn(template_name='file/view_column.html')
@@ -97,6 +102,9 @@ class ValidationTable(tables.Table):
         template_name = "django_tables2/bootstrap.html"
         fields = ("file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
 
+    def render_file_reference(self, value, record):
+        return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
+
     docs = TemplateColumn(template_name='file/total_column.html')
     validate = TemplateColumn(template_name='file/validator_column.html')
 
@@ -107,8 +115,10 @@ class QaTable(tables.Table):
         model = DocumentFile
         template_name = "django_tables2/bootstrap.html"
         fields = ("file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
-
+    def render_file_reference(self, value, record):
+        return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
     docs = TemplateColumn(template_name='file/total_column.html')
+
     action = TemplateColumn(template_name='file/qa_column.html')
 
 
@@ -118,7 +128,8 @@ class ScannerTable(tables.Table):
         model = DocumentFile
         template_name = "django_tables2/bootstrap.html"
         fields = ("file_reference", "state", "file_barcode", "created_on")
-
+    def render_file_reference(self, value, record):
+        return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
     docs = TemplateColumn(template_name='file/total_column.html')
     action = TemplateColumn(template_name='file/scan.html')
 
@@ -129,7 +140,8 @@ class TranscribeTable(tables.Table):
         model = DocumentFile
         template_name = "django_tables2/bootstrap.html"
         fields = ("file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
-
+    def render_file_reference(self, value, record):
+        return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
     docs = TemplateColumn(template_name='file/total_column.html')
     transcribe = TemplateColumn(template_name='app/document_action_column.html')
 
@@ -158,7 +170,8 @@ class AdminTable(tables.Table):
         model = DocumentFile
         template_name = "django_tables2/bootstrap.html"
         fields = ("file",)
-
+    def render_file_reference(self, value, record):
+        return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
     actions = TemplateColumn(template_name='file/view_history.html')
 
 
@@ -189,7 +202,8 @@ class ReceiverFiles(tables.Table):
         model = DocumentFile
         template_name = "django_tables2/bootstrap.html"
         fields = ("file_reference", "file_type", "state", "stage", "captured_by", "file_barcode", "created_on")
-
+    def render_file_reference(self, value, record):
+        return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
     docs = TemplateColumn(template_name='file/total_column.html')
     change_state = TemplateColumn(template_name='batch/file_state_column.html')
     move_stage = TemplateColumn(template_name='batch/file_view_column.html')
@@ -201,7 +215,8 @@ class AssemblerFiles(tables.Table):
         model = DocumentFile
         template_name = "django_tables2/bootstrap.html"
         fields = ("file_reference", "file_type", "state", "stage", "captured_by", "file_barcode", "created_on")
-
+    def render_file_reference(self, value, record):
+        return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
     docs = TemplateColumn(template_name='file/total_column.html')
     change_state = TemplateColumn(template_name='batch/file_state_column.html')
     move_stage = TemplateColumn(template_name='batch/file_view_column.html')
@@ -213,5 +228,6 @@ class AssemblerDocuments(tables.Table):
         model = DocumentFileDetail
         template_name = "django_tables2/bootstrap4.html"
         fields = ("file_reference_id", "document_barcode", "state", "document_name_id", "document_file_path")
-
+    def render_file_reference(self, value, record):
+        return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
     actions = TemplateColumn(template_name='app/document_transcribe.html')
