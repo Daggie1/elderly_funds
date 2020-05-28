@@ -108,7 +108,7 @@ class EscalatedFileTable(tables.Table):
 
 
     docs = TemplateColumn(template_name='file/total_column.html')
-    action = TemplateColumn(template_name='file/view_column.html')
+    action = TemplateColumn(template_name='file/escalated_column.html')
     # transcribe = TemplateColumn(template_name='app/document_action_column.html')
 
     def render_counter(self):
