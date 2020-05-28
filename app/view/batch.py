@@ -96,7 +96,7 @@ class BatchUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMix
     success_message = 'Batch updated successfully'
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
+        form.instance.created_by = self.request.user
         return super().form_valid(form)
 
     def test_func(self):

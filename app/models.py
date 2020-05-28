@@ -138,9 +138,9 @@ class DocumentFile(models.Model):
 
     def __str__(self):
         return self.file_reference
-
     def get_absolute_url(self):
-        return reverse('view_docs_in_file', kwargs={'file_reference': self.pk})
+        return reverse('batch_documents', kwargs={'file_reference': self.pk})
+
 
     def file_closed(self):
         if self.state == STATES[3]:

@@ -8,7 +8,7 @@ from django_tables2 import SingleTableMixin, RequestConfig
 from app.tables import TranscribeTable
 from app.filters import DocumentFileFilter
 
-from app.models import Filer, DocumentFile, DocumentFileDetail, DocumentType
+from app.models import Filer, DocumentFile, DocumentFileDetail, DocumentType,STAGES
 
 
 def map_keys_to_value_digital(dict_list):
@@ -73,10 +73,10 @@ class TranscribeFiles(SingleTableMixin, FilterView):
     template_name = "transcribe_list.html"
 
     def get_queryset(self):
-        queryset = DocumentFile.objects.filter(stage='Transcriber').order_by('-created_on')
+        queryset = DocumentFile.objects.filter(stage=STAGES[4]).order_by('-created_on')
         self.table = TranscribeTable(queryset)
         self.filter = DocumentFileFilter(self.request.GET,
-                                         DocumentFile.objects.filter(stage='Transcriber').order_by('-created_on'))
+                                         DocumentFile.objects.filter(stage=STAGES[4]).order_by('-created_on'))
         self.table = TranscribeTable(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
 

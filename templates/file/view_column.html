@@ -1,39 +1,29 @@
 
+{% load app_extras %}
+<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-v"></i>
+            </button>
+            <div class="dropdown-menu">
+              {{ record.file_reference|get_actions_file }}
+                <div role="separator" class="dropdown-divider"></div>
+{% if 'app.can_register_batch' in perms and record.file_created_by == user and record.stage == 'Registry'   %}
+    <a class="btn btn-primary btn-block" href="{% url 'file_edit' record.pk %}">Edit</a>
+    <a class="btn btn-danger btn-block" href="{% url 'file_delete' record.pk %}">Delete</a>
 
+{% elif record.stage == 'Scanner' %}
 
-{% if user.is_superuser %}
-    <a class="btn btn-info btn-sm" href="{% url 'view_docs_in_file'  record.pk%}">Open</a>
-{% elif 'app.can_register_batch' in perms %}
-     {% if record.state_id == '300' %}
-    <a class="btn btn-info btn-sm" href="{% url 'view_docs_in_file'  record.pk%}">Open</a>
-    <a class="btn btn-danger btn-sm" href="{% url 'file_delete' record.pk %}"><i class="fas fa-trash"></i></a>
-        {% else %}
-        <a class="btn btn-info btn-sm" href="{% url 'view_docs_in_file'  record.pk%}">Open</a>
-        {% endif %}
+    <a class="btn btn-primary btn-block" href="{% url 'upload_document'  record.file_reference %}">Scan</a>
+                {% elif record.stage == 'Transcriber' %}
 
-
-
-
-{% elif record.state.pk == '400' and  'app.can_register_batch' in perms %}
-    <a class="btn btn-warning btn-sm" href="{% url 'view_docs_in_file'  record.pk%}">Edit</a>
-    <a class="btn btn-danger btn-sm" href="{% url 'file_delete' record.pk %}"><i class="fas fa-trash"></i></a>
- {% elif 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms or 'app.can_qa_file' in perms or  'app.can_validate_file' in perms%}
-   {% if record.assigned_to == user %}
-       {% if 'app.can_scan_file' in perms %}
-        <a class="btn btn-info btn-sm" href="{% url 'upload_document' record.pk %}">Open</a>
-           {% else %}
-            <a class="btn btn-info btn-sm" href="{% url 'view_docs_in_file'  record.pk %}">Open</a>
-       {% endif %}
-
-
-    {% else %}
-       <a class="btn btn-info btn-sm" href="{% url 'select_file'  record.pk%}">Select</a>
-       {% endif %}
-
-    {% elif 'app.can_transcribe_file' in perms %}
-    <a class="btn btn-info btn-sm" href="{% url 'get_files_from_storage' record.file_reference %}">Map Documents </a>
-     <a class="btn btn-warning btn-sm" href="{% url 'view_docs_in_file'  record.file_reference %}">Transcribe</a>
+                <a class="btn btn-info btn-block" href="{% url 'get_files_from_storage' record.file_reference %}">Map Documents </a>
+                 <a class="btn btn-warning btn-block" href="{% url 'batch_documents'  record.file_reference %}">Transcribe</a>
 
 
 
-    {% endif %}
+                {% endif %}
+        </div>
+
+
+
+
+

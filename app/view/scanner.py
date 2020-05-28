@@ -18,7 +18,7 @@ from django_filters.views import FilterView
 
 from app.views import start_scanning
 from app.forms import StorageForm
-from app.models import DocumentFile, DocumentFileDetail, Filer
+from app.models import DocumentFile, DocumentFileDetail, Filer,STAGES
 from django.shortcuts import render, render_to_response, redirect
 from django_tables2 import SingleTableMixin, RequestConfig
 from app.tables import ScannerTable
@@ -71,7 +71,7 @@ class ScannerTableView(SingleTableMixin,FilterView):
         context['table'] = self.table
         context['filter'] = self.filter
         return context
-    
+
 def update_file_state(request, id):
     file = DocumentFile.objects.get(pk=id)
     file.file_status = 'next stage'

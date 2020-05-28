@@ -9,7 +9,7 @@ from django.views.generic import ListView, CreateView
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin, RequestConfig
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import DeleteView
+from django.views.generic import DeleteView,UpdateView
 from app.filters import DocumentFileFilter
 from app.models import DocumentFile, STAGES, STATES
 from app.tables import DocumentFileTable, BatchFileTable
@@ -24,6 +24,7 @@ class DocumentFileCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.file_created_by = self.request.user
+
         form.instance.batch_id = self.kwargs['batch_id']
         # file=form.save()
         # print(file.file_reference)
@@ -43,6 +44,7 @@ class FilesView(LoginRequiredMixin, SingleTableMixin, FilterView):
         # Add in a QuerySet of all the books
 
         context['batch_id'] = int(self.kwargs['batch_id'])
+
 
         return context
 
@@ -98,8 +100,7 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
 
 
         elif self.request.user.has_perm('app.can_qa_file'):
-            queryset =  DocumentFile.objects.filter(stage=STAGES[5], flagged=False).filter(
-                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            queryset =  DocumentFile.objects.filter(stage=STAGES[5],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
 
         elif self.request.user.has_perm('app.can_validate_file'):
             queryset =  DocumentFile.objects.filter(stage=STAGES[6], flagged=False).filter(
@@ -167,6 +168,20 @@ class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView)
             return DocumentFile.objects.none()
 
     filterset_class = DocumentFileFilter
+class FileUpdateView(LoginRequiredMixin,SuccessMessageMixin, UserPassesTestMixin, UpdateView):
+    model = DocumentFile
+    fields = ['file_type', 'file_reference','file_barcode']
+    template_name = 'file/create.html'
+    success_message = 'File updated successfully'
+    def form_valid(self, form):
+        form.instance.file_created_by = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        file = self.get_object()
+        if self.request.user.has_perm('app.can_register_batch') :
+            return True
+        return False
 
 
 class FileDeleteView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, DeleteView):
@@ -176,7 +191,7 @@ class FileDeleteView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixi
     template_name = 'file/delete_confirm.html'
 
     def test_func(self):
-        batch = self.get_object()
+        file = self.get_object()
         if self.request.user.has_perm('app.can_register_batch'):
             return True
         return False
