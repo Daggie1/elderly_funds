@@ -24,6 +24,8 @@ class Batch(models.Model):
     is_return_batch = models.BooleanField(null=False)
     state = FSMField(default=BATCH[0], protected=True)
 
+    def get_absolute_url(self):
+        return reverse('batch_files', kwargs={'pk': self.pk})
     # transition methods
     @transition(field=state, source=[BATCH[2]], target=BATCH[0])
     def open(self, user=None):
