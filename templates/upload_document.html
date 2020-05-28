@@ -54,7 +54,7 @@
                       <td>
                           <button class="btn btn-sm preview" id="{{ document.filepond.url }}" ><span class="fas fa-eye"></span></button>
                       </td>
-                      <td><a href="" class="btn btn-sm"><span class="fas fa-trash text-danger"></span></a></td>
+                      <td><a href="{% url 'delete_pdf' document.id %}" class="btn btn-sm"><span class="fas fa-trash text-danger"></span></a></td>
                     </tr>
                   {% endfor %}
                   </tbody>
