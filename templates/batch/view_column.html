@@ -5,28 +5,19 @@
             <div class="dropdown-menu">
                 {{ record.id|get_actions_batch }}
                 <div role="separator" class="dropdown-divider"></div>
-                {% if 'app.can_register_batch' in perms and user.is_superuser %}
-    <a class="btn btn-info btn-block" href="{% url 'batch_files' record.id %}">Open </a>
-    {% elif 'app.can_register_batch' in perms %}
+                {% if 'app.can_register_batch' in perms and record.created_by == user and record.state != 'Closed'   %}
 
-    {% if record.state_id == '300' %}
-    <a class="btn btn-info btn-block" href="{% url 'batch_files' record.id %}">Open </a>
 
-        <a class="btn btn-info btn-block" href="{% url 'registry_submit_batch' record.id  %}">submit</a>
-    <a class="btn btn-danger btn-block" href="{% url 'batch_delete' record.id %}"><i class="fas fa-trash"></i></a>
-        {% else %}
-        <a class="btn btn-info btn-block" href="{% url 'batch_files' record.id %}">Open </a>
+
+    <a class="btn btn-danger btn-block" href="{% url 'batch_delete' record.id %}">Delete</a>
+                    <a class="btn btn-primary btn-block" href="{% url 'batch_edit' record.id %}">Edit</a>
+
+
         {% endif %}
-
-
-    {% elif 'app.can_receive_file' in perms  %}
-
-            <a class="btn btn-info btn-block" href="{% url 'batch_files' record.id %}">View</a>
+            <a class="btn btn-info btn-block" href="{% url 'batch_files' record.id %}">Open </a>
 
 
 
-
-    {% endif %}
         </div>
 
 

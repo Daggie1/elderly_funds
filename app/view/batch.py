@@ -14,7 +14,7 @@ from app.tables import BatchTable, DocumentFileTable, BatchDocumentTable, Docume
 from app.filters import BatchFilter, DocumentFileFilter, DocumentFilter
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
-    ListView,
+    ListView,UpdateView,
     DeleteView
 )
 
@@ -56,8 +56,8 @@ def create_batch(request):
                 batch.save()
                 messages.success(request, f" Batch Created successfully")
 
-                # return redirect(reverse('files.view', kwargs={'batch_id': batch.id}))
-                return redirect('batch_index')
+                return redirect(reverse('batch_files', kwargs={'pk': batch.id}))
+
             except AttributeError as e:
                 print(e)
                 messages.error(request, ' something wrong happened while adding batch')
@@ -66,6 +66,20 @@ def create_batch(request):
         form = BatchCreationForm()
     return render(request, 'batch/create.html', {'form': form})
 
+class BatchUpdateView(LoginRequiredMixin,SuccessMessageMixin, UserPassesTestMixin, UpdateView):
+    model = Batch
+    fields = ['batch_no', 'description']
+    template_name = 'batch/create.html'
+    success_message = 'Batch updated successfully'
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        batch = self.get_object()
+        if batch.created_by == self.request.user and batch.state!=STATES[2]:
+            return True
+        return False
 
 class BatchDeleteView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, DeleteView):
     model = Batch
@@ -75,7 +89,7 @@ class BatchDeleteView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMix
 
     def test_func(self):
         batch = self.get_object()
-        if self.request.user.has_perm('app.can_register_batch'):
+        if batch.created_by == self.request.user and batch.state!=STATES[2]:
             return True
         return False
 
@@ -88,12 +102,12 @@ class BatchFilesView(LoginRequiredMixin, SingleTableMixin, FilterView):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the books
-        context['batch_id'] = int(self.kwargs['batch_id'])
+        context['batch_id'] = int(self.kwargs['pk'])
         return context
 
     def get_queryset(self):
 
-        return DocumentFile.objects.filter(batch_id=int(self.kwargs['batch_id']))
+        return DocumentFile.objects.filter(batch_id=int(self.kwargs['pk']))
 
 
     filterset_class = DocumentFileFilter
