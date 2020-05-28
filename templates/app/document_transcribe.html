@@ -1,16 +1,16 @@
 
-{% if record.document_path is None %}
-{% if 'app.can_register_batch' in perms and not user.is_superuser %}
+
+{% if 'app.can_register_batch' in perms and record.file_reference.file_created_by == user and record.file_reference.stage == 'Registry'   %}
     <a class="btn btn-danger btn-sm" href="{% url 'document_delete' record.pk %}"><i class="fas fa-trash"></i></a>
 
-{% elif 'app.can_transcribe_file' in perms and not user.is_superuser  %}
-<a class="btn btn-secondary btn-sm" href="{% url 'transcription_lab' record.id record.document_type_id %}">Transcribe</a>
-{% elif 'app.can_qa_file' in perms  and not user.is_superuser%}
+{% endif %}
+{% if record.file_reference.stage == 'Quality Assuarance' %}
     <a class="btn btn-info btn-sm" href="{% url 'validate_doc_content' record.id  %}">Check Quality</a>
-    {% elif 'app.can_validate_file' in perms  and not user.is_superuser%}
+{% endif %}
+    {% if record.file_reference.stage == 'Validator' %}
     <a class="btn btn-info btn-sm" href="{% url 'validate_doc_content' record.id  %}">Validate</a>
 {% endif %}
-
+{% if record.file_reference.stage == 'Transcriber'   %}
 <a class="btn btn-outline-warning btn-sm " href="{% url 'get_files_from_storage' record.file_reference %}">Map Documents </a>
     <a class="btn btn-secondary btn-sm" href="{% url 'transcription_lab' record.id record.document_type_id %}">Transcribe</a>
 {% endif %}
