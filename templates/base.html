@@ -59,7 +59,7 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a href="{% url 'home' %}" class="nav-link">Home</a>
       </li>
-        {% if 'app.can_create_batch' in perms %}
+        {% if 'app.can_register_batch' in perms %}
           <li class="nav-item d-none d-sm-inline-block">
         <a href="{% url 'batch_create' %}" class="nav-link">Create Batch</a>
       </li>
