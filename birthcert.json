@@ -1,0 +1,33 @@
+{
+  "title": "Birth Certificate",
+  "type": "object",
+  "properties": {
+    "District": {
+      "type": "string",
+      "description": "District of birth",
+      "minLength": 4,
+      "default": "Kiambu"
+    },
+    "Province": {
+      "type": "string",
+      "description": "Province Of Birth",
+      "minLength": 4,
+      "default": "Central"
+    },
+    "Entry_No": {
+      "type": "string",
+      "default": "253232"
+    },
+    "sex": {
+      "type": "string",
+      "enum": [
+        "male",
+        "female"
+      ]
+    },
+    "Where_Born": {
+      "type": "string",
+      "default": "Ndumberi"
+    }
+  }
+}
