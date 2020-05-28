@@ -9,7 +9,7 @@ from django.views.generic import ListView, CreateView
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import DeleteView
+from django.views.generic import DeleteView,UpdateView
 from app.filters import DocumentFileFilter
 from app.models import DocumentFile, STAGES, STATES
 from app.tables import DocumentFileTable, BatchFileTable
@@ -30,8 +30,6 @@ class DocumentFileCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         # print(file.file_reference)
         return super().form_valid(form)
 
-    def get_success_url(self):
-        return reverse('batch_files', kwargs={'batch_id': self.kwargs['batch_id']})
 
 class FilesView(LoginRequiredMixin, SingleTableMixin, FilterView):
     template_name = 'file/index.html'
@@ -150,6 +148,20 @@ class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView)
             return DocumentFile.objects.none()
 
     filterset_class = DocumentFileFilter
+class FileUpdateView(LoginRequiredMixin,SuccessMessageMixin, UserPassesTestMixin, UpdateView):
+    model = DocumentFile
+    fields = ['file_type', 'file_reference','file_barcode']
+    template_name = 'file/create.html'
+    success_message = 'File updated successfully'
+    def form_valid(self, form):
+        form.instance.file_created_by = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        file = self.get_object()
+        if self.request.user.has_perm('app.can_register_batch') :
+            return True
+        return False
 
 
 class FileDeleteView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, DeleteView):
@@ -159,7 +171,7 @@ class FileDeleteView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixi
     template_name = 'file/delete_confirm.html'
 
     def test_func(self):
-        batch = self.get_object()
+        file = self.get_object()
         if self.request.user.has_perm('app.can_register_batch'):
             return True
         return False

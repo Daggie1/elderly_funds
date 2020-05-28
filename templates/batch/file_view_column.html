@@ -6,13 +6,12 @@
             <div class="dropdown-menu">
               {{ record.file_reference|get_actions_file }}
                 <div role="separator" class="dropdown-divider"></div>
-                {% if 'app.can_register_batch' in perms %}
-                 {% if record.state_id == 300 %}
-                <a class="btn btn-info btn-block" href="{% url 'batch_documents'  record.pk%}">Open</a>
-                <a class="btn btn-danger btn-block" href="{% url 'file_delete' record.pk %}"><i class="fas fa-trash"></i></a>
-                    {% else %}
-                    <a class="btn btn-info btn-block" href="{% url 'batch_documents'  record.pk%}">Open</a>
-                    {% endif %}
+{% if 'app.can_register_batch' in perms and record.file_created_by == user and record.stage == 'Registry'   %}
+
+
+
+    <a class="btn btn-danger btn-block" href="{% url 'file_delete' record.pk %}">Delete</a>
+    <a class="btn btn-primary btn-block" href="{% url 'file_edit' record.pk %}">Edit</a>
             {% elif record.state.pk == '400' and  'app.can_register_batch' in perms %}
                 <a class="btn btn-warning btn-block" href="{% url 'batch_documents'  record.pk%}">Edit</a>
                 <a class="btn btn-danger btn-block" href="{% url 'file_delete' record.pk %}"><i class="fas fa-trash"></i></a>

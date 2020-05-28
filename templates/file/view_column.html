@@ -1,6 +1,6 @@
 
 
-
+  STAGES = ("Registry", "Reception", "Assembly", "Scanner", "Transcriber", "Quality Assuarance", "Validator")
 {% if user.is_superuser %}
     <a class="btn btn-info btn-sm" href="{% url 'view_docs_in_file'  record.pk%}">Open</a>
 {% elif 'app.can_register_batch' in perms %}

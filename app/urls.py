@@ -15,7 +15,7 @@ from .views import (
 from .view.user import reset_default_password
 from app.view.file import (
                             FilesView, DocumentFileCreate, DocumentFileList,
-                            RejectedDocumentFileList,FileDeleteView)
+                            RejectedDocumentFileList,FileDeleteView,FileUpdateView)
 from .view.registry import (registry_submit_to_receiver, change_file_status_to_accept, change_file_status_to_accept_ajax,
                             change_file_status_to_reject,change_document_status_to_accept,
                             change_document_status_to_reject, return_rectified_file)
@@ -64,6 +64,7 @@ urlpatterns = [
     path('list/transcribe/files', TranscribeFiles.as_view(), name='list_transcribe_files'),
     path('list_of_escalated_document_files', RejectedDocumentFileList.as_view(), name='rejected_list_document_files'),
     path('delete_file/<pk>/', FileDeleteView.as_view(), name='file_delete'),
+    path('delete_edit/<pk>/', FileUpdateView.as_view(), name='file_edit'),
 
     # Document Types
     path('create_document_type', DocumentTypeCreate.as_view(), name='create_document_type'),
