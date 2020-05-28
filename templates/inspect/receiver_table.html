@@ -36,46 +36,11 @@
         </div>
         <!-- /.col -->
 
-           <div class="modal fade" id="modal-lg">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Provide return reasons</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-                <form action="{% url 'chat' %}"  method="GET" id="returnform">
-                    <div class="form-group">
-                      <textarea id="summernote" name="reasons" class="form-control"></textarea>
-                    </div>
+         </div>
 
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-warning">Return</button>
-            </div>
-               </form>
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-      </div>
-      <!-- /.modal -->
-      </div>
-      <!-- /.row -->
-
-{% endblock %}
+ {% include 'file/return_file_modal.html' %}
+{% endblock content %}
 
 {% block js %}
-    <script>
-    var url = '';
-    var hostname = $(location).attr('host');
-   $(".return").click(function() {
-       let id = this.id
-       url = 'http://'+hostname + id
-       $('#returnform').attr('action', url)
-});
-</script>
+<script src="{% static 'return_actions/modal.js' %}"></script>
 {% endblock %}

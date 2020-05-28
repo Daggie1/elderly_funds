@@ -191,7 +191,7 @@ class FileDeleteView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixi
     template_name = 'file/delete_confirm.html'
 
     def test_func(self):
-        file = self.get_object()
+
         if self.request.user.has_perm('app.can_register_batch'):
             return True
         return False

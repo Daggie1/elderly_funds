@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static  %}
 {% load crispy_forms_tags %}
 {% load render_table from django_tables2 %}
 {% block content %}
@@ -29,4 +30,9 @@
           </div>
         </div>
   </div>
+ {% include 'file/return_file_modal.html' %}
 {% endblock content %}
+
+{% block js %}
+<script src="{% static 'return_actions/modal.js' %}"></script>
+{% endblock %}

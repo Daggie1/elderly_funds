@@ -26,7 +26,7 @@ from app.view.batch import BatchListView, create_batch,BatchDeleteView, BatchFil
 from app.view.document import DocumentDeleteView, DocumentView, UploadedDocumentsList, create_document
 from app.view.document_type import DocumentTypeCreate, DocumentTypeList
 
-from app.view.file_type import FileTypeCreate, FileTypeList
+from app.view.file_type import FileTypeCreate, FileTypeList,FileTypeUpdateView,FileTypeDeleteView
 from app.view.scanner import upload_documents_to_file, ScannerTableView, delete_document
 from app.view.transcribe import get_files_from_storage, update_document_file_detail, TranscribeFiles
 from app.view.user import profile,admin_check_user
@@ -63,7 +63,9 @@ urlpatterns = [
     # file type urls
     path('create/file_type/', FileTypeCreate.as_view(), name='create_file_type'),
     path('list_files_types', FileTypeList.as_view(), name='list_file_types'),
-    path('delete_file_type/<str:pk>/delete/', FileTypeDelete.as_view(), name='delete_file_type'),
+    path('edit_file_type/<pk>/update/', FileTypeUpdateView.as_view(), name='edit_file_type'),
+    path('delete_file_type/<pk>/delete/', FileTypeDeleteView.as_view(), name='delete_file_type'),
+
 
     # physical file urls
     path('batch/<int:batch_id>/files', FilesView.as_view(), name='files.view'),

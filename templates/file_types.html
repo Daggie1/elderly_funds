@@ -28,7 +28,7 @@
                       <td>
                         {{ file.file_description }}
                       </td>
-                      <td><a href="" class="btn btn-primary"><span class="fa fa-edit"></span></a></td>
+                      <td><a href="{% url 'edit_file_type' file.file_type %}" class="btn btn-primary"><span class="fa fa-edit"></span></a></td>
                       <td><a href="{% url 'delete_file_type' file.file_type %}" class="btn btn-danger"><span class="fa fa-trash"></span></a></td>
                     </tr>
                       {% endfor %}
