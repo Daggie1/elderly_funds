@@ -8,7 +8,7 @@ from django_tables2 import SingleTableMixin
 from app.tables import TranscribeTable
 from app.filters import DocumentFileFilter
 
-from app.models import Filer, DocumentFile, DocumentFileDetail, DocumentType
+from app.models import Filer, DocumentFile, DocumentFileDetail, DocumentType,STAGES
 
 
 def map_keys_to_value_digital(dict_list):
@@ -71,3 +71,6 @@ class TranscribeFiles(SingleTableMixin, FilterView):
     filterset_class = DocumentFileFilter
     model = DocumentFile
     template_name = "transcribe_list.html"
+
+    def get_queryset(self):
+        return DocumentFile.objects.filter(stage=STAGES[4])

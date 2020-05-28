@@ -12,7 +12,7 @@ from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin, RequestConfig
 
 from app.filters import DocumentFilter, BatchFilter, DocumentFileFilter
-from app.models import DocumentFileDetail, DocumentFile, Batch, Modification, STAGES
+from app.models import DocumentFileDetail, DocumentFile, Batch, Modification, STAGES, STATES
 from app.tables import ReceiverTable, ReceiverFiles, AssemblerFiles, AssemblerDocuments, DocumentTable
 
 
@@ -87,7 +87,7 @@ class ReceiveBatch(LoginRequiredMixin, SingleTableMixin, FilterView):
     filterset_class = BatchFilter
 
     def get_queryset(self):
-        queryset = Batch.objects.all()
+        queryset = Batch.objects.filter(is_return_batch=False, state=STATES[2])
         self.table = ReceiverTable(queryset)
         self.filter = BatchFilter(self.request.GET,
                                      Batch.objects.all())
