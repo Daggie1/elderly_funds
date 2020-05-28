@@ -190,10 +190,10 @@ class ReceiverTable(tables.Table):
         attrs = {"class": "table table-bordered table-striped table-responsive"}
         model = Batch
         template_name = "django_tables2/bootstrap4.html"
-        fields = ("batch_no", "created_on", "created_by", "state", "description")
+        fields = ("batch_no", "created_on", "state", "description")
 
     files = TemplateColumn(template_name='batch/total_column.html')
-    actions = TemplateColumn(template_name='batch/view_column.html')
+    actions = TemplateColumn(template_name='batch/receive_column.html')
 
 
 class ReceiverFiles(tables.Table):
