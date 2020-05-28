@@ -7,7 +7,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views.generic import ListView, CreateView
 from django_filters.views import FilterView
-from django_tables2 import SingleTableMixin
+from django_tables2 import SingleTableMixin, RequestConfig
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView
 from app.filters import DocumentFileFilter
@@ -24,14 +24,14 @@ class DocumentFileCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.file_created_by = self.request.user
-
         form.instance.batch_id = self.kwargs['batch_id']
         # file=form.save()
         # print(file.file_reference)
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('batch_files', kwargs={'batch_id': self.kwargs['batch_id']})
+        return reverse('batch_files', kwargs={'pk': self.kwargs['batch_id']})
+
 
 class FilesView(LoginRequiredMixin, SingleTableMixin, FilterView):
     template_name = 'file/index.html'
@@ -42,12 +42,12 @@ class FilesView(LoginRequiredMixin, SingleTableMixin, FilterView):
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the books
 
-        context['batch_id']=int(self.kwargs['batch_id'])
-
+        context['batch_id'] = int(self.kwargs['batch_id'])
 
         return context
 
     def get_queryset(self):
+        RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
         if self.request.user.has_perm('app.can_register_batch'):
             return DocumentFile.objects.filter(batch_id=int(self.kwargs['batch_id']))
         elif self.request.user.has_perm('app.can_receive_file'):
@@ -69,46 +69,63 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
 
     table_class = DocumentFileTable
     template_name = 'view_document_files.html'
+    filterset_class = DocumentFileFilter
 
     def get_queryset(self):
+
         if self.request.user.is_superuser:
-            return DocumentFile.objects.all()
+            queryset=  DocumentFile.objects.all()
         elif self.request.user.has_perm('app.can_create_batch'):
-            return DocumentFile.objects.filter(stage=STAGES[0],flagged=False).filter(Q(assigned_to=self.request.user) |Q(assigned_to__isnull=True)| Q(state=STATES[2]))
+            queryset =  DocumentFile.objects.filter(stage=STAGES[0], flagged=False).filter(
+                Q(assigned_to=self.request.user) | Q(assigned_to__isnull=True) | Q(state=STATES[2]))
         elif self.request.user.has_perm('app.can_receive_file'):
-            return DocumentFile.objects.filter(stage=STAGES[1],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[2]))
+            queryset =  DocumentFile.objects.filter(stage=STAGES[1], flagged=False).filter(
+                Q(assigned_to=self.request.user) | Q(state=STATES[2]))
         elif self.request.user.has_perm('app.can_disassemble_file'):
-            return DocumentFile.objects.filter(stage=STAGES[2],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[2]))
+            queryset = DocumentFile.objects.filter(stage=STAGES[2], flagged=False).filter(
+                Q(assigned_to=self.request.user) | Q(state=STATES[2]))
         elif self.request.user.has_perm('app.can_scan_file'):
 
-         return DocumentFile.objects.filter(stage=STAGES[3],flagged=False).filter(Q(assigned_to=self.request.user) |Q(assigned_to__isnull=True) | Q(state=STATES[2]))
+            queryset = DocumentFile.objects.filter(stage=STAGES[3], flagged=False).filter(
+                Q(assigned_to=self.request.user) | Q(assigned_to__isnull=True) | Q(state=STATES[2]))
 
 
 
         elif self.request.user.has_perm('app.can_transcribe_file'):
 
-
-
-            return DocumentFile.objects.filter(stage=STAGES[4],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            queryset =  DocumentFile.objects.filter(stage=STAGES[4], flagged=False).filter(
+                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
 
 
         elif self.request.user.has_perm('app.can_qa_file'):
-            return DocumentFile.objects.filter(stage=STAGES[5],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            queryset =  DocumentFile.objects.filter(stage=STAGES[5], flagged=False).filter(
+                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
 
         elif self.request.user.has_perm('app.can_validate_file'):
-            return DocumentFile.objects.filter(stage=STAGES[6],flagged=False).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            queryset =  DocumentFile.objects.filter(stage=STAGES[6], flagged=False).filter(
+                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         else:
-            return DocumentFile.objects.none()
+            queryset =  DocumentFile.objects.none()
 
-    filterset_class = DocumentFileFilter
+        self.table = DocumentFileTable(queryset)
+        self.filter = DocumentFileFilter(self.request.GET,
+                                  queryset)
+        self.table = DocumentFileTable(self.filter.qs)
+        RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
+        # return Batch.objects.filter(is_return_batch=False)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['table'] = self.table
+        context['filter'] = self.filter
+        return context
 
 class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     table_class = DocumentFileTable
     template_name = 'file/rejected_file_documents_list.html'
 
     def get_queryset(self):
-
+        RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
         if self.request.user.is_superuser:
             return DocumentFile.objects.DocumentFile.objects.filter(
                 flagged=True)

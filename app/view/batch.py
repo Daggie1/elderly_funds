@@ -14,9 +14,10 @@ from app.tables import BatchTable, DocumentFileTable, BatchDocumentTable, Docume
 from app.filters import BatchFilter, DocumentFileFilter, DocumentFilter
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
-    ListView,UpdateView,
+    ListView, UpdateView,
     DeleteView
 )
+
 
 # TODO remove restriction of quering batch
 class BatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
@@ -26,7 +27,19 @@ class BatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     filterset_class = BatchFilter
 
     def get_queryset(self):
-            return Batch.objects.filter(is_return_batch=False)
+        queryset = Batch.objects.filter(is_return_batch=False)
+        self.table = BatchTable(queryset)
+        self.filter = BatchFilter(self.request.GET,
+                                  Batch.objects.filter(is_return_batch=False))
+        self.table = BatchTable(self.filter.qs)
+        RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
+        # return Batch.objects.filter(is_return_batch=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['table'] = self.table
+        context['filter'] = self.filter
+        return context
 
 
 class ReturnBatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
@@ -36,10 +49,19 @@ class ReturnBatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     filterset_class = BatchFilter
 
     def get_queryset(self):
-        if self.request.user.has_perm('app.can_receive_file'):
-            return Batch.objects.filter(is_return_batch=True)
-        else:
-            return Batch.objects.none()
+        queryset = Batch.objects.filter(is_return_batch=True)
+        self.table = BatchTable(queryset)
+        self.filter = BatchFilter(self.request.GET,
+                                  Batch.objects.filter(is_return_batch=True))
+        self.table = BatchTable(self.filter.qs)
+        RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
+        # return Batch.objects.filter(is_return_batch=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['table'] = self.table
+        context['filter'] = self.filter
+        return context
 
 
 @login_required
@@ -66,20 +88,23 @@ def create_batch(request):
         form = BatchCreationForm()
     return render(request, 'batch/create.html', {'form': form})
 
-class BatchUpdateView(LoginRequiredMixin,SuccessMessageMixin, UserPassesTestMixin, UpdateView):
+
+class BatchUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, UpdateView):
     model = Batch
     fields = ['batch_no', 'description']
     template_name = 'batch/create.html'
     success_message = 'Batch updated successfully'
+
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
     def test_func(self):
         batch = self.get_object()
-        if batch.created_by == self.request.user and batch.state!=STATES[2]:
+        if batch.created_by == self.request.user and batch.state != STATES[2]:
             return True
         return False
+
 
 class BatchDeleteView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, DeleteView):
     model = Batch
@@ -89,7 +114,7 @@ class BatchDeleteView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMix
 
     def test_func(self):
         batch = self.get_object()
-        if batch.created_by == self.request.user and batch.state!=STATES[2]:
+        if batch.created_by == self.request.user and batch.state != STATES[2]:
             return True
         return False
 
@@ -97,20 +122,22 @@ class BatchDeleteView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMix
 class BatchFilesView(LoginRequiredMixin, SingleTableMixin, FilterView):
     template_name = 'batch/filetable.html'
     table_class = BatchFileTable
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super().get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        context['batch_id'] = int(self.kwargs['pk'])
-        return context
+    filterset_class = DocumentFileFilter
 
     def get_queryset(self):
+        queryset = Batch.objects.filter(is_return_batch=True)
+        self.table = BatchFileTable(queryset)
+        self.filter = BatchFilter(self.request.GET,
+                                  DocumentFile.objects.filter(batch_id=int(self.kwargs['pk'])))
+        self.table = BatchFileTable(self.filter.qs)
+        RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
 
-        return DocumentFile.objects.filter(batch_id=int(self.kwargs['pk']))
-
-
-    filterset_class = DocumentFileFilter
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['table'] = self.table
+        context['filter'] = self.filter
+        context['batch_id'] = int(self.kwargs['pk'])
+        return context
 
 
 class BatchDocumentsView(LoginRequiredMixin, SingleTableMixin, FilterView):

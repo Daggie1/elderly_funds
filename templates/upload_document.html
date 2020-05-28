@@ -32,8 +32,11 @@
               <div class="card-header">
                 <h3 class="card-title">Documents</h3>
                   <div class="card-tools">
-
+                    {% if file.stage == 'Scanner' %}
                          {{ file.file_reference|dispatch_to_transcriber }}
+                      {% else %}
+                        <p class="text-warning">Premature Scanning of File</p>
+                      {% endif %}
 
                 </div>
               </div>

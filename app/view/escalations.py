@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, CreateView
 from django_filters.views import FilterView
-from django_tables2 import SingleTableMixin
+from django_tables2 import SingleTableMixin, RequestConfig
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView
 from app.filters import DocumentFileFilter
@@ -22,6 +22,7 @@ class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView)
     template_name = 'view_document_files.html'
 
     def get_queryset(self):
+        RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
         if self.request.user.is_superuser:
             return DocumentFile.objects.filter(flagged=True)
         elif self.request.user.has_perm('app.can_create_batch'):

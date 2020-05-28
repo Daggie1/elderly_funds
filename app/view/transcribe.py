@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 from django_filters.views import FilterView
-from django_tables2 import SingleTableMixin
+from django_tables2 import SingleTableMixin, RequestConfig
 from app.tables import TranscribeTable
 from app.filters import DocumentFileFilter
 
@@ -71,3 +71,17 @@ class TranscribeFiles(SingleTableMixin, FilterView):
     filterset_class = DocumentFileFilter
     model = DocumentFile
     template_name = "transcribe_list.html"
+
+    def get_queryset(self):
+        queryset = DocumentFile.objects.filter(stage='Transcriber').order_by('-created_on')
+        self.table = TranscribeTable(queryset)
+        self.filter = DocumentFileFilter(self.request.GET,
+                                         DocumentFile.objects.filter(stage='Transcriber').order_by('-created_on'))
+        self.table = TranscribeTable(self.filter.qs)
+        RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['table'] = self.table
+        context['filter'] = self.filter
+        return context

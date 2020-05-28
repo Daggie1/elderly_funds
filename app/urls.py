@@ -53,21 +53,21 @@ urlpatterns = [
     path('view/batch/<str:file_reference>/documents/', BatchDocumentsView.as_view(), name='batch_documents'),
 
     # file type urls
-    path('create_file_type/', FileTypeCreate.as_view(), name='create_file_type'),
+    path('create/file_type/', FileTypeCreate.as_view(), name='create_file_type'),
     path('list_files_types', FileTypeList.as_view(), name='list_file_types'),
     path('delete_file_type/<str:pk>/delete/', FileTypeDelete.as_view(), name='delete_file_type'),
 
     # physical file urls
     path('batch/<int:batch_id>/files', FilesView.as_view(), name='files.view'),
-    path('batch/<int:batch_id>/create_file/', DocumentFileCreate.as_view(), name='create_document_file'),
-    path('list_document_files', DocumentFileList.as_view(), name='list_document_files'),
+    path('batch/<int:batch_id>/create/file/', DocumentFileCreate.as_view(), name='create_document_file'),
+    path('list/document/files', DocumentFileList.as_view(), name='list_document_files'),
     path('list/transcribe/files', TranscribeFiles.as_view(), name='list_transcribe_files'),
     path('list_of_escalated_document_files', RejectedDocumentFileList.as_view(), name='rejected_list_document_files'),
     path('delete_file/<pk>/', FileDeleteView.as_view(), name='file_delete'),
 
     # Document Types
-    path('create_document_type', DocumentTypeCreate.as_view(), name='create_document_type'),
-    path('view_document_types', DocumentTypeList.as_view(), name='list_document_types'),
+    path('create/document/type', DocumentTypeCreate.as_view(), name='create_document_type'),
+    path('view/document/types', DocumentTypeList.as_view(), name='list_document_types'),
 
     # document upload and viewing
     path('file/<file_ref_no>/documents', DocumentView.as_view(), name='document.view'),
