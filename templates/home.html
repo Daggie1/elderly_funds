@@ -102,7 +102,7 @@
                     <ul class="list-group">
                     {% for file in registry %}
                     <tr>
-                      <a href="#" class="list-group-item">{{ file.file_barcode }}</a>
+                      <a href="{% url 'file_details' file.pk %}" class="list-group-item">{{ file.file_barcode }}</a>
                     </tr>
                     {% endfor %}
                     </ul>
@@ -133,7 +133,7 @@
                      <ul class="list-group">
                     {% for file in reception %}
                     <tr>
-                      <a href="#" class="list-group-item">{{ file.file_barcode }}</a>
+                      <a href="{% url 'file_details' file.pk %}" class="list-group-item">{{ file.file_barcode }}</a>
                     </tr>
                     {% endfor %}
                     </ul>
@@ -162,7 +162,7 @@
                       <ul class="list-group">
                     {% for file in disassembly %}
                     <tr>
-                      <a href="#" class="list-group-item">{{ file.file_barcode }}</a>
+                      <a href="{% url 'file_details' file.pk %}" class="list-group-item">{{ file.file_barcode }}</a>
                     </tr>
                     {% endfor %}
                     </ul>
@@ -190,7 +190,7 @@
                  <ul class="list-group">
                     {% for file in scanning %}
                     <tr>
-                      <a href="#" class="list-group-item">{{ file.file_barcode }}</a>
+                      <a href="{% url 'file_details' file.pk %}" class="list-group-item">{{ file.file_barcode }}</a>
                     </tr>
                     {% endfor %}
                     </ul>
@@ -217,7 +217,7 @@
                  <ul class="list-group">
                     {% for file in transcription %}
                     <tr>
-                      <a href="#" class="list-group-item">{{ file.file_barcode }}</a>
+                      <a href="{% url 'file_details' file.pk %}" class="list-group-item">{{ file.file_barcode }}</a>
                     </tr>
                     {% endfor %}
                     </ul>
@@ -244,7 +244,7 @@
                      <ul class="list-group">
                     {% for file in qa %}
                     <tr>
-                      <a href="#" class="list-group-item">{{ file.file_barcode }}</a>
+                      <a href="{% url 'file_details' file.pk %}" class="list-group-item">{{ file.file_barcode }}</a>
                     </tr>
                     {% endfor %}
                     </ul>
