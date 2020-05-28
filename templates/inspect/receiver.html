@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load app_extras %}
 {% block content %}
     <div class="container">
     <div class="row">
@@ -75,13 +76,11 @@
             </div>
             <div class="col-md-6 ">
                 {% if batch %}
-                     <form action="" method="post"  id="form_data">
-                    {% csrf_token %}
-                        <input required value="" type="hidden" id="state" name="modified_to_state_id">
-                        <div class="form-group">
-                        <button class="btn btn-success" id="accept" type="submit"> Accept</button>
-                        </div>
-                     </form>
+
+                        <a href="" class="btn btn-success" id="accept" type="submit"> Accept</a>
+                        <button class="btn btn-success" id="return" type="submit">Reject</button>
+
+
                 {% endif %}
 
             </div>
@@ -139,7 +138,7 @@
                     excess.splice(index, 1);
                     let urlMask = "{% url 'change_file_status_to_accept_ajax' 87 %}".replace(/87/, file_referece);
                     $('#form_data').attr('action', urlMask);
-                    {#$( "#accept" ).trigger( "click" );#}
+                    $( "#accept" ).trigger( "click" );
                 }
                 registerExcess()
                 listItem = "<li class='list-group-item bg-success'>" +barcode+ "</li>"

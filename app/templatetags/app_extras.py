@@ -77,7 +77,8 @@ def get_actions_file(id):
     stage_transitions = list(file.get_available_stage_transitions())
 
     if len(stage_transitions) > 1:
-        print(f'{stage_transitions[0].source} {STAGES.index(stage_transitions[0].source)} to {stage_transitions[0].target} {STAGES.index(stage_transitions[0].target)} ')
+        print(
+            f'{stage_transitions[0].source} {STAGES.index(stage_transitions[0].source)} to {stage_transitions[0].target} {STAGES.index(stage_transitions[0].target)} ')
         print(
             f'{stage_transitions[1].source} {STAGES.index(stage_transitions[1].source)} to {stage_transitions[1].target} {STAGES.index(stage_transitions[1].target)} ')
 
@@ -107,7 +108,9 @@ def get_actions_file(id):
                                reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[7]]))
         if stage_transitions[0].target == STAGES[6] and stage_transitions[1].target == STAGES[4]:
             return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
-                               u'btn btn-info btn-block"><button class="dropdown-item return btn btn-info btn-block" id="{}"  data-toggle="modal" data-target="#modal-lg">Return To Transacriber</button></div><div role="separator" '
+                               u'btn btn-info btn-block"><button class="dropdown-item return btn btn-info btn-block" '
+                               u'id="{}"  data-toggle="modal" data-target="#modal-lg">Return To '
+                               u'Transacriber</button></div><div role="separator" '
                                u'class="dropdown-divider"></div><div class="dropdown-item '
                                u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
                                u'}">Dispatch To Validator</a></div>',
@@ -116,7 +119,9 @@ def get_actions_file(id):
 
         if stage_transitions[0].target == STAGES[1] and stage_transitions[1].target == STAGES[5]:
             return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
-                               u'btn btn-info btn-block"><button class="dropdown-item return btn btn-info btn-block" id="{}"  data-toggle="modal" data-target="#modal-lg">Return To QA</button></div><div role="separator" '
+                               u'btn btn-info btn-block"><button class="dropdown-item return btn btn-info btn-block" '
+                               u'id="{}"  data-toggle="modal" data-target="#modal-lg">Return To QA</button></div><div '
+                               u'role="separator" '
                                u'class="dropdown-divider"></div><div class="dropdown-item '
                                u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
                                u'}">Finalize to Reception</a></div>',
@@ -138,8 +143,6 @@ def get_actions_file(id):
                                    u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
                                    u'}">Send To Transcriber</a></div>',
                                    reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[5]]))
-
-
 
 
 @register.filter
@@ -190,26 +193,66 @@ def get_actions_file_state(id):
 
 @register.filter
 def get_validate_buttons(id):
-    return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
-                       u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
-                       u'}">Approve</a></div><div role="separator" '
-                       u'class="dropdown-divider"></div><div class="dropdown-item '
-                       u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block text-warning" href="{'
-                       u'}">Reject and Return</a></div>',
-                       reverse_lazy('update_state_file', args=[id, ACTIONS[2]]),
-                       reverse_lazy('update_state_file', args=[id, ACTIONS[3]]))
+    file = DocumentFile.objects.get(pk=id)
+    stage_transitions = list(file.get_available_stage_transitions())
+    if file.stage == STAGES[6]:
+            return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
+                               u'btn btn-info btn-block"><button class="dropdown-item return btn btn-info btn-block" '
+                               u'id="{}"  data-toggle="modal" data-target="#modal-lg">Return To QA</button></div><div '
+                               u'role="separator" '
+                               u'class="dropdown-divider"></div><div class="dropdown-item '
+                               u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
+                               u'}">Finalize to Reception</a></div>',
+                               reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[10]]),
+                               reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[11]]))
+
 
 
 @register.filter
 def get_qa_buttons(id):
-    return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
-                       u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
-                       u'}">Approve</a></div><div role="separator" '
-                       u'class="dropdown-divider"></div><div class="dropdown-item '
-                       u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block text-warning" href="{'
-                       u'}">Reject and Return</a></div>',
-                       reverse_lazy('update_state_file', args=[id, ACTIONS[2]]),
-                       reverse_lazy('update_state_file', args=[id, ACTIONS[3]]))
+    file = DocumentFile.objects.get(pk=id)
+    stage_transitions = list(file.get_available_stage_transitions())
+    if file.stage == STAGES[5]:
+        return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
+                           u'btn btn-info btn-block"><button class="dropdown-item return btn btn-info btn-block" '
+                           u'id="{}"  data-toggle="modal" data-target="#modal-lg">Return To '
+                           u'Transacriber</button></div><div role="separator" '
+                           u'class="dropdown-divider"></div><div class="dropdown-item '
+                           u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
+                           u'}">Dispatch To Validator</a></div>',
+                           reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[8]]),
+                           reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[9]]))
+
+
+@register.filter
+def get_receiver_buttons(id):
+    file = DocumentFile.objects.get(pk=id)
+    stage_transitions = list(file.get_available_stage_transitions())
+    if file.stage == STAGES[5]:
+        return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
+                           u'btn btn-info btn-block"><button class="dropdown-item return btn btn-info btn-block" '
+                           u'id="{}"  data-toggle="modal" data-target="#modal-lg">Return To '
+                           u'Return Registry</button></div><div role="separator" '
+                           u'class="dropdown-divider"></div><div class="dropdown-item '
+                           u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
+                           u'}">Dispatch To Assembler</a></div>',
+                           reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[8]]),
+                           reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[9]]))
+
+@register.filter
+def get_assembler_buttons(id):
+    file = DocumentFile.objects.get(pk=id)
+    stage_transitions = list(file.get_available_stage_transitions())
+    if file.stage == STAGES[5]:
+        return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
+                           u'btn btn-info btn-block"><button class="dropdown-item return btn btn-info btn-block" '
+                           u'id="{}"  data-toggle="modal" data-target="#modal-lg">Return To '
+                           u'Return Registry</button></div><div role="separator" '
+                           u'class="dropdown-divider"></div><div class="dropdown-item '
+                           u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
+                           u'}">Dispatch To Assembler</a></div>',
+                           reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[8]]),
+                           reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[9]]))
 
 
 @register.filter
@@ -217,7 +260,7 @@ def dispatch_to_transcriber(id):
     return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Dispatch To Transcriber</a>',
                        reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[5]]))
 
+
 @register.filter
 def preview_document(url):
-    
     return format_html(u'<embed id="pdf" src="{}"  width= "100%" height= "800">')

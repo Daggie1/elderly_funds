@@ -25,7 +25,16 @@ class BatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     template_name = 'batch/index.html'
     filterset_class = BatchFilter
 
+    def get_queryset(self):
 
+        if self.request.user.has_perm('app.can_register_batch'):
+            return Batch.objects.filter(created_by=self.request.user).filter(
+                state__in=[STATES[0], STATES[1], STATES[2]])
+        elif self.request.user.has_perm('app.can_receive_file'):
+            return Batch.objects.filter(is_return_batch=True).filter(created_by=self.request.user).filter(
+                state__in=[STATES[0], STATES[1], STATES[2]])
+        else:
+            return Batch.objects.none()
 
 
 class ReturnBatchListView(LoginRequiredMixin, SingleTableMixin, FilterView):
