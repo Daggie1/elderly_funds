@@ -75,3 +75,8 @@ def send_report_message(request):
     Notification.objects.create(comment=report, created_by=request.user)
     # notification.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def get_messages(request):
+    messages = Notification.objects.filter(file_id=None).filter(resolved=False).order_by('-created_at')[:20]
+    return render(request, 'messages.html', {'messages': messages})

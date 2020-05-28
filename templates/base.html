@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 {% load static %}
 {% load notifications_filters %}
+{% load messages %}
 <html>
 <head>
   <meta charset="utf-8">
@@ -85,8 +86,8 @@
       <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-file-word"></i>
-          <span class="badge badge-danger navbar-badge"></span>
+          <i class="far fa-envelope"></i>
+          <span class="badge badge-warning navbar-badge">{{ pending_tickets }}</span>
         </a>
 
       </li>

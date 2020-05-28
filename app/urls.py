@@ -28,7 +28,7 @@ from app.view.file_type import FileTypeCreate, FileTypeList
 from app.view.scanner import upload_documents_to_file, ScannerTableView, delete_document
 from app.view.transcribe import get_files_from_storage, update_document_file_detail, TranscribeFiles
 from app.view.user import profile,admin_check_user
-from .view.report import report,send_report_message
+from .view.report import report,send_report_message, get_messages
 from app.view.inspection import  inspect, receive, ReceiveBatch, OpenBatchFiles, DessembleFiles, DessemblerDocuments
 from app.view.qa import  QaFileList, open_file_for_qa
 from app.view.validate import ValidateFileList
@@ -187,5 +187,6 @@ urlpatterns = [
 
     #send a report message
     path('send/report/',send_report_message, name='chat'),
+    path('get/report/',get_messages, name='messages'),
 ]
 
