@@ -1,8 +1,15 @@
+
 {% load app_extras %}
 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-ellipsis-v"></i>
             </button>
             <div class="dropdown-menu">
+              {{ record.file_reference|get_actions_file }}
                 <div role="separator" class="dropdown-divider"></div>
-    <a class="btn btn-info btn-block" href="{% url 'receive' record.id %}">Inspect Batch </a>
-            </div>
+
+        </div>
+
+
+
+
+

@@ -5,24 +5,21 @@ from django_tables2 import SingleTableMixin
 
 from app.filters import DocumentFileFilter
 from app.models import DocumentFile, DocumentFileDetail
-from app.tables import QaTable,ValidateQADocTable
+from app.tables import QaTable, ValidateQADocTable
 from app.models import STAGES
+
 
 class QaFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     permission_required = 'app.view_documentfile'
-
+    filterset_class = DocumentFileFilter
     table_class = QaTable
     template_name = 'qa/index.html'
 
     def get_queryset(self):
-        return DocumentFile.objects.filter(stage=STAGES[5]).filter(
-            flagged=True,
-            assigned_to=self.request.user)
-
-    filterset_class = DocumentFileFilter
+        return DocumentFile.objects.filter(stage=STAGES[5])
 
 
-def open_file_for_qa(request,id):
+def open_file_for_qa(request, id):
     file = DocumentFile.objects.get(pk=id)
-    table= ValidateQADocTable(DocumentFileDetail.objects.filter(file_reference=id))
-    return render(request, 'qa/documents.html', {'file':file,'table':table})
+    table = ValidateQADocTable(DocumentFileDetail.objects.filter(file_reference=id))
+    return render(request, 'qa/documents.html', {'file': file, 'table': table})

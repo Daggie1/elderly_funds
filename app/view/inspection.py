@@ -96,19 +96,20 @@ class ReceiveBatch(LoginRequiredMixin, SingleTableMixin, FilterView):
 
 
 
+
 class OpenBatchFiles(LoginRequiredMixin, SingleTableMixin, FilterView):
     table_class = ReceiverFiles
     template_name = 'inspect/receiver_table.html'
-    filterset_class = DocumentFilter
+    filterset_class = DocumentFileFilter
 
     def get_queryset(self):
-        queryset = DocumentFile.objects.filter(stage='Assembler')
+        queryset = DocumentFile.objects.filter(stage=STAGES[1])
         self.table = ReceiverFiles(queryset)
         self.filter = DocumentFilter(self.request.GET,
-                                     DocumentFile.objects.filter(file_reference_id=self.kwargs['id']))
+                                     DocumentFile.objects.filter(pk=self.kwargs['id']))
         self.table = ReceiverFiles(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
-
+        return queryset
 
 class DessembleFiles(LoginRequiredMixin, SingleTableMixin, FilterView):
     table_class = AssemblerFiles
@@ -116,13 +117,13 @@ class DessembleFiles(LoginRequiredMixin, SingleTableMixin, FilterView):
     filterset_class = DocumentFileFilter
 
     def get_queryset(self):
-        queryset = DocumentFile.objects.filter(stage='Assembler')
+        queryset = DocumentFile.objects.filter(stage=STAGES[2])
         self.table = AssemblerFiles(queryset)
         self.filter = DocumentFilter(self.request.GET,
                                      DocumentFile.objects.filter(stage='Assembler'))
         self.table = AssemblerFiles(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
-
+        return queryset
 
 
 class DessemblerDocuments(LoginRequiredMixin, SingleTableMixin, FilterView):
@@ -131,10 +132,11 @@ class DessemblerDocuments(LoginRequiredMixin, SingleTableMixin, FilterView):
     filterset_class = DocumentFilter
 
     def get_queryset(self):
-        queryset = DocumentFileDetail.objects.filter(file_reference_id=self.kwargs['id'])
+        queryset = DocumentFileDetail.objects.filter(file_reference=self.kwargs['id'])
         self.table = AssemblerDocuments(queryset)
         self.filter = DocumentFilter(self.request.GET,
                                      DocumentFileDetail.objects.filter(file_reference_id=self.kwargs['id']))
         self.table = DocumentTable(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
+        return queryset
 

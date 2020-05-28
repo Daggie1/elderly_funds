@@ -4,10 +4,6 @@
 {% load bootstrap4 %}
 {% load crispy_forms_tags %}
 
-{% block css %}
-<link rel="stylesheet" href="{% static 'adminlte/plugins/select2/css/select2.min.css' %}">
-  <link rel="stylesheet" href="{% static 'adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
-{% endblock %}
 {% block content %}
 
   <div class="row">
@@ -16,81 +12,13 @@
             <div class="card-header">
               <h3 class="card-title">Documents For this file</h3>
 
-
-
                 <div class="card-tools">
-                {% if 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms %}
-                <button class="btn btn-warning" id="action_btn" onclick="hideUnhide()">Take Action on this File</button>
-                {% endif %}
-                {% if file_state_id == '400'  %}
-
-                    <button class="btn btn-warning" id="return_btn" onclick="hideUnhideReturnRejectedFile()">Take Action on this File</button>
-                {% endif %}
-                {% if 'app.can_register_batch' in perms  %}
-
-                    <a href="{% url 'document.create' file_ref_no %}" class="btn btn-primary">Add Document</a>
-                {% endif %}
-                </div>
-
-
+                   <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-lg">Create Report</button>
+               </div>
             </div>
             <!-- /.card-header -->
-            <div class="carview_docsd-body">
-                 <div class="row" id="action_row" style="display: none">
-                <div class="col-md-4">
-
-            <form action="{% url 'change_file_status_to_accept' file_ref_no %}" method="post"  id="form_data">
-                    {% csrf_token %}
-                    <!-- Default unchecked -->
 
 
-<!-- Default checked -->
-                <div class="row ">
-
-                    <div class="col-md-6 ">
-                        <input required value="{{ file_state_id }}" type="hidden" name="modified_to_state_id">
-                        <div class="form-group">
-                        <button class="btn btn-success"  type="submit"> Accept</button>
-                        </div>
-
-                    </div>
-                    <input type="hidden" name="is_reject" value="nothing">
-                    <div class="col-md-6">
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-primary"> Reject</button>
-                    </div>
-                </div>
-
-
-
-                </form>
-                </div>
-            </div>
-                 <div class="row" id="return_form_row" style="display: none">
-                <div class="col-md-4">
-
-            <form action="{% url 'return_rectified_file' file_ref_no %}" method="post"  >
-                    {% csrf_token %}
-                    <!-- Default unchecked -->
-
-
-<!-- Default checked -->
-                <div class="row ">
-
-                    <div class="col-md-6 ">
-                        <input required value="302" type="hidden" name="modified_to_state_id">
-                        <div class="form-group">
-                        <button class="btn btn-success"  type="submit"> Submit File</button>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                </form>
-                </div>
-            </div>
                 {% if filter %}
                 <form action="" method="get" class="form form-inline">
 {#                    {% bootstrap_form filter.form layout='inline' %}#}
@@ -107,129 +35,40 @@
         </div>
   </div>
 
-{#    modals#}
-
-          <div class="modal fade" id="modal-primary">
-        <div class="modal-dialog">
-          <div class="modal-content ">
+<div class="modal fade" id="modal-lg">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">File Rejection Form</h4>
+              <h4 class="modal-title">Provide return reasons</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span></button>
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-              <div class="modal-body">
-                  <form action="{% url 'change_file_status_to_reject' file_ref_no %}" method="post"  id="form_data">
-                    {% csrf_token %}
-                      <div class="form-group">
-                          <label for="is_reject_description">Reason for reject *</label>
-                    <textarea  class="form-control" id= "is_reject_description" required="required" placeholder="explain your reason" name="is_reject_description" rows="3">
+            <div class="modal-body">
+                <form action="#"  method="GET" id="returnform">
+                    <div class="form-group">
+                      <textarea name="reasons" class="form-control"></textarea>
+                    </div>
 
-                    </textarea>
-                  </div>
-                      <div class="form-group ">
-                         <div class="form-group">
-                        <label>The root of escalation *</label>
-                        <select class="form-control select2bs4" name="modified_to_state_id" data-dropdown-css-class="select2-primary" data-placeholder="Select Group" required="required">
-                            {% if 'app.can_receive_file' in perms %}
-                        <option value="400">Missing File</option>
-                        {% endif %}
-                            {% if 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms or  'app.can_transcribe_file' in perms  %}
-                                <option value="400">Unknown File</option>
-
-                                {% endif %}
-                        {% if 'app.can_disassemble_file' in perms or 'app.can_validate_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms or  'app.can_transcribe_file' in perms %}
-                            <option value="400">Missing Documents</option>
-                            {% endif %}
-                        {% if 'app.can_validate_file' in perms %}
-                            <option value="405">Documents not  transcribed correctly</option>
-                            {% endif %}
-
-
-                        </select>
-                      </div>
-
-                      </div>
-                      <div class="row">
-                      <div class="form-group col-md-6 pull-left">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close Form</button>
-                          </div>
-                      <div class="form-group col-md-4 offset-2">
-
-              <button type="submit" class="btn btn-success">Submit changes</button>
-                      </div>
-                          </div>
-                </form>
-              </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-warning">Return</button>
+            </div>
+               </form>
           </div>
           <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
+
+
       </div>
 
 
 {% endblock content %}
 
 {% block js %}
-<script src="{% static 'adminlte/plugins/datatables/jquery.dataTables.js' %}"></script>
-<script src="{% static 'adminlte/plugins/datatables/jquery.dataTables.js' %}"></script>
 
-    <script>
-  $(function () {
-    $("#example1").DataTable();
-  });
-
-</script>
-    <script>
-  function  hideUnhideReturnRejectedFile()
-     {
-  var form_div = document.getElementById("return_form_row");
-  var return_btn = document.getElementById("return_btn");
-  if (form_div.style.display === "none") {
-    form_div.style.display = "block";
-    return_btn.textContent="Hide Action Form";
-  } else {
-    form_div.style.display = "none";
-return_btn.textContent="Take Action on this File";
-  }
-}
-function hideUnhide() {
-  var action_row = document.getElementById("action_row");
-  var action_btn = document.getElementById("action_btn");
-  if (action_row.style.display === "none") {
-    action_row.style.display = "block";
-    action_btn.textContent="Hide Action Form";
-  } else {
-    action_row.style.display = "none";
-action_btn.textContent="Take Action on this Batch";
-  }
-}
-function check() {
-    var textarea_desc=document.getElementById('desc');
-    var btn_submit =document.getElementById('btn_submit');
-
-    if(textarea_desc.style.display ==='none'){
-        textarea_desc.style.display = "block"
-        textarea_desc.setAttribute('required','true');
-        btn_submit.style.display = "block"
-
-    }
-    else {
-       textarea_desc.style.display = "none";
-        textarea_desc.setAttribute('required','false');
-        btn_submit.style.display = "none"
-    }
-}
-</script>
-<script src="{% static 'adminlte/plugins/select2/js/select2.full.min.js' %}"></script>
-    <script>
- $(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2();
-
-    //Initialize Select2 Elements
-    $('.select2bs4').select2({
-      theme: 'bootstrap4'
-    })
-     })
-    </script>
 {% endblock %}
