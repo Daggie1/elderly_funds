@@ -23,7 +23,7 @@ class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView)
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            return DocumentFile.objects.all()
+            return DocumentFile.objects.filter(flagged=True)
         elif self.request.user.has_perm('app.can_create_batch'):
             return DocumentFile.objects.filter(stage=STAGES[0],flagged=True).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         elif self.request.user.has_perm('app.can_receive_file'):
