@@ -281,7 +281,7 @@ def get_receiver_actions(id):
 
 @register.filter
 def dispatch_to_transcriber(id):
-    return format_html(u'<a class="dropdown-item btn btn-info btn-block" href="{}">Dispatch To Transcriber</a>',
+    return format_html(u'<a class="btn btn-info btn-block" href="{}">Dispatch To Transcriber</a>',
                        reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[5]]))
 
 

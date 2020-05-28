@@ -20,7 +20,7 @@ from app.views import start_scanning
 from app.forms import StorageForm
 from app.models import DocumentFile, DocumentFileDetail, Filer,STAGES
 from django.shortcuts import render, render_to_response, redirect
-from django_tables2 import SingleTableMixin
+from django_tables2 import SingleTableMixin, RequestConfig
 from app.tables import ScannerTable
 from app.filters import DocumentFileFilter
 
@@ -58,8 +58,19 @@ class ScannerTableView(SingleTableMixin,FilterView):
     template_name = "files_list.html"
 
     def get_queryset(self):
-        return DocumentFile.objects.filter(stage=STAGES[3])
-    
+        queryset = DocumentFile.objects.filter(stage='Scanner').order_by('-created_on')
+        self.table = ScannerTable(queryset)
+        self.filter = DocumentFileFilter(self.request.GET,
+                                  DocumentFile.objects.filter(stage='Scanner').order_by('-created_on'))
+        self.table = ScannerTable(self.filter.qs)
+        RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['table'] = self.table
+        context['filter'] = self.filter
+        return context
 
 def update_file_state(request, id):
     file = DocumentFile.objects.get(pk=id)

@@ -74,7 +74,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
+            <div class="col-12 card col-md-12 col-lg-4 order-1 order-md-2">
               <h3 class="text-primary">{% if file.flagged %}
                   <i class="fas fa-exclamation-triangle text-danger "></i>
                   {% else %}
@@ -82,7 +82,11 @@
                   {% endif %}
                   {{file}}</h3>
 {% if file.flagged %}
-   <p><span class=" text-danger h6">Reason for flagging:</span>{{ file.notification_set.all.last.comment }}</p>
+    <div class="card bg-gradient-danger">
+    <div class="card-header">Reasons For Flagging</div>
+    <p>{{ file.notification_set.all.last.comment }}</p>
+    </div>
+
             <br>
             {% endif %}
 

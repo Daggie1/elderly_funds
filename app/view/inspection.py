@@ -94,6 +94,11 @@ class ReceiveBatch(LoginRequiredMixin, SingleTableMixin, FilterView):
         self.table = ReceiverTable(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['table'] = self.table
+        context['filter'] = self.filter
+        return context
 
 
 
@@ -109,7 +114,13 @@ class OpenBatchFiles(LoginRequiredMixin, SingleTableMixin, FilterView):
                                      DocumentFile.objects.filter(pk=self.kwargs['id']))
         self.table = ReceiverFiles(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
-        return queryset
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['table'] = self.table
+        context['filter'] = self.filter
+        return context
 
 class DessembleFiles(LoginRequiredMixin, SingleTableMixin, FilterView):
     table_class = AssemblerFiles
@@ -123,8 +134,13 @@ class DessembleFiles(LoginRequiredMixin, SingleTableMixin, FilterView):
                                      DocumentFile.objects.filter(stage='Assembler'))
         self.table = AssemblerFiles(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
-        return queryset
 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['table'] = self.table
+        context['filter'] = self.filter
+        return context
 
 class DessemblerDocuments(LoginRequiredMixin, SingleTableMixin, FilterView):
     table_class = AssemblerDocuments
@@ -138,5 +154,9 @@ class DessemblerDocuments(LoginRequiredMixin, SingleTableMixin, FilterView):
                                      DocumentFileDetail.objects.filter(file_reference_id=self.kwargs['id']))
         self.table = DocumentTable(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
-        return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['table'] = self.table
+        context['filter'] = self.filter
+        return context

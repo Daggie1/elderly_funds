@@ -44,7 +44,7 @@ class BatchFileTable(tables.Table):
     class Meta:
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("counter","file_reference", "file_type", "state", "stage", "captured_by", "file_barcode", "created_on")
     def render_file_reference(self, value, record):
         return format_html('<a href="{}" ><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
@@ -77,8 +77,10 @@ class DocumentFileTable(tables.Table):
     class Meta:
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
+
         template_name = "django_tables2/bootstrap.html"
         fields = ("counter","file_reference", "file_type", "state", "stage", "file_barcode", "created_on")
+
 
     docs = TemplateColumn(template_name='file/total_column.html')
     action = TemplateColumn(template_name='file/view_column.html')
@@ -100,7 +102,7 @@ class EscalatedFileTable(tables.Table):
             "class": lambda record: "bg-red" if record.flagged else "bg-default"
         }
         model = DocumentFile
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("counter","file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
 
     def render_file_reference(self, value, record):
@@ -108,7 +110,7 @@ class EscalatedFileTable(tables.Table):
 
 
     docs = TemplateColumn(template_name='file/total_column.html')
-    action = TemplateColumn(template_name='file/view_column.html')
+    action = TemplateColumn(template_name='file/escalated_column.html')
     # transcribe = TemplateColumn(template_name='app/document_action_column.html')
 
     def render_counter(self):
@@ -136,7 +138,7 @@ class ValidationTable(tables.Table):
     class Meta:
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("counter","file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
 
     def render_file_reference(self, value, record):
@@ -155,7 +157,7 @@ class QaTable(tables.Table):
     class Meta:
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("counter","file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
     def render_file_reference(self, value, record):
         return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
@@ -173,7 +175,7 @@ class ScannerTable(tables.Table):
     class Meta:
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("counter","file_reference", "state", "file_barcode", "created_on")
     def render_file_reference(self, value, record):
         return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
@@ -190,7 +192,7 @@ class TranscribeTable(tables.Table):
     class Meta:
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("counter","file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
     def render_file_reference(self, value, record):
         return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
@@ -207,7 +209,7 @@ class HistoryTable(tables.Table):
     class Meta:
         attrs = {"class": "table table-bordered table-striped"}
         model = Modification
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("counter","file", "modified_from_stage", "modified_to_stage", "by", "created_at")
 
     view = TemplateColumn(template_name='file/view_history.html')
@@ -222,7 +224,7 @@ class SpecificFileUserHistoryTable(tables.Table):
     class Meta:
         attrs = {"class": "table table-bordered table-striped"}
         model = Modification
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("counter","modified_from_stage", "modified_to_stage", "created_at")
 
     def render_counter(self):
@@ -235,7 +237,7 @@ class AdminTable(tables.Table):
     class Meta:
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("counter","file",)
     def render_file_reference(self, value, record):
         return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
@@ -251,7 +253,7 @@ class ValidateQADocTable(tables.Table):
     class Meta:
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFileDetail
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("counter","file_reference_id", "document_barcode", "document_file_path")
 
     actions = TemplateColumn(template_name='document/inspect.html')
@@ -285,7 +287,7 @@ class ReceiverFiles(tables.Table):
             "class": lambda record: "bg-gradient-cyan" if record.stage == 'Reception' else "bg-default"
         }
         model = DocumentFile
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("counter","file_reference", "file_type", "stage", "captured_by", "file_barcode", "created_on")
     def render_file_reference(self, value, record):
         return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
@@ -305,7 +307,7 @@ class AssemblerFiles(tables.Table):
         row_attrs = {
             "class": lambda record: "bg-gradient-cyan" if record.stage != 'Assembly' else "bg-default"
         }
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("counter","file_reference", "file_type", "state", "stage", "captured_by", "file_barcode", "created_on")
     def render_file_reference(self, value, record):
         return format_html('<a href="{}"><strong>{}</strong></a>'.format('file_details/{}'.format(record.pk), value))
