@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+    <div class="col-md-6">
+         {% for message in messages %}
+            <div class="card shadow m-1">
+            <div class="card-header {% if message.resolved == False %} bg-gradient-danger {% endif %}">
+            </div>
+            <div class="card-body">
+                <div class="card-text">{{ message.comment }}</div>
+            </div>
+            <div class="card-footer">
+                <a href="#" class="btn btn-xs btn-success">Make As Resolved</a>
+                <p class="text-lg-right float-right">reported by<i class="text-info ">  {{ message.created_by.username }}</i> </p>
+            </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    </div>
+{% endblock %}
