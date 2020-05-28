@@ -33,6 +33,8 @@
 
 <link rel="stylesheet" href="{% static 'adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css' %}">
 <link rel="stylesheet" href="{% static 'adminlte/plugins/toastr/toastr.min.css' %}">
+<script src="{% static 'adminlte/plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <style rel="stylesheet">
         * {
               border-radius: 0 !important;
@@ -208,7 +210,7 @@
 <!-- ./wrapper -->
 
 <!-- jQuery -->
-<script src="{% static 'adminlte/plugins/jquery/jquery.min.js' %}"></script>
+{#<script src="{% static 'adminlte/plugins/jquery/jquery.min.js' %}"></script>#}
 <!-- jQuery UI 1.11.4 -->
 <script src="{% static 'adminlte/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -216,7 +218,7 @@
   $.widget.bridge('uibutton', $.ui.button)
 </script>
 <!-- Bootstrap 4 -->
-<script src="{% static 'adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+{#<script src="{% static 'adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>#}
 
 <!-- jQuery Knob Chart -->
 <script src="{% static 'adminlte/plugins/jquery-knob/jquery.knob.min.js' %}"></script>

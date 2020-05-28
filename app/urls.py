@@ -1,6 +1,8 @@
 from django.contrib.auth.views import LogoutView, PasswordChangeView
 from django.urls import path, re_path
 
+from django.conf.urls import url
+from django.views.decorators.csrf import csrf_exempt
 
 from .views import (
     registry_submit, AdminView, FileTypeDelete,request_file,
@@ -38,6 +40,12 @@ from app.view.stages_methods import update_stage_file
 from app.view.file_history import (get_file_history,get_each_user_history,
     get_loggedin_user_history,user_specific_file_history,file_details,assign_file)
 from app.view.escalations import RejectedDocumentFileList
+
+
+# file manager imports
+from .filemanager import (BrowserView, DetailView, UploadView,
+                               UploadFileView, DirectoryCreateView, RenameView,
+                               DeleteView)
 
 urlpatterns = [
     path('', report, name='home'),
@@ -188,5 +196,15 @@ urlpatterns = [
     #send a report message
     path('send/report/',send_report_message, name='chat'),
     path('get/report/',get_messages, name='messages'),
+
+
+    # filemanager urls
+    url(r'^filemanager/$', BrowserView.as_view(), name='browser'),
+    url(r'^detail/$', DetailView.as_view(), name='detail'),
+    url(r'^upload/$', UploadView.as_view(), name='upload'),
+    url(r'^upload/file/$', csrf_exempt(UploadFileView.as_view()), name='upload-file'),
+    url(r'^create/directory/$', DirectoryCreateView.as_view(), name='create-directory'),
+    url(r'^rename/$', RenameView.as_view(), name='rename'),
+    url(r'^delete/$', DeleteView.as_view(), name='delete'),
 ]
 

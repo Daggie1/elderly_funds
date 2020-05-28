@@ -127,6 +127,7 @@ class PasswordResetForm(PasswordChangeForm):
         model = User
         fields = ['new_password1', 'new_password2']
 
+
 class StorageForm(forms.ModelForm):
     class Meta:
         model = Notification
@@ -140,4 +141,13 @@ class StorageForm(forms.ModelForm):
 
 
 class ResetPassword(Form):
-    username=forms.CharField(max_length=255, required=True)
+    username = forms.CharField(max_length=255, required=True)
+
+
+class DirectoryCreateForm(forms.Form):
+    directory_name = forms.CharField()
+
+
+class RenameForm(forms.Form):
+    input_name = forms.CharField()
+    old_name = forms.CharField()
