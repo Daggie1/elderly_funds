@@ -11,41 +11,52 @@ from django_tables2 import SingleTableMixin, RequestConfig
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView
 from app.filters import DocumentFileFilter
-from app.models import DocumentFile, STAGES,STATES
+from app.models import DocumentFile, STAGES, STATES
 from app.tables import DocumentFileTable, EscalatedFileTable
 
 
 class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     permission_required = 'app.view_documentfile'
-
+    filterset_class = DocumentFileFilter
     table_class = EscalatedFileTable
     template_name = 'view_document_files.html'
 
     def get_queryset(self):
-        RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
+
         if self.request.user.is_superuser:
-            return DocumentFile.objects.filter(flagged=True)
+            queryset = DocumentFile.objects.filter(flagged=True)
         elif self.request.user.has_perm('app.can_create_batch'):
-            return DocumentFile.objects.filter(stage=STAGES[0],flagged=True).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            queryset = DocumentFile.objects.filter(stage=STAGES[0], flagged=True).filter(
+                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         elif self.request.user.has_perm('app.can_receive_file'):
-            return DocumentFile.objects.filter(stage=STAGES[1],flagged=True).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            queryset = DocumentFile.objects.filter(stage=STAGES[1], flagged=True).filter(
+                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         elif self.request.user.has_perm('app.can_disassemble_file'):
-            return DocumentFile.objects.filter(stage=STAGES[2],flagged=True).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            queryset = DocumentFile.objects.filter(stage=STAGES[2], flagged=True).filter(
+                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         elif self.request.user.has_perm('app.can_scan_file'):
-
-         return DocumentFile.objects.filter(stage=STAGES[3],flagged=True).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
-
-
+            queryset = DocumentFile.objects.filter(stage=STAGES[3], flagged=True).filter(
+                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         elif self.request.user.has_perm('app.can_transcribe_file'):
-
-
-            return DocumentFile.objects.filter(stage=STAGES[4],flagged=True).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
-
+            queryset = DocumentFile.objects.filter(stage=STAGES[4], flagged=True).filter(
+                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         elif self.request.user.has_perm('app.can_qa_file'):
-            return DocumentFile.objects.filter(stage=STAGES[5],flagged=True).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
-
+            queryset = DocumentFile.objects.filter(stage=STAGES[5], flagged=True).filter(
+                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         elif self.request.user.has_perm('app.can_validate_file'):
-            return DocumentFile.objects.filter(stage=STAGES[6],flagged=True).filter(Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+            queryset = DocumentFile.objects.filter(stage=STAGES[6], flagged=True).filter(
+                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
         else:
-            return DocumentFile.objects.none()
-    filterset_class = DocumentFileFilter
+            queryset = DocumentFile.objects.none()
+
+        self.table = EscalatedFileTable(queryset)
+        self.filter = DocumentFileFilter(self.request.GET,
+                                         queryset)
+        self.table = EscalatedFileTable(self.filter.qs)
+        RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['table'] = self.table
+        context['filter'] = self.filter
+        return context
