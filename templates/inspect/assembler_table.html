@@ -45,9 +45,9 @@
               </button>
             </div>
             <div class="modal-body">
-                <form action="#"  method="GET" id="returnform">
+                <form action="{% url 'chat' %}"  method="GET" id="returnform">
                     <div class="form-group">
-                      <textarea name="reasons" class="form-control"></textarea>
+                      <textarea id="summernote" name="reasons" class="form-control"></textarea>
                     </div>
 
             </div>

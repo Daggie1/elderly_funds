@@ -1,8 +1,10 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from app.models import *
+
 
 @login_required
 def report(request):
@@ -15,10 +17,9 @@ def report(request):
     # get all file types
     file_types = DocumentFileType.objects.all()
     # get all users
-    users=User.objects.all()
+    users = User.objects.all()
 
-    file=DocumentFile.objects.first()
-
+    file = DocumentFile.objects.first()
 
     reject_file = DocumentFile.objects.filter(
         flagged=True)
@@ -46,7 +47,6 @@ def report(request):
         "rejected_file": reject_file,
     }
 
-
     return render(request, "home.html", context)
 
 
@@ -68,3 +68,10 @@ def get_escalated_issues():
 
 def open_file():
     pass
+
+
+def send_report_message(request):
+    report = request.GET.get('reasons')
+    Notification.objects.create(comment=report, created_by=request.user)
+    # notification.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -45,22 +45,11 @@ def upload_documents_to_file(request, file_reference):
     return render(request, 'upload_document.html', {'file': file, 'documents':file_documents})
 
 
-# def get_file_to_upload_documents(request):
-#     if request.method == 'GET':
-#         query = request.GET.get('q')
-#         if query:
-#             qset = (
-#                 Q(file_reference_icontains=query)
-#             )
-#             results = DocumentFile.objects.filter(qset).distinct()
-#         else:
-#             results = []
-#
-#     files = DocumentFile.objects.all().order_by('created_on')[:10]
-#
-#     context = {'files': files, 'results': results}
+def delete_document(request, id):
+    doc = Filer.objects.get(pk=id)
+    doc.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    # return render(request, 'files_list.html', context=context)
 
 class ScannerTableView(SingleTableMixin,FilterView):
     table_class = ScannerTable

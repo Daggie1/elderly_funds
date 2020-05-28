@@ -25,10 +25,10 @@ from app.view.document import DocumentDeleteView, DocumentView, UploadedDocument
 from app.view.document_type import DocumentTypeCreate, DocumentTypeList
 
 from app.view.file_type import FileTypeCreate, FileTypeList
-from app.view.scanner import upload_documents_to_file, ScannerTableView
+from app.view.scanner import upload_documents_to_file, ScannerTableView, delete_document
 from app.view.transcribe import get_files_from_storage, update_document_file_detail, TranscribeFiles
 from app.view.user import profile,admin_check_user
-from .view.report import report
+from .view.report import report,send_report_message
 from app.view.inspection import  inspect, receive, ReceiveBatch, OpenBatchFiles, DessembleFiles, DessemblerDocuments
 from app.view.qa import  QaFileList, open_file_for_qa
 from app.view.validate import ValidateFileList
@@ -75,6 +75,7 @@ urlpatterns = [
     path('uploaded_documents', UploadedDocumentsList.as_view(), name='uploaded_documents'),
     path('files/upload/select',ScannerTableView.as_view(), name='get_file_to_upload_documents'),
     path('upload/to/file/<str:file_reference>',upload_documents_to_file, name='upload_document'),
+    path('delete/uploaded/pdf/<int:id>',delete_document, name='delete_pdf'),
     path('delete_document/<pk>/', DocumentDeleteView.as_view(), name='document_delete'),
 
 
@@ -182,5 +183,8 @@ urlpatterns = [
 
     # open files for qa
     path('file/qa/open/<int:id>', open_file_for_qa, name='open_qa_file'),
+
+    #send a report message
+    path('send/report/',send_report_message, name='chat'),
 ]
 
