@@ -6,7 +6,7 @@ from django_tables2 import SingleTableMixin
 from app.filters import DocumentFileFilter
 from app.models import DocumentFile, DocumentFileDetail
 from app.tables import QaTable,ValidateQADocTable
-
+from app.models import STAGES
 
 class QaFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     permission_required = 'app.view_documentfile'
@@ -15,7 +15,7 @@ class QaFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     template_name = 'qa/index.html'
 
     def get_queryset(self):
-        return DocumentFile.objects.filter(stage=[5]).filter(
+        return DocumentFile.objects.filter(stage=STAGES[5]).filter(
             flagged=True,
             assigned_to=self.request.user)
 
