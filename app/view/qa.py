@@ -19,7 +19,7 @@ class QaFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
         queryset = DocumentFile.objects.filter(stage=STAGES[5])
         self.table = QaTable(queryset)
         self.filter = DocumentFileFilter(self.request.GET,
-                                  DocumentFile.objects.filter(stage=STAGES[5]))
+                                         DocumentFile.objects.filter(stage=STAGES[5]))
         self.table = QaTable(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
         # return Batch.objects.filter(is_return_batch=False)
@@ -29,6 +29,7 @@ class QaFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
         context['table'] = self.table
         context['filter'] = self.filter
         return context
+
 
 def open_file_for_qa(request, id):
     file = DocumentFile.objects.get(pk=id)
