@@ -31,12 +31,14 @@
                   <p>Escalated Issues</p>
                 </a>
               </li>
+            {% if user.is_superuser %}
             <li class="nav-item">
                 <a href="{% url 'messages' %}" class="nav-link {% if request.resolver_match.url_name == 'messages' %} active {% endif %}">
                   <i class="fas fa-envelope nav-icon"></i>
                   <p>Messages</p>
                 </a>
               </li>
+            {% endif %}
 {#            <li class="nav-item">#}
 {#                <a href="{% url 'browser' %}" class="nav-link {% if request.resolver_match.url_name == 'browser' %} active {% endif %}">#}
 {#                  <i class="fas fa-memory nav-icon"></i>#}
