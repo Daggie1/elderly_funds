@@ -23,10 +23,10 @@ class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView)
 
     def get_queryset(self):
         #mark all as read
-        self.request.user.set_notificationsentto.filter(read_at__isNull=False).update(read_at=timezone.now)
+        self.request.user.notificationsentto_set.filter(read_at__isnull=True).update(read_at=timezone.now())
 
         if self.request.user.is_superuser:
-            queryset = DocumentFile.objects.filter(flagged_=True)
+            queryset = DocumentFile.objects.filter(flagged=True)
         elif self.request.user.has_perm('app.can_create_batch'):
             queryset = DocumentFile.objects.filter(stage=STAGES[0], flagged=True).filter(
                 Q(assigned_to=self.request.user) | Q(state=STATES[4]))
