@@ -134,37 +134,37 @@ class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView)
                 flagged=True)
         elif self.request.user.has_perm('app.can_create_batch'):
             return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[0],
+                stage=STAGES[0],
                 assigned_to=self.request.user)
         elif self.request.user.has_perm('app.can_receive_file'):
             return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[1],
+                stage=STAGES[1],
                 assigned_to=self.request.user)
         elif self.request.user.has_perm('app.can_disassemble_file'):
             return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[2],
+                stage=STAGES[2],
                 assigned_to=self.request.user)
         elif self.request.user.has_perm('app.can_scan_file'):
 
             return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[3],
+                stage=STAGES[3],
                 assigned_to=self.request.user)
 
 
         elif self.request.user.has_perm('app.can_transcribe_file'):
 
             return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[4],
+                stage=STAGES[4],
                 assigned_to=self.request.user)
 
         elif self.request.user.has_perm('app.can_qa_file'):
             return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[5],
+                stage=STAGES[5],
                 assigned_to=self.request.user)
 
         elif self.request.user.has_perm('app.can_validate_file'):
             return DocumentFile.objects.filter(flagged=True).filter(
-                stage=[6],
+                stage=STAGES[6],
                 assigned_to=self.request.user)
         else:
             return DocumentFile.objects.none()
