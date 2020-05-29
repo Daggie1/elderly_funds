@@ -110,8 +110,8 @@ class OpenBatchFiles(LoginRequiredMixin, SingleTableMixin, FilterView):
     def get_queryset(self):
         queryset = DocumentFile.objects.filter(stage=STAGES[1])
         self.table = ReceiverFiles(queryset)
-        self.filter = DocumentFilter(self.request.GET,
-                                     DocumentFile.objects.filter(pk=self.kwargs['id']))
+        self.filter = DocumentFileFilter(self.request.GET,
+                                     DocumentFile.objects.filter(stage=STAGES[1]))
         self.table = ReceiverFiles(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
 
@@ -130,8 +130,8 @@ class DessembleFiles(LoginRequiredMixin, SingleTableMixin, FilterView):
     def get_queryset(self):
         queryset = DocumentFile.objects.filter(stage=STAGES[2])
         self.table = AssemblerFiles(queryset)
-        self.filter = DocumentFilter(self.request.GET,
-                                     DocumentFile.objects.filter(stage='Assembler'))
+        self.filter = DocumentFileFilter(self.request.GET,
+                                     DocumentFile.objects.filter(stage=STAGES[2]))
         self.table = AssemblerFiles(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
 
