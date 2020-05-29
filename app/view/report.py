@@ -80,3 +80,11 @@ def send_report_message(request):
 def get_messages(request):
     messages = Notification.objects.filter(file_id=None).filter(resolved=False).order_by('-created_at')[:20]
     return render(request, 'messages.html', {'messages': messages})
+
+
+def mark_as_resolved(request, id):
+    message = Notification.objects.get(pk=id)
+    message.resolved_by = request.user
+    message.resolved = True
+    message.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

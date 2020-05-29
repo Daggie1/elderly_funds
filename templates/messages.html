@@ -10,7 +10,7 @@
                 <div class="card-text">{{ message.comment | safe }}</div>
             </div>
             <div class="card-footer">
-                <a href="#" class="btn btn-xs btn-success">Make As Resolved</a>
+                <a href="{% url 'resolve' message.id %}" class="btn btn-xs btn-success">Make As Resolved</a>
                 <p class="text-lg-right float-right">reported by<i class="text-info ">  {{ message.created_by.username }}</i> </p>
             </div>
             </div>
