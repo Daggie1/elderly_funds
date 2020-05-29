@@ -80,13 +80,9 @@ def update_stage_file(request, pk, action):
                 file.save()
                 messages.success(request, ' File moved successfully')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-            elif action == ACTIONS[11]:
-                file.finalize_to_reception()
-                file.save()
-                messages.success(request, ' File moved successfully')
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
             else:
-                messages.error(request, ' No action selected')
+
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         except AttributeError as e:
             messages.error(request, ' something wrong happened while updating file status')
