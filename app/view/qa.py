@@ -31,8 +31,8 @@ class QaFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
         return context
 
 
-def open_file_for_qa(request, id):
-    file = DocumentFile.objects.get(pk=id)
+def open_file_for_qa(request, pk):
+    file = DocumentFile.objects.get(pk=pk)
     table = ValidateQADocTable(DocumentFileDetail.objects.filter(file_reference=id))
     RequestConfig(request, paginate={'per_page': 10}).configure(table)
     return render(request, 'qa/documents.html', {'file': file, 'table': table})

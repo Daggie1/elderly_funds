@@ -4,7 +4,7 @@
 {% endif %}
 {% if 'app.can_register_batch' in perms and record.assigned_to == user and record.stage == 'Registry'   %}
     <a class="btn btn-warning btn-sm" href="{% url 'file_edit' record.pk %}">Edit</a>
-    <a class="btn btn-outline-danger btn-sm" href="{% url 'file_delete' record.pk %}">Delete</a>
+    <a class="btn btn-primary btn-sm" href="{% url 'file_delete' record.pk %}">Delete</a>
 
 {% elif record.stage == 'Scanner' and record.assigned_to == user %}
 
