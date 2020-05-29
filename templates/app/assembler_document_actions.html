@@ -1,1 +1,6 @@
 {#move states#}
+ {% if record.document_file_path is not None %}
+                <a href="{% url 'validate_doc_content' record.id %}" class="btn btn-sm btn-info btn-block">Open</a>
+                {% else %}
+                    <i class="text-warning">Please Map Documents</i>
+                {% endif %}

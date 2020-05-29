@@ -125,9 +125,9 @@ class BatchFilesView(LoginRequiredMixin, SingleTableMixin, FilterView):
     filterset_class = DocumentFileFilter
 
     def get_queryset(self):
-        queryset = Batch.objects.filter(is_return_batch=True)
+        queryset = DocumentFile.objects.filter(batch_id=int(self.kwargs['pk']))
         self.table = BatchFileTable(queryset)
-        self.filter = BatchFilter(self.request.GET,
+        self.filter = DocumentFileFilter(self.request.GET,
                                   DocumentFile.objects.filter(batch_id=int(self.kwargs['pk'])))
         self.table = BatchFileTable(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
