@@ -193,7 +193,7 @@ urlpatterns = [
     path('assign_file/<pk>',assign_file, name='file_assign'),
 
     # open files for qa
-    path('file/qa/open/<int:id>', open_file_for_qa, name='open_qa_file'),
+    path('file/qa/open/<pk>', open_file_for_qa, name='open_qa_file'),
 
     #send a report message
     path('send/report/',send_report_message, name='chat'),
