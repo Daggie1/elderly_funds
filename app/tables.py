@@ -81,7 +81,7 @@ class DocumentFileTable(tables.Table):
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
 
-        template_name = "django_tables2/bootstrap.html"
+        template_name = "django_tables2/bootstrap4.html"
         fields = ("counter","file_reference", "file_type", "state", "stage", "file_barcode", "created_on")
 
 
