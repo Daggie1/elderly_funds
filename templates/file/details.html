@@ -84,7 +84,7 @@
 {% if file.flagged %}
     <div class="card bg-gradient-danger">
     <div class="card-header">Reasons For Flagging</div>
-    <p>{{ file.notification_set.all.last.comment }}</p>
+    <p>{{ file.notification_set.all.last.comment | safe }}</p>
     </div>
 
             <br>
