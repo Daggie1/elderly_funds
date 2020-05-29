@@ -29,25 +29,25 @@ class RejectedDocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView)
             queryset = DocumentFile.objects.filter(flagged=True)
         elif self.request.user.has_perm('app.can_create_batch'):
             queryset = DocumentFile.objects.filter(stage=STAGES[0], flagged=True).filter(
-                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+                Q(assigned_to=self.request.user) )
         elif self.request.user.has_perm('app.can_receive_file'):
             queryset = DocumentFile.objects.filter(stage=STAGES[1], flagged=True).filter(
-                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+                Q(assigned_to=self.request.user) )
         elif self.request.user.has_perm('app.can_disassemble_file'):
             queryset = DocumentFile.objects.filter(stage=STAGES[2], flagged=True).filter(
-                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+                Q(assigned_to=self.request.user) )
         elif self.request.user.has_perm('app.can_scan_file'):
             queryset = DocumentFile.objects.filter(stage=STAGES[3], flagged=True).filter(
-                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+                Q(assigned_to=self.request.user) )
         elif self.request.user.has_perm('app.can_transcribe_file'):
             queryset = DocumentFile.objects.filter(stage=STAGES[4], flagged=True).filter(
-                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+                Q(assigned_to=self.request.user))
         elif self.request.user.has_perm('app.can_qa_file'):
             queryset = DocumentFile.objects.filter(stage=STAGES[5], flagged=True).filter(
-                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+                Q(assigned_to=self.request.user) )
         elif self.request.user.has_perm('app.can_validate_file'):
             queryset = DocumentFile.objects.filter(stage=STAGES[6], flagged=True).filter(
-                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+                Q(assigned_to=self.request.user) )
         else:
             queryset = DocumentFile.objects.none()
 
