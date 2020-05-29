@@ -1,4 +1,4 @@
-import json2html
+from json2html import *
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.models import Permission
 from django.shortcuts import redirect, render
@@ -13,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView, UpdateView
 from app.filters import DocumentFileFilter
 from app.models import DocumentFile, STAGES, STATES, DocumentFileDetail
-from app.tables import DocumentFileTable, BatchFileTable
+from app.tables import DocumentFileTable, BatchFileTable, CompleteFiles
 
 
 class DocumentFileCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -91,21 +91,18 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
             queryset = DocumentFile.objects.filter(stage=STAGES[3], flagged=False).filter(
                 Q(assigned_to=self.request.user) | Q(assigned_to__isnull=True) | Q(state=STATES[2]))
 
-
-
         elif self.request.user.has_perm('app.can_transcribe_file'):
 
             queryset = DocumentFile.objects.filter(stage=STAGES[4], flagged=False).filter(
-                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
-
+                Q(assigned_to=self.request.user) | Q(state=STATES[2]))
 
         elif self.request.user.has_perm('app.can_qa_file'):
             queryset = DocumentFile.objects.filter(stage=STAGES[5], flagged=False).filter(
-                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+                Q(assigned_to=self.request.user) | Q(state=STATES[2]))
 
         elif self.request.user.has_perm('app.can_validate_file'):
             queryset = DocumentFile.objects.filter(stage=STAGES[6], flagged=False).filter(
-                Q(assigned_to=self.request.user) | Q(state=STATES[4]))
+                Q(assigned_to=self.request.user) | Q(state=STATES[2]))
         else:
             queryset = DocumentFile.objects.none()
 
@@ -114,7 +111,6 @@ class DocumentFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
                                          queryset)
         self.table = DocumentFileTable(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
-        # return Batch.objects.filter(is_return_batch=False)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -207,16 +203,16 @@ class FileDeleteView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixi
 
 class CompleteFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     permission_required = 'app.view_documentfile'
-    table_class = DocumentFileTable
+    table_class = CompleteFiles
     template_name = 'view_document_files.html'
     filterset_class = DocumentFileFilter
 
     def get_queryset(self):
-        queryset = DocumentFile.objects.all()
-        self.table = DocumentFileTable(queryset)
+        queryset = DocumentFile.objects.filter( Q(stage=STAGES[4]) | Q(stage = STAGES[5])  | Q(stage = STAGES[6]))
+        self.table = CompleteFiles(queryset)
         self.filter = DocumentFileFilter(self.request.GET,
                                          queryset)
-        self.table = DocumentFileTable(self.filter.qs)
+        self.table = CompleteFiles(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
 
     def get_context_data(self, **kwargs):
@@ -225,9 +221,14 @@ class CompleteFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
         context['filter'] = self.filter
         return context
 
+
 def file_internals(request, id):
-    document = DocumentFileDetail.objects.get(id=id)
-    content = document.document_content
-    table_data = json2html.convert(json=content, table_attributes="id=\"info-table\" class=\"table table-bordered "
+    documents = DocumentFileDetail.objects.filter(file_reference=id)
+    large_table = []
+    for document in documents:
+        content = document.document_content
+        table_data = json2html.convert(json=content, table_attributes="id=\"info-table\" class=\"table table-bordered "
                                                                   "table-hover\"")
-    return render(request, 'file/file_pages.html',{'document':document, 'table_data':table_data})
+        large_table.append(table_data)
+
+    return render(request, 'file/pages.html', {'table_data': large_table})

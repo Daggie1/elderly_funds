@@ -17,7 +17,7 @@ from .views import (
 from .view.user import reset_default_password
 from app.view.file import (
                             FilesView, DocumentFileCreate, DocumentFileList,
-                            RejectedDocumentFileList,FileDeleteView,FileUpdateView)
+                            RejectedDocumentFileList,FileDeleteView,FileUpdateView, CompleteFileList,file_internals)
 from .view.registry import (registry_submit_to_receiver, change_file_status_to_accept, change_file_status_to_accept_ajax,
                             change_file_status_to_reject,change_document_status_to_accept,
                             change_document_status_to_reject, return_rectified_file)
@@ -199,6 +199,9 @@ urlpatterns = [
     path('send/report/',send_report_message, name='chat'),
     path('get/report/',get_messages, name='messages'),
     path('mark/resolved/<int:id>', mark_as_resolved, name='resolve'),
+    path('complete/files/',CompleteFileList.as_view(),name='complete'),
+    path('complete/files/<int:id>',file_internals,name='completeopen'),
+
 
 
     # filemanager urls
@@ -209,5 +212,7 @@ urlpatterns = [
     url(r'^create/directory/$', DirectoryCreateView.as_view(), name='create-directory'),
     url(r'^rename/$', RenameView.as_view(), name='rename'),
     url(r'^delete/$', DeleteView.as_view(), name='delete'),
+
+
 ]
 

@@ -351,3 +351,22 @@ class AssemblerDocuments(tables.Table):
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(start = 1))
         return next(self.row_counter)
+
+
+class CompleteFiles(tables.Table):
+    counter = tables.Column(empty_values=(), orderable=False)
+    class Meta:
+        attrs = {"class": "table table-bordered table-striped"}
+        model = DocumentFile
+        template_name = "django_tables2/bootstrap4.html"
+        fields = ("counter","file_reference", "file_type", "state", "stage", "file_barcode", "created_on")
+
+    def render_file_reference(self, value, record):
+        url = reverse('file_details', kwargs={'pk': record.pk})
+        return mark_safe(f'<a href="{url}"><strong>{value}</strong></a>')
+    docs = TemplateColumn(template_name='file/total_column.html')
+    open = TemplateColumn(template_name='file/open_eye.html')
+
+    def render_counter(self):
+        self.row_counter = getattr(self, 'row_counter', itertools.count(start = 1))
+        return next(self.row_counter)

@@ -128,8 +128,8 @@
           </li>
         {% endif %}
         {% if 'app.can_receive_file' in perms or 'app.can_disassemble_file' in perms or 'app.can_scan_file' in perms or 'app.can_reassemble_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
-                  <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'list_document_files' %} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'list_document_files' %} active {% endif %} ">
+                  <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'list_document_files' or request.resolver_match.url_name == 'complete' %} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if request.resolver_match.url_name == 'list_document_files' or request.resolver_match.url_name == 'complete' %} active {% endif %} ">
               <i class="nav-icon fas fa-folder-open"></i>
               <p>
                 Files
@@ -146,6 +146,15 @@
               </li>
 
 {% endif %}
+            {% if 'app.can_receive_file' %}
+
+                 <li class="nav-item">
+                <a href="{% url 'complete' %}" class="nav-link  {% if request.resolver_match.url_name == 'complete' %} active {% endif %} ">
+                  <i class="far fa-check nav-icon"></i>
+                  <p>Completed Files</p>
+                </a>
+              </li>
+            {% endif %}
 
             </ul>
 {% endif %}
