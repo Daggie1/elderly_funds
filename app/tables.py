@@ -209,6 +209,7 @@ class TranscribeTable(tables.Table):
         url = reverse('file_details', kwargs={'pk': record.pk})
         return mark_safe(f'<a href="{url}"><strong>{value}</strong></a>')
     transcribe = TemplateColumn(template_name='app/document_action_column.html')
+    action = TemplateColumn(template_name='file/view_column.html')
 
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(start = 1))

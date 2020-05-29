@@ -402,7 +402,7 @@ class DocumentFile(models.Model):
         self.flagged = False
         self.save()
 
-    @transition(field=stage, source=[STAGES[5]], target=STAGES[4],
+    @transition(field=stage, source=[STAGES[5], STAGES[6]], target=STAGES[4],
                 permission=['app.can_qa_file'])
     def return_transcriber(self, user=None, rejection_comment=None):
 

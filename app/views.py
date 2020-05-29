@@ -111,9 +111,10 @@ class DocumentTranscribe(LoginRequiredMixin, SingleTableMixin, FilterView):
 @login_required
 def get_document_and_document_type(request, doc_id, file_type):
     document = get_object_or_404(DocumentFileDetail, pk=doc_id)
+    document_path = document.document_file_path
     document_type = DocumentType.objects.get(pk=file_type)
     form = JSONSchemaForm(schema=document_type.document_field_specs, options={"theme": "bootstrap3"})
-    return render(request, 'transcription_lab.html', {'form': form, 'document': document})
+    return render(request, 'transcription_lab.html', {'form': form, 'document': document, 'path':document_path})
 
 
 def get_document_list(request, file_reference):
