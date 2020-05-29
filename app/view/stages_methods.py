@@ -59,6 +59,7 @@ def update_stage_file(request, pk, action):
                 file.return_scanner(user=user)
                 file.save()
                 messages.success(request, ' File moved successfully')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif action == ACTIONS[7]:
                 file.dispatch_qa(user=user)
                 file.save()
@@ -68,6 +69,7 @@ def update_stage_file(request, pk, action):
                 file.return_transcriber(user=user)
                 file.save()
                 messages.success(request, ' File moved successfully')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif action == ACTIONS[9]:
                 file.dispatch_validator(user=user)
                 file.save()
@@ -77,6 +79,7 @@ def update_stage_file(request, pk, action):
                 file.return_qa(user=user)
                 file.save()
                 messages.success(request, ' File moved successfully')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif action == ACTIONS[11]:
                 file.finalize_to_reception()
                 file.save()
