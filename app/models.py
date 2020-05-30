@@ -10,7 +10,7 @@ from django.contrib.auth.models import User, Permission
 from PIL import Image
 from django.urls import reverse
 
-STAGES = ("Registry", "Reception", "Assembly", "Scanner", "Transcriber", "Quality Assuarance", "Validator")
+STAGES = ("Registry", "Reception", "Assembly", "Scanner", "Transcriber", "Quality Assuarance", "Validator","Complete")
 STATES = ("Opened", "Done", "Closed",)
 BATCH = ("Opened", "Done", "Closed")
 
@@ -503,9 +503,15 @@ class DocumentFile(models.Model):
         self.flagged = True
         self.save()
 
-    @transition(field=stage, source=[STAGES[6]], target=STAGES[1],
+    @transition(field=stage, source=[STAGES[6]], target=STAGES[7],
                 permission=['app.can_validate_file'])
-    def finalize_to_reception(self):
+    def dispatch_complete(self, user=None):
+        Modification.objects.create(
+            file=self,
+            modified_from_stage=STAGES[6],
+            modified_to_stage=STAGES[7],
+            by=user
+        )
         self.flagged = False
         self.save()
 
