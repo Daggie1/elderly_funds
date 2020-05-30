@@ -159,8 +159,8 @@
             </ul>
 {% endif %}
                 {% if 'app.can_scan_file' in perms or 'app.can_transcribe_file' in perms  or 'app.can_qa_file' in perms or 'app.can_validate_file' in perms %}
-            <li class="nav-item has-treeview {% if  request.resolver_match.url_name == 'get_file_to_upload_documents' or request.resolver_match.url_name  == 'list_transcribe_files'%} menu-open {% endif %}">
-            <a href="#" class="nav-link {% if  request.resolver_match.url_name == 'get_file_to_upload_documents' or request.resolver_match.url_name  == 'list_transcribe_files' %} active {% endif %}">
+            <li class="nav-item has-treeview {% if  request.resolver_match.url_name == 'get_file_to_upload_documents'  or request.resolver_match.url_name == 'get_files_from_storage' or request.resolver_match.url_name  == 'upload_document' or request.resolver_match.url_name  == 'list_transcribe_files'%} menu-open {% endif %}">
+            <a href="#" class="nav-link {% if  request.resolver_match.url_name == 'get_file_to_upload_documents'  or request.resolver_match.url_name == 'get_files_from_storage' or request.resolver_match.url_name  == 'upload_document' or request.resolver_match.url_name  == 'list_transcribe_files' %} active {% endif %}">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Documents
@@ -171,7 +171,7 @@
 
             {% if 'app.can_scan_file' in perms %}
                  <li class="nav-item">
-                <a href="{% url 'get_file_to_upload_documents' %}" class="nav-link">
+                <a href="{% url 'get_file_to_upload_documents' %}" class="nav-link {% if request.resolver_match.url_name == 'get_file_to_upload_documents'  or request.resolver_match.url_name == 'upload_document'%} active {% endif %}">
                   <i class="fas fa-file-upload nav-icon"></i>
                   <p>Upload Documents</p>
                 </a>
@@ -179,7 +179,7 @@
                 {% endif %}
             {% if  'app.can_transcribe_file' in perms  %}
                   <li class="nav-item">
-                <a href="{% url 'list_transcribe_files' %}" class="nav-link">
+                <a href="{% url 'list_transcribe_files' %}" class="nav-link {% if request.resolver_match.url_name == 'list_transcribe_files'  or request.resolver_match.url_name == 'get_files_from_storage'%} active {% endif %}">
                   <i class="fas fa-glasses nav-icon"></i>
                   <p>Transcribe Documents</p>
                 </a>

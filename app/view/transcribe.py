@@ -23,7 +23,6 @@ def map_keys_to_value_digital(dict_list):
 
 def get_files_from_storage(request, file_reference):
     scanned_documents = Filer.objects.filter(file_reference=file_reference).values('filepond', 'file_reference')
-    print(scanned_documents)
     digital_documents = DocumentFileDetail.objects.filter(file_reference=file_reference).values()
     document_type = DocumentType.objects.all().values('document_name')
     file = DocumentFile.objects.get(pk=file_reference)
