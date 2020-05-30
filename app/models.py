@@ -142,25 +142,20 @@ class DocumentFile(models.Model):
         return reverse('batch_documents', kwargs={'file_reference': self.pk})
 
 
-    def file_closed(self):
-        if self.state == STATES[3]:
+    def is_file_closed(self):
+        if self.state == STATES[2]:
             return True
         return False
 
     def assigned_to_me(self, user=None):
         if self.assigned_to == user:
             return True
-        return False
-
-    def assign_when_not_assigned(self, user=None):
-        if self.assigned_to == user:
-            return True
-        elif self.assigned_to == None:
-            self.assigned_to = user
-            self.save()
+        if self.assigned_to == None:
             return True
 
         return False
+
+
 
     # transition methods
     @transition(field=state, source=[STATES[2]], target=STATES[0])
