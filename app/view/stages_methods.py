@@ -11,7 +11,7 @@ ACTIONS = ['Dispatch to Reception', 'Return to Registry', 'Dispatch to Assembler
                  'Dispatch to Transcriber',
                  'Return to Scanner', 'Dispatch to QA',
                  'Return to Transcriber', 'Dispatch to Validator',
-                 'Return to QA', 'Finalize to Reception']
+                 'Return to QA', 'Fully Digitized']
 
 
 def update_stage_file(request, pk, action):
@@ -81,6 +81,11 @@ def update_stage_file(request, pk, action):
                 messages.success(request, ' File moved successfully')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+            elif action == ACTIONS[11]:
+                file.dispatch_complete(user=user)
+                file.save()
+                messages.success(request, ' File moved successfully')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
 
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

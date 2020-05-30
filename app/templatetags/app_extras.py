@@ -19,7 +19,7 @@ ACTIONS_STAGE = ['Dispatch to Reception',
                  'Dispatch to Transcriber',
                  'Return to Scanner', 'Dispatch to QA',
                  'Return to Transcriber', 'Dispatch to Validator',
-                 'Return to QA', 'Finalize to Reception']
+                 'Return to QA', 'Fully Digitized']
 
 
 @register.filter
@@ -117,14 +117,14 @@ def get_actions_file(id):
                                reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[8]]),
                                reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[9]]))
 
-        if stage_transitions[0].target == STAGES[1] and stage_transitions[1].target == STAGES[5]:
+        if stage_transitions[0].target == STAGES[7] and stage_transitions[1].target == STAGES[5]:
             return format_html(u'<div role="separator" class="dropdown-divider"></div><div class="dropdown-item '
                                u'btn btn-info btn-block"><button class="dropdown-item return btn btn-info btn-block" '
                                u'id="{}"  data-toggle="modal" data-target="#modal-lg">Return To QA</button></div><div '
                                u'role="separator" '
                                u'class="dropdown-divider"></div><div class="dropdown-item '
                                u'btn btn-info btn-block"><a class="dropdown-item btn btn-info btn-block" href="{'
-                               u'}">Finalize to Reception</a></div>',
+                               u'}">Mark as Complete</a></div>',
                                reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[10]]),
                                reverse_lazy('update_stage_file', args=[id, ACTIONS_STAGE[11]]))
     else:
