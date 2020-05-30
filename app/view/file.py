@@ -211,7 +211,7 @@ class CompleteFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
     filterset_class = DocumentFileFilter
 
     def get_queryset(self):
-        queryset = DocumentFile.objects.filter( Q(stage=STAGES[4]) | Q(stage = STAGES[5])  | Q(stage = STAGES[6]))
+        queryset = DocumentFile.objects.filter( Q(stage=STAGES[7]))
         self.table = CompleteFiles(queryset)
         self.filter = DocumentFileFilter(self.request.GET,
                                          queryset)
