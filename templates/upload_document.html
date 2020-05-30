@@ -17,9 +17,7 @@
                 </div>
                 <div class="card-body">
                     <input type="file"
-                    class="filepond" name="filepond" multiple data-allow-reorder="true" data-max-file-size="10MB"
-                           data-max-files="200"
-                    >
+                    class="filepond" name="filepond" multiple data-allow-reorder="true">
                 </div>
             </div>
         </div>
@@ -93,22 +91,34 @@
 {% endblock content %}
 
 {% block js %}
-     <script src="{% static '/filepond.js' %}"></script>
+     <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+
+    <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
       <script>
-  FilePond.parse(document.body);
-  FilePond.setOptions({
-      server: {
-          url:"{% url 'upload_document' file.file_reference %}",
-          process:{
-              headers: {
-                  'X-CSRF-TOKEN': '{{ csrf_token }}'
+      FilePond.registerPlugin(FilePondPluginFileValidateSize);
+      FilePond.registerPlugin(FilePondPluginFileValidateType);
+      FilePond.parse(document.body);
+      FilePond.setOptions({
+          server: {
+              url:"{% url 'upload_document' file.file_reference %}",
+              process:{
+                  headers: {
+                      'X-CSRF-TOKEN': '{{ csrf_token }}'
+                  }
               }
           }
-      }
-  })
+      })
+
+     $('.filepond').filepond({
+        allowMultiple: true,
+         maxFileSize:'12MB',
+         acceptedFileTypes:['application/pdf'],
+    });
       $('.filepond').on('FilePond:processfiles', function(e) {
-    location.reload();
-        });
+            location.reload();
+      });
+
+  {#image preview code#}
    $('.preview').click(function(){
        let id = $(this).attr('id')
        console.log(id)
@@ -119,6 +129,7 @@
    )
       $('#modal-lg').on('hidden.bs.modal', function () {
        location.reload()
+          {#end of image preview code#}
 });
 
 
