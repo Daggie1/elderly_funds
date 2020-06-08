@@ -1,0 +1,60 @@
+{
+  "title": "Birth Certificate",
+  "type": "object",
+  "required": [
+    "name",
+    "fathers_name",
+    "mothers_name",
+    "birth_entry_no",
+    "date_of_birth",
+    "district",
+    "gender"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+       "title": "Name",
+      "description": "First and Last name",
+      "minLength": 4,
+      "default": "Names"
+    },
+    "fathers_name": {
+      "type": "string",
+       "title": "Father's Name",
+      "description": "name of the father",
+      "default": "father's name"
+    },
+    "mothers_name": {
+      "type": "string",
+      "title": "Mother's Name",
+      "description": "name of the mother",
+      "default": "mother's name"
+    },
+    "gender": {
+      "type": "string",
+      "title": "SEX",
+      "enum": [
+        "male",
+        "female"
+      ]
+    },
+    "date_of_birth": {
+      "type": "string",
+       "title": "Date Of Birth",
+      "format": "date",
+      "options": {
+        "flatpickr": {}
+      }
+    },
+    "district": {
+      "type": "string",
+      "title": "District",
+      "description": "place of birth"
+    },
+    "birth_entry_no": {
+      "type": "string",
+      "title": "Birth Certificate No",
+      "title": "birth entry no"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "title": "Marriage Certificate",
+  "type": "object",
+  "required": [
+    "full_names_spouse_1",
+    "full_names_spouse_2",
+    "place_of_marriage",
+    "date_of_marriage",
+    "marriage_entry_no"
+  ],
+  "properties": {
+    "full_names_spouse_1": {
+      "type": "string",
+      "description": "Full names Spouse 1",
+      "minLength": 4,
+      "default": "Full Name Spouse 1"
+    },
+    "full_names_spouse_2": {
+      "type": "string",
+      "description": "Full names Spouse 2",
+      "minLength": 4,
+      "default": "Full Name Spouse 2"
+    },
+    "marriage_entry_no": {
+      "type": "integer",
+      "default": 94,
+      "minimum": 8,
+      "maximum": 10
+    },
+    "date_of_marriage": {
+      "type": "string",
+      "format": "date",
+      "options": {
+        "flatpickr": {}
+      }
+    },
+    "place_of_marriage": {
+      "type": "string",
+      "title": "Place Of Marriage",
+      "description": "place of marriage"
+    }
+  }
+}

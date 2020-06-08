@@ -1,0 +1,96 @@
+{
+  "title": "Person",
+  "type": "object",
+  "properties": {
+
+    "Parents_ID": {
+      "type": "object",
+      "title": "Parent National ID",
+      "properties": {
+        "id_no": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "full_names": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "date_of_birth": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "gender": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "district_of_birth": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "district": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "division": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "location": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "sublocation": {
+          "type": "string",
+          "default": "San Francisco"
+        }
+      }
+    },
+    "Parents_Passport": {
+      "type": "object",
+      "title": "Parent Passport",
+      "properties": {
+        "passport_no": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "full_names": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "date_of_issue": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "date_of_expiry": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "issueing_office": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "country_of_issue": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "gender": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "place_of_birth": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+
+        "date_of_birth": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "nationality": {
+          "type": "string",
+          "default": "San Francisco"
+        }
+      }
+    }
+  }
+}

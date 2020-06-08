@@ -1,0 +1,62 @@
+{
+  "title": "National Identity",
+  "type": "object",
+  "required": [
+    "id_no",
+    "full_names",
+    "date_of_birth",
+    "gender",
+    "district",
+    "division",
+    "location",
+    "sub_location"
+  ],
+  "properties": {
+    "full_names": {
+      "type": "string",
+      "description": "Full names",
+      "minLength": 4,
+      "default": "Full Name"
+    },
+    "id_no": {
+      "type": "integer",
+      "default": 0,
+      "minimum": 8,
+      "maximum": 10
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "male",
+        "female"
+      ]
+    },
+    "date_of_birth": {
+      "type": "string",
+      "format": "date",
+      "options": {
+        "flatpickr": {}
+      }
+    },
+    "district": {
+      "type": "string",
+      "title": "District",
+      "description": "district of birth"
+    },
+    "division": {
+      "type": "string",
+      "title": "Division",
+      "description": "division of birth"
+    },
+    "location": {
+      "type": "string",
+      "title": "Location",
+      "description": "location of birth"
+    },
+    "sub_location": {
+      "type": "string",
+      "title": "SubLocation",
+      "description": "sublocation of birth"
+    }
+  }
+}
