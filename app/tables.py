@@ -46,7 +46,7 @@ class BatchFileTable(tables.Table):
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
         template_name = "django_tables2/bootstrap4.html"
-        fields = ("counter","file_reference", "file_type", "state", "stage", "captured_by", "file_barcode", "created_on")
+        fields = ("counter","file_reference", "file_type", "state", "stage", "file_created_by", "file_barcode", "created_on")
 
     def render_file_reference(self, value, record):
         url = reverse('file_details', kwargs={'pk': record.pk})
@@ -107,7 +107,7 @@ class EscalatedFileTable(tables.Table):
         }
         model = DocumentFile
         template_name = "django_tables2/bootstrap4.html"
-        fields = ("counter","file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
+        fields = ("counter","file_reference", "file_type", "state", "file_created_by", "file_barcode", "created_on")
 
     def render_file_reference(self, value, record):
         url = reverse('file_details', kwargs={'pk': record.pk})
@@ -144,7 +144,7 @@ class ValidationTable(tables.Table):
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
         template_name = "django_tables2/bootstrap4.html"
-        fields = ("counter","file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
+        fields = ("counter","file_reference", "file_type", "state", "file_created_by", "file_barcode", "created_on")
 
     def render_file_reference(self, value, record):
         url = reverse('file_details', kwargs={'pk': record.pk})
@@ -164,7 +164,7 @@ class QaTable(tables.Table):
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
         template_name = "django_tables2/bootstrap4.html"
-        fields = ("counter","file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
+        fields = ("counter","file_reference", "file_type", "state", "file_created_by", "file_barcode", "created_on")
 
     def render_file_reference(self, value, record):
         url = reverse('file_details', kwargs={'pk': record.pk})
@@ -203,7 +203,7 @@ class TranscribeTable(tables.Table):
         attrs = {"class": "table table-bordered table-striped"}
         model = DocumentFile
         template_name = "django_tables2/bootstrap4.html"
-        fields = ("counter","file_reference", "file_type", "state", "captured_by", "file_barcode", "created_on")
+        fields = ("counter","file_reference", "file_type", "state", "file_created_by", "file_barcode", "created_on")
 
     def render_file_reference(self, value, record):
         url = reverse('file_details', kwargs={'pk': record.pk})
@@ -303,7 +303,7 @@ class ReceiverFiles(tables.Table):
         }
         model = DocumentFile
         template_name = "django_tables2/bootstrap4.html"
-        fields = ("counter","file_reference", "file_type", "stage", "captured_by", "file_barcode", "created_on")
+        fields = ("counter","file_reference", "file_type", "stage", "file_created_by", "file_barcode", "created_on")
     def render_file_reference(self, value,record):
         url = reverse('file_details', kwargs={'pk' :record.pk})
         return mark_safe(f'<a href="{url}"><strong>{value}</strong></a>')
@@ -324,7 +324,7 @@ class AssemblerFiles(tables.Table):
             "class": lambda record: "bg-gradient-cyan" if record.stage != 'Assembly' else "bg-default"
         }
         template_name = "django_tables2/bootstrap4.html"
-        fields = ("counter","file_reference", "file_type", "state", "stage", "captured_by", "file_barcode", "created_on")
+        fields = ("counter","file_reference", "file_type", "state", "stage", "file_created_by", "file_barcode", "created_on")
 
     def render_file_reference(self, value, record):
         url = reverse('file_details', kwargs={'pk': record.pk})
