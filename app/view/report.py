@@ -8,6 +8,7 @@ from app.models import *
 
 @login_required
 def report(request):
+    MAX = 5
     # get all documents
     documents = DocumentFileDetail.objects.all()
     # get all files
@@ -24,12 +25,12 @@ def report(request):
     reject_file = DocumentFile.objects.filter(
         flagged=True)
 
-    registry = DocumentFile.objects.filter(stage=STAGES[0])
-    reception = DocumentFile.objects.filter(stage=STAGES[1])
-    disassembly = DocumentFile.objects.filter(stage=STAGES[2])
-    transcription = DocumentFile.objects.filter(stage=STAGES[3])
-    qa = DocumentFile.objects.filter(stage=STAGES[4])
-    scanning = DocumentFile.objects.filter(stage=STAGES[5])
+    registry = DocumentFile.objects.filter(stage=STAGES[0]).order_by('-created_on')
+    reception = DocumentFile.objects.filter(stage=STAGES[1]).order_by('-created_on')
+    disassembly = DocumentFile.objects.filter(stage=STAGES[2]).order_by('-created_on')
+    transcription = DocumentFile.objects.filter(stage=STAGES[3]).order_by('-created_on')
+    qa = DocumentFile.objects.filter(stage=STAGES[4]).order_by('-created_on')
+    scanning = DocumentFile.objects.filter(stage=STAGES[5]).order_by('-created_on')
 
     context = {
         "documents": documents,

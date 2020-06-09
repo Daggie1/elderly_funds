@@ -100,9 +100,9 @@
               <!-- /.card-header -->
               <div class="card-body">
                     <ul class="list-group">
-                    {% for file in registry %}
+                    {% for file in registry|slice:":5" %}
                     <tr>
-                      <a href="{% url 'file_details' file.pk %}" class="list-group-item">{{ file.file_barcode }}</a>
+                      <a href="{% url 'file_details' file.pk %}" class="list-group-item text-sm-left">{{ file.file_barcode }}</a>
                     </tr>
                     {% endfor %}
                     </ul>
@@ -131,7 +131,7 @@
               <!-- /.card-header -->
               <div class="card-body">
                      <ul class="list-group">
-                    {% for file in reception %}
+                    {% for file in reception|slice:":5" %}
                     <tr>
                       <a href="{% url 'file_details' file.pk %}" class="list-group-item">{{ file.file_barcode }}</a>
                     </tr>
@@ -160,7 +160,7 @@
               <!-- /.card-header -->
               <div class="card-body">
                       <ul class="list-group">
-                    {% for file in disassembly %}
+                    {% for file in disassembly|slice:":5" %}
                     <tr>
                       <a href="{% url 'file_details' file.pk %}" class="list-group-item">{{ file.file_barcode }}</a>
                     </tr>
@@ -188,7 +188,7 @@
               <!-- /.card-header -->
               <div class="card-body">
                  <ul class="list-group">
-                    {% for file in scanning %}
+                    {% for file in scanning|slice:":5" %}
                     <tr>
                       <a href="{% url 'file_details' file.pk %}" class="list-group-item">{{ file.file_barcode }}</a>
                     </tr>
@@ -215,7 +215,7 @@
               <!-- /.card-header -->
               <div class="card-body">
                  <ul class="list-group">
-                    {% for file in transcription %}
+                    {% for file in transcription|slice:":5" %}
                     <tr>
                       <a href="{% url 'file_details' file.pk %}" class="list-group-item">{{ file.file_barcode }}</a>
                     </tr>
@@ -242,7 +242,7 @@
               <!-- /.card-header -->
               <div class="card-body">
                      <ul class="list-group">
-                    {% for file in qa %}
+                    {% for file in qa|slice:":5" %}
                     <tr>
                       <a href="{% url 'file_details' file.pk %}" class="list-group-item">{{ file.file_barcode }}</a>
                     </tr>
