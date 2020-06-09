@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'bootstrap4',
     'django_fsm',
+    'session_security',
 ]
 JSONFORMS_SCHEMA_DIR = '/static/'
 
@@ -54,9 +55,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'session_security.middleware.SessionSecurityMiddleware',
+
 ]
 
 ROOT_URLCONF = 'edms.urls'
+
+SESSION_SECURITY_INSECURE = True
 
 TEMPLATES = [
     {
@@ -138,6 +143,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
