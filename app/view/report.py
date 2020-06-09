@@ -51,25 +51,6 @@ def report(request):
     return render(request, "home.html", context)
 
 
-def get_rejected_documents():
-    pass
-
-
-def get_accepted_documents():
-    pass
-
-
-def track_files():
-    pass
-
-
-def get_escalated_issues():
-    pass
-
-
-def open_file():
-    pass
-
 
 def send_report_message(request):
     report = request.GET.get('reasons')
@@ -88,4 +69,10 @@ def mark_as_resolved(request, id):
     message.resolved_by = request.user
     message.resolved = True
     message.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def delete_document_type(request, id):
+    document_type = DocumentType.objects.filter(pk=id)
+    document_type.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

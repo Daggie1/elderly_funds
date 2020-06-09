@@ -30,7 +30,7 @@ from app.view.file_type import FileTypeCreate, FileTypeList,FileTypeUpdateView,F
 from app.view.scanner import upload_documents_to_file, ScannerTableView, delete_document
 from app.view.transcribe import get_files_from_storage, update_document_file_detail, TranscribeFiles
 from app.view.user import profile,admin_check_user
-from .view.report import report, send_report_message, get_messages, mark_as_resolved
+from .view.report import report, send_report_message, get_messages, mark_as_resolved, delete_document_type
 from app.view.inspection import  inspect, receive, ReceiveBatch, OpenBatchFiles, DessembleFiles, DessemblerDocuments
 from app.view.qa import  QaFileList, open_file_for_qa
 from app.view.validate import ValidateFileList
@@ -79,6 +79,7 @@ urlpatterns = [
     # Document Types
     path('create/document/type', DocumentTypeCreate.as_view(), name='create_document_type'),
     path('view/document/types', DocumentTypeList.as_view(), name='list_document_types'),
+    path('document/type/delete/<str:id>',delete_document_type, name='delete_doc_type'),
 
     # document upload and viewing
     path('file/<file_ref_no>/documents', DocumentView.as_view(), name='document.view'),
