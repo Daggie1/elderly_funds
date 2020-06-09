@@ -288,3 +288,8 @@ def dispatch_to_transcriber(id):
 @register.filter
 def preview_document(url):
     return format_html(u'<embed id="pdf" src="{}"  width= "100%" height= "800">')
+
+
+@register.filter
+def clean_json(data):
+    return json.dumps(data)

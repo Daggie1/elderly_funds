@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load app_extras %}
 {% block content %}
     <div class="row">
            <div class="col-md-6">
@@ -28,7 +29,7 @@
                       <td>
                         {{ doc.document_description }}
                       </td>
-                      <td><button href="" class="btn btn-primary preview" value="{{ doc.document_field_specs }}"><span class="fa fa-edit"></span></button></td>
+                      <td><button href="" class="btn btn-primary preview" value="{{ doc.document_field_specs|clean_json }}"><span class="fa fa-eye"></span></button></td>
                       <td><a href="{% url 'delete_doc_type' doc.document_name %}" class="btn btn-danger"><span class="fa fa-trash"></span></a></td>
 
                     </tr>
@@ -85,8 +86,9 @@
     })
 
     function renderForm(data){
-        console.log(data)
-    let defaultSchema = data
+
+    let hema = JSON.parse(data)
+       let defaultSchema = JSON.parse(JSON.stringify(hema))
          let jsoneditor = null
     let defaultOptions = {
         iconlib: 'fontawesome5',
@@ -101,7 +103,9 @@
         if (jsoneditor) {
             jsoneditor.destroy()
         }
+
         jsoneditor = new window.JSONEditor(jsonEditorForm, defaultOptions)
+
     }
     initJsoneditor()
 

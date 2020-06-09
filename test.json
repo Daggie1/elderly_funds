@@ -1,0 +1,1 @@
+{'type': 'object', 'title': 'Document Title', 'required': ['name'], 'properties': {'name': {'type': 'string', 'default': 'Jeremy Dorn', 'minLength': 4, 'description': 'First and Last name'}}}
