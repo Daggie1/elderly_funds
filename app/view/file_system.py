@@ -5,7 +5,7 @@ from pathlib import Path
 
 from django.shortcuts import render
 
-DIRECTORY = Path("media/media")
+DIRECTORY = Path("media")
 
 
 # Create your views here.
