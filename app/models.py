@@ -594,7 +594,7 @@ def document_directory_path(instance, filename):
     folder = instance.file_reference.file_reference
     batch = instance.file_reference.batch
 
-    path = 'media/%d/{}/{}/{}{}'.format(batch, folder, name, ext)
+    path = 'media/{}/{}/{}{}'.format(batch, folder, name, ext)
     return datetime.now().strftime(path)
 
 

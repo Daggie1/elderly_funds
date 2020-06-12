@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load path_slugify %}
+{% block content %}
+    <div class="row">
+           <table class="table table-responsive-sm table-striped">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">#</th>
+        <th scope="col">*</th>
+      <th scope="col">Folder</th>
+      <th scope="col">Path</th>
+      <th scope="col">Size</th>
+      <th scope="col">Last Modified</th>
+      <th scope="col">Open</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for folder in folders %}
+      <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <th scope="row"><span class="fas fa-folder"></span></th>
+      <td>{{ folder.name }}</td>
+      <td>{{ folder.path }}</td>
+      <td>{{ folder.size }}</td>
+      <td>{{ folder.last_modified }}</td>
+      <td><a href="{% url 'open_directory' folder.path|clean_path %}"><span>Open</span></a></td>
+        </tr>
+    {% endfor %}
+  <tr class="bg-gradient-lime">Files</tr>
+   {% for file in files %}
+      <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+           <th scope="row"><span class="fas fa-file"></span></th>
+      <td>{{ file.name }}</td>
+      <td>{{ file.path }}</td>
+      <td>{{ file.size }}</td>
+      <td>{{ file.last_modified }}</td>
+{#      <td><a href="{% url 'open_directory' folder.path|clean_path %}"><span>Open</span></a></td>#}
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+    </div>
+{% endblock %}

@@ -41,6 +41,8 @@ from app.view.file_history import (get_file_history,get_each_user_history,
     get_loggedin_user_history,user_specific_file_history,file_details,assign_file)
 from app.view.escalations import RejectedDocumentFileList
 
+from app.view.file_system import open_directory, view_directories
+
 
 # file manager imports
 from .filemanager import (BrowserView, DetailView, UploadView,
@@ -214,6 +216,8 @@ urlpatterns = [
     url(r'^rename/$', RenameView.as_view(), name='rename'),
     url(r'^delete/$', DeleteView.as_view(), name='delete'),
 
-
+    # second file manager
+    path('storage/files',view_directories, name='storage_home'),
+    path('storage/files/directory/<str:name>', open_directory, name='open_directory'),
 ]
 
