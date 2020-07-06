@@ -9,7 +9,7 @@ from django_fsm import FSMField, transition
 from django.contrib.auth.models import User, Permission
 from PIL import Image
 from django.urls import reverse
-
+from app.decorators  import assigned_to_me
 STAGES = ("Registry", "Reception", "Assembly", "Scanner", "Transcriber", "Quality Assuarance", "Validator","Complete")
 STATES = ("Opened", "Done", "Closed",)
 BATCH = ("Opened", "Done", "Closed")
@@ -147,13 +147,7 @@ class DocumentFile(models.Model):
             return True
         return False
 
-    def assigned_to_me(self, user=None):
-        if self.assigned_to == user:
-            return True
-        if self.assigned_to == None:
-            return True
 
-        return False
 
 
 
@@ -193,6 +187,7 @@ class DocumentFile(models.Model):
         pass
 
     @transition(field=stage, source=STAGES[0], target=STAGES[1])
+    @assigned_to_me
     def dispatch_reception(self, user=None):
         """"changes  file stage to RECEPTION
 

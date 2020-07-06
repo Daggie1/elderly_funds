@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: django-service
+spec:
+  selector:
+    app: django-container
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+
+  type: LoadBalancer
+  externalIPs:
+    - 192.168.0.10
