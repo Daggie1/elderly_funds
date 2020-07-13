@@ -1,0 +1,6 @@
+version: '3'
+services:
+  daggy_django:
+    build:
+      context: .
+      dockerfile: ./docker/django/Dockerfile

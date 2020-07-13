@@ -1,9 +1,5 @@
 version: '3'
 services:
-  daggy_django:
-    build:
-      context: .
-      dockerfile: ./docker/django/Dockerfile
   db:
     restart: always
     build: ./postgres/
@@ -12,7 +8,6 @@ services:
       POSTGRES_HOST_AUTH_METHOD: "trust"
     ports:
       - "5432"
-
   web:
     restart: always
     build: .
