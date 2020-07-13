@@ -14,10 +14,16 @@ services:
     command: python3 manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
+    volumes:
+      - media_data:/usr/src/media
+    env_file:
+      - ./docker/envs/.env
     depends_on:
       - db
 networks:
   app-network:
     driver: bridge
+
 volumes:
-  edms:
+  media_data:
+
