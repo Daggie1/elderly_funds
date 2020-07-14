@@ -34,5 +34,5 @@ class ValidateFileList(LoginRequiredMixin, SingleTableMixin, FilterView):
 
 def open_file_for_Validator(request, id):
     file = DocumentFile.objects.get(pk=id)
-    table = ValidateQADocTable(DocumentFileDetail.objects.filter(file_reference=id))
+    table = ValidateQADocTable(DocumentFileDetail.objects.filter(pk=id))
     return render(request, 'qa/documents.html', {'file': file, 'table': table})
