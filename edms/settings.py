@@ -19,10 +19,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'rg$$9il&lqqfi57njx=9!*f_guufsmyz3v(1s1)t=bjr4zbv6d'
-
+#SECRET_KEY = 'rg$$9il&lqqfi57njx=9!*f_guufsmyz3v(1s1)t=bjr4zbv6d'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+
+DEBUG = int(os.environ.get("DEBUG", default=0))
 
 ALLOWED_HOSTS = []
 
@@ -88,15 +90,16 @@ if DOCKER:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'kubernetes_django',
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('POSTGRES_HOST'),
-        'PORT': os.getenv('POSTGRES_PORT', 5432)
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'HOST': 'db',
+            'PORT': '5432',
+            'PASSWORD': 'password'
 
         }
 
     }
+
 
 else:
     DATABASES = {
