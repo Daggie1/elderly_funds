@@ -633,4 +633,12 @@ class NotificationSentTo(models.Model):
     read_at = models.DateTimeField(null=True)
 
 
-
+class Stock(models.Model):
+    file_number = models.CharField(primary_key=True)
+    name = models.CharField(max_length=200)
+    nationality = models.CharField(max_length=50)
+    cross_reference = models.CharField(max_length=60)
+    file_category = models.CharField(max_length=60)
+    date_last_correspondence = models.DateTimeField(null=True)
+    date_first_correspondence = models.DateTimeField(null=True)
+    location_of_file = models.CharField(max_length=40)
