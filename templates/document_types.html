@@ -13,7 +13,7 @@
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                      <th style="width: 10px">#</th>
+                      <th style="width: 10px">*</th>
                       <th>File Reference</th>
                       <th>File Type Description</th>
                       <th style="width: 40px">Edit</th>
@@ -86,10 +86,9 @@
     })
 
     function renderForm(data){
-
-    let hema = JSON.parse(data)
-       let defaultSchema = JSON.parse(JSON.stringify(hema))
-         let jsoneditor = null
+    let hema = JSON.parse(data);
+       let defaultSchema = JSON.parse(JSON.stringify(hema));
+         let jsoneditor = null;
     let defaultOptions = {
         iconlib: 'fontawesome5',
         object_layout: 'normal',
