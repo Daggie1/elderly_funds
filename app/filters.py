@@ -1,5 +1,5 @@
 import django_filters
-from .models import DocumentFile, DocumentFileDetail, Batch
+from .models import DocumentFile, DocumentFileDetail, Batch, Stock
 
 
 class DocumentFileFilter(django_filters.FilterSet):
@@ -18,3 +18,9 @@ class BatchFilter(django_filters.FilterSet):
     class Meta:
         model = Batch
         fields = ['batch_no', 'description']
+
+
+class StockFilter(django_filters.FilterSet):
+    class Meta:
+        model = Stock
+        fields = ['name', 'file_number', 'location_of_file']

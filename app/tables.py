@@ -4,7 +4,7 @@ import django_tables2 as tables
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django_tables2 import TemplateColumn, A
-from .models import DocumentFile, DocumentFileDetail, Batch, Modification
+from .models import DocumentFile, DocumentFileDetail, Batch, Modification, Stock
 from django.urls import  reverse
 
 class BatchTable(tables.Table):
@@ -22,6 +22,23 @@ class BatchTable(tables.Table):
         self.row_counter = getattr(self, 'row_counter', itertools.count(start = 1))
         return next(self.row_counter)
 
+
+
+class StockTable(tables.Table):
+    counter = tables.Column(empty_values=(), orderable=False)
+    class Meta:
+        attrs = {"class": "table table-bordered table-striped table-responsive"}
+        model = Stock
+        template_name = "django_tables2/bootstrap4.html"
+        fields = ('file_number', 'name', 'nationality', 'cross_reference', 'file_category', 'date_last_correspondence',
+                  'date_first_correspondence', 'location_of_file')
+
+
+    actions = TemplateColumn(template_name='batch/view_column.html')
+
+    def render_counter(self):
+        self.row_counter = getattr(self, 'row_counter', itertools.count(start = 1))
+        return next(self.row_counter)
 
 class ReturnBatchTable(tables.Table):
     # transitions = tables.Column(accessor='get_transition_options',verbose_name='Transition')

@@ -6,7 +6,7 @@ from django.forms import Form, SelectMultiple, NumberInput, HiddenInput, TextInp
 from django.forms.models import modelformset_factory, formset_factory
 from django_jsonforms.forms import JSONSchemaField
 
-from .models import Batch, Filer, Notification
+from .models import Batch, Filer, Notification, Stock
 from .models import DocumentFileType, DocumentType, Profile, DocumentFileDetail
 
 
@@ -151,3 +151,10 @@ class DirectoryCreateForm(forms.Form):
 class RenameForm(forms.Form):
     input_name = forms.CharField()
     old_name = forms.CharField()
+
+
+class StockForm(forms.ModelForm):
+    class Meta:
+        model = Stock
+        fields = ('file_number', 'name', 'nationality', 'cross_reference', 'file_category', 'date_last_correspondence',
+                  'date_first_correspondence', 'location_of_file')

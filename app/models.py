@@ -634,11 +634,22 @@ class NotificationSentTo(models.Model):
 
 
 class Stock(models.Model):
-    file_number = models.CharField(primary_key=True)
-    name = models.CharField(max_length=200)
+    FILE_LOCATIONS = [
+        ('REGISTRY', 'Registry'),
+        ('CITIZENSHIP','Citizenship'),
+        ('INVESTIGATION','Investigation')
+    ]
+    FILE_CATEGORY = [
+        ('TEMPORARY','Temporary'),
+        ('PERMANENT','Permanent'),
+        ('PARALLEL','Parallel')
+    ]
+
+    file_number = models.CharField(primary_key=True, max_length=50)
+    name = models.CharField(max_length=80)
     nationality = models.CharField(max_length=50)
     cross_reference = models.CharField(max_length=60)
-    file_category = models.CharField(max_length=60)
+    file_category = models.CharField(max_length=60, Choices=FILE_CATEGORY)
     date_last_correspondence = models.DateTimeField(null=True)
     date_first_correspondence = models.DateTimeField(null=True)
-    location_of_file = models.CharField(max_length=40)
+    location_of_file = models.CharField(max_length=40, Choices = FILE_LOCATIONS)
