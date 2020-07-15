@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'edms.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-DOCKER = False
+DOCKER = True
 if DOCKER:
     DATABASES = {
         'default': {
