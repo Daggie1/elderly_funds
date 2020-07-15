@@ -42,6 +42,7 @@ from app.view.file_history import (get_file_history,get_each_user_history,
 from app.view.escalations import RejectedDocumentFileList
 
 from app.view.file_system import open_directory, view_directories
+from app.view.stock import create_stock, StockListView, StockUpdateView
 
 
 # file manager imports
@@ -219,5 +220,9 @@ urlpatterns = [
     # second file manager
     path('storage/files',view_directories, name='storage_home'),
     path('storage/files/directory/<str:name>', open_directory, name='open_directory'),
+
+    #stock taking urls
+    path('stock/file', StockListView.as_view(),name='stock_index'),
+    path('stock/create', create_stock, name='stock_create'),
 ]
 

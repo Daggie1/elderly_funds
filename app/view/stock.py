@@ -27,7 +27,6 @@ class StockListView(LoginRequiredMixin, SingleTableMixin, FilterView):
                                   Stock.objects.all())
         self.table = StockTable(self.filter.qs)
         RequestConfig(self.request, paginate={'per_page': 10}).configure(self.table)
-        # return Batch.objects.filter(is_return_batch=False)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -38,19 +37,13 @@ class StockListView(LoginRequiredMixin, SingleTableMixin, FilterView):
 
 class StockUpdateView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMixin, UpdateView):
     model = Stock
-    fields = ['batch_no', 'description']
+    fields = ['file_number', 'name', 'nationality', 'cross_reference', 'file_category', 'date_last_correspondence',
+              'date_first_correspondence', 'location_of_file']
     template_name = 'stock/create.html'
     success_message = 'Record updated successfully'
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
         return super().form_valid(form)
-
-    def test_func(self):
-        batch = self.get_object()
-        if batch.created_by == self.request.user and batch.state != STATES[2]:
-            return True
-        return False
 
 
 @login_required
@@ -60,14 +53,10 @@ def create_stock(request):
 
         if form.is_valid():
             try:
-                stock = Stock.objects.create(batch_no=form.cleaned_data.get('batch_no'),
-                                             description=form.cleaned_data.get('description'),
-                                             created_by=request.user,
-                                             is_return_batch=False)
-                stock.save()
+                form.save()
                 messages.success(request, f" File Recorded successfully")
 
-                return redirect()
+                return redirect('stock_index')
 
             except AttributeError as e:
                 print(e)

@@ -34,7 +34,7 @@ class StockTable(tables.Table):
                   'date_first_correspondence', 'location_of_file')
 
 
-    actions = TemplateColumn(template_name='batch/view_column.html')
+    # actions = TemplateColumn(template_name='batch/view_column.html')
 
     def render_counter(self):
         self.row_counter = getattr(self, 'row_counter', itertools.count(start = 1))
