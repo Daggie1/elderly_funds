@@ -1,0 +1,15 @@
+[
+  {
+  "model": "auth.permission",
+  "fields": {
+    "codename": "can_manage_stock",
+    "name": "Can Manage Stock Inventory",
+    "content_type": 12
+  }
+},
+ {
+    "model": "auth.group",
+    "fields": {"name": "File Inventory Manager",
+      "permissions": [72]}
+  }
+]

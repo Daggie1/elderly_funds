@@ -1,0 +1,26 @@
+[
+  {
+  "model": "auth.permission",
+  "fields": {
+    "codename": "can_manage_stock",
+    "name": "Can Manage Stock Inventory",
+    "content_type": 12
+  }
+},
+ {
+    "model": "auth.group",
+    "fields": {"name": "File Inventory Manager",
+      "permissions": [72]}
+  },
+
+  {"model": "auth.user", "pk": 9, "fields":
+  {"password": "pbkdf2_sha256$150000$o12P8684JQwX$FssNo3YVEsyg05xm7oST9cAOXSBDLQka7QmabUb51Y4=",
+    "last_login": null, "is_superuser": false, "username": "321009",
+    "first_name": "", "last_name": "", "email": "inventorymanager@admin.com",
+    "is_staff": false, "is_active": true, "date_joined": "2020-05-17T19:53:05.588Z",
+    "groups": [7], "user_permissions": []}},
+
+  {"model": "app.profile", "pk": 9,
+    "fields": {"user": 9, "id_no": "321009", "phone": "07000000", "full_name": "Inventory Manager",
+      "first_login": false, "image": "default.jpg"}}
+]
