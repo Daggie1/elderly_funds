@@ -637,7 +637,11 @@ class Stock(models.Model):
     FILE_LOCATIONS = [
         ('REGISTRY', 'Registry'),
         ('CITIZENSHIP','Citizenship'),
-        ('INVESTIGATION','Investigation')
+        ('INVESTIGATION','Investigation'),
+        ('VISA','Visa'),
+        ('PERMITS','Permits'),
+        ('PERMANENT_RESIDENCE','Permanent Residence'),
+        ('INTERVIEW','Interview'),
     ]
     FILE_CATEGORY = [
         ('TEMPORARY','Temporary'),
@@ -646,6 +650,7 @@ class Stock(models.Model):
     ]
 
     file_number = models.CharField(primary_key=True, max_length=50)
+    comment = models.TextField(null=True, blank=True)
     name = models.CharField(max_length=80)
     nationality = models.CharField(max_length=50)
     cross_reference = models.CharField(max_length=60)

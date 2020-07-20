@@ -162,7 +162,7 @@ class StockForm(forms.ModelForm):
         }
 
         fields = ('file_number', 'name', 'nationality', 'cross_reference', 'file_category',
-                  'date_first_correspondence','date_last_correspondence', 'location_of_file')
+                  'date_first_correspondence','date_last_correspondence', 'location_of_file','comment')
         widgets = {'date_first_correspondence': forms.DateInput(attrs={'required': 'true',
                                                         'type':'date', 'id':'first_date',
                                                         }),
