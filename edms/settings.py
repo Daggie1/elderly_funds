@@ -86,13 +86,13 @@ WSGI_APPLICATION = 'edms.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-DOCKER = False
+DOCKER = True
 if DOCKER:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'postgres',
-            'USER': 'postgres',
+            'NAME': 'work',
+            'USER': 'edms',
             'HOST': 'db',
             'PORT': '5432',
             'PASSWORD': 'password'
