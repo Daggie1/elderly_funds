@@ -32,7 +32,7 @@ class StockTable(tables.Table):
         attrs = {"class": "table table-bordered table-striped table-responsive"}
         model = Stock
         template_name = "django_tables2/bootstrap4.html"
-        fields = ('file_number', 'name', 'nationality', 'cross_reference', 'file_category', 'date_last_correspondence',
+        fields = ('counter','file_number', 'name', 'nationality', 'cross_reference', 'file_category', 'date_last_correspondence',
                   'date_first_correspondence', 'location_of_file')
 
     actions = TemplateColumn(template_name='stock/view_column.html')
