@@ -4,7 +4,7 @@
                with font-awesome or any other icon font library -->
          <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'stock_index' %} menu-open {% endif %}">
             <a href="#" class="nav-link {% if request.resolver_match.url_name == 'stock_index'  %} active {% endif %} ">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-cubes"></i>
               <p>
                 File Stock
                 <i class="right fas fa-angle-left"></i>
@@ -13,7 +13,7 @@
             <ul class="nav nav-treeview">
             <li class="nav-item">
                 <a href="{% url 'stock_index' %}" class="nav-link {% if request.resolver_match.url_name == 'stock_index' %} active {% endif %}">
-                  <i class="fas fa-memory nav-icon"></i>
+                  <i class="fas fa-layer-group nav-icon"></i>
                   <p>Records</p>
                 </a>
               </li>

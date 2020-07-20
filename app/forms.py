@@ -156,13 +156,17 @@ class RenameForm(forms.Form):
 class StockForm(forms.ModelForm):
     class Meta:
         model = Stock
+        help_texts = {
+            'date_first_correspondence': 'Should be less than current date',
+            'date_last_correspondence': 'Must be earlier than date of last correspondence',
+        }
 
-        fields = ('file_number', 'name', 'nationality', 'cross_reference', 'file_category', 'date_last_correspondence',
-                  'date_first_correspondence', 'location_of_file')
+        fields = ('file_number', 'name', 'nationality', 'cross_reference', 'file_category',
+                  'date_first_correspondence','date_last_correspondence', 'location_of_file')
         widgets = {'date_first_correspondence': forms.DateInput(attrs={'required': 'true',
-                                                        'type':'date'
+                                                        'type':'date', 'id':'first_date',
                                                         }),
                    'date_last_correspondence': forms.DateInput(attrs={'required': 'true',
-                                                        'type':'date'
+                                                        'type':'date', 'id':'last_date',
                                                         }),
                    }

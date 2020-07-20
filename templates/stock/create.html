@@ -24,7 +24,7 @@
                     {% csrf_token %}
              {{ form|crispy }}
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block">Save File Records</button>
+                        <button type="submit"  onclick="javascript:return comparedate();" class="btn btn-primary btn-block">Save File Records</button>
                     </div>
 
                 </form>
@@ -47,6 +47,18 @@
     })
 
      })
+    function comparedate() {
+        var firstdate = document.getElementById("first_date").value;
+        var lastdate = document.getElementById("last_date").value;
+        if (firstdate < lastdate) {
+            {
+                $("#error-warning").show();
+                $("#error-warning").text("Please correct the To date");
+                return false;
+            }
+
+        }
+    }
 
     </script>
 {% endblock %}
