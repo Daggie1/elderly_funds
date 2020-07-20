@@ -1,0 +1,74 @@
+{
+  "title": "Passport",
+  "type": "object",
+  "required": [
+    "Passport No",
+    "Immigration File No",
+    "Full Names",
+    "Date of Issue",
+    "Date of Expiry",
+    "Issueing Office",
+    "Country of Issue",
+"Gender",
+"Place of Birth",
+"Date of Birth",
+"Nationality"
+
+  ],
+"properties": {
+    "Passport No": {
+      "type": "integer"
+    },
+"Immigration File No": {
+      "type": "integer"
+    },
+"Full Names": {
+      "type": "string"
+    },
+"Date of Issue": {
+     "type": "string",
+      "format": "date",
+      "options": {
+        "flatpickr": {}
+      }
+},
+"Date of Expiry": {
+     "type": "string",
+      "format": "date",
+      "options": {
+        "flatpickr": {}
+      }
+},
+"Issueing Office": {
+     "type": "string"
+
+},
+"Country of Issue": {
+     "type": "string"
+
+},
+"Place of Birth": {
+     "type": "string"
+
+},
+"Date of Birth": {
+     "type": "string",
+      "format": "date",
+      "options": {
+        "flatpickr": {}
+      }
+},
+"Nationality": {
+     "type": "string"
+
+},
+"Gender": {
+      "type": "string",
+      "enum": [
+        "male",
+        "female",
+        "other"
+      ]
+    }
+}
+}

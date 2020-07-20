@@ -1,0 +1,74 @@
+{
+  "title": "Endosement",
+  "type": "object",
+  "required": [
+    "Full name of applicant",
+"Date of application",
+    "Date of birth",
+"Place of issue",
+"Issuing authority",
+"Birth entry no",
+    "Place of birth",
+    "Nationality",
+    "Passport no",
+    "Full names on passport",
+    "Foreigners ID card",
+"Other countrys citizen certificate ID"
+
+
+
+  ],
+"properties": {
+     "Foreigners ID card": {
+      "type": "integer"
+    },
+      "Other countrys citizen certificate ID": {
+      "type": "integer"
+    },
+    "Birth entry no": {
+      "type": "integer"
+    },
+"Passport no": {
+      "type": "integer"
+    },
+"Full name of applicant": {
+      "type": "string"
+    },
+  "Issuing authority": {
+      "type": "string"
+    },
+
+
+"Place of issue": {
+     "type": "string"
+
+},
+"Place of birth": {
+     "type": "string"
+
+},
+"Date of birth": {
+     "type": "string",
+      "format": "date",
+      "options": {
+        "flatpickr": {}
+      }
+},
+"Date of application": {
+     "type": "string",
+      "format": "date",
+      "options": {
+        "flatpickr": {}
+      }
+},
+"Full names on passport": {
+     "type": "string"
+
+},
+
+"Nationality": {
+     "type": "string"
+
+}
+}
+}

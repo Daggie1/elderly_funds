@@ -156,5 +156,13 @@ class RenameForm(forms.Form):
 class StockForm(forms.ModelForm):
     class Meta:
         model = Stock
+
         fields = ('file_number', 'name', 'nationality', 'cross_reference', 'file_category', 'date_last_correspondence',
                   'date_first_correspondence', 'location_of_file')
+        widgets = {'date_first_correspondence': forms.DateInput(attrs={'required': 'true',
+                                                        'type':'date'
+                                                        }),
+                   'date_last_correspondence': forms.DateInput(attrs={'required': 'true',
+                                                        'type':'date'
+                                                        }),
+                   }
