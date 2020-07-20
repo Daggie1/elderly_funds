@@ -1,0 +1,13 @@
+{% load app_extras %}
+<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-v"></i>
+            </button>
+            <div class="dropdown-menu">
+                <div role="separator" class="dropdown-divider"></div>
+    <a class="btn btn-danger btn-block" href="{% url 'stock_delete' record.pk %}">Delete</a>
+                    <a class="btn btn-primary btn-block" href="{% url 'stock_update' record.pk %}">Edit</a>
+
+        </div>
+
+
+
