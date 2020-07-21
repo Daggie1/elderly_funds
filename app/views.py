@@ -254,7 +254,7 @@ class GroupUpdateView(LoginRequiredMixin, UpdateView):
     success_url = '/roles/'
 
     fields = ['name', 'permissions']
-    template_name = 'multi_auth/groups/create.html'
+    template_name = 'create_group.html'
 
 
 class UserDeleteView(LoginRequiredMixin, DeleteView):
@@ -262,7 +262,13 @@ class UserDeleteView(LoginRequiredMixin, DeleteView):
 
     model = User
     success_url = '/users/'
-    template_name = ''
+    template_name = 'user/delete_confirm.html'
+class GroupDeleteView(LoginRequiredMixin, DeleteView):
+    permission_required = 'auth.delete_user'
+
+    model = User
+    success_url = '/roles/'
+    template_name = 'group_delete_confirm.html'
 
 
 @login_required

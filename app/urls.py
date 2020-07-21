@@ -13,7 +13,7 @@ from .views import (
      add_group, update_document_content,
     validate_document_content,
     receiver_batch_submit,
-    start_scanning,start_qa,start_validate,change_password)
+    start_scanning,start_qa,start_validate,change_password, GroupDeleteView)
 from .view.user import reset_default_password
 from app.view.file import (
                             FilesView, DocumentFileCreate, DocumentFileList,
@@ -116,6 +116,7 @@ urlpatterns = [
     path('roles/', GroupListView.as_view(), name='groups.index'),
     path('roles/create/', add_group, name='roles.create'),
     path('roles/update/<int:pk>/', GroupUpdateView.as_view(), name='groups.update'),
+path('roles/delete/<int:pk>/', GroupDeleteView.as_view(), name='groups.delete'),
     #
 
     path('login/', Login.as_view(), name='login'),
@@ -224,7 +225,7 @@ urlpatterns = [
     #stock taking urls
     path('stock/file', StockListView.as_view(),name='stock_index'),
     path('stock/create', create_stock, name='stock_create'),
-    path('stock/update/<int:pk>/',StockUpdateView.as_view(), name='stock_update'),
-    path('stock/delete/<int:pk>/', StockDeleteView.as_view(), name='stock_delete'),
+    path('stock/update/<str:pk>/',StockUpdateView.as_view(), name='stock_update'),
+    path('stock/delete/<str:pk>/', StockDeleteView.as_view(), name='stock_delete'),
 ]
 

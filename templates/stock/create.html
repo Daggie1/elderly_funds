@@ -50,10 +50,11 @@
     function comparedate() {
         var firstdate = document.getElementById("first_date").value;
         var lastdate = document.getElementById("last_date").value;
-        if (firstdate < lastdate) {
+        if (firstdate > lastdate) {
             {
-                $("#error-warning").show();
-                $("#error-warning").text("Please correct the To date");
+                {#$("#error-warning").show();#}
+                {#$("#error-warning").text("Please correct the To date");#}
+                alert("First date correspondence should be equal or less than last date correspondence");
                 return false;
             }
 
