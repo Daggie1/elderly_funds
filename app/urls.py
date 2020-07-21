@@ -224,7 +224,7 @@ urlpatterns = [
     #stock taking urls
     path('stock/file', StockListView.as_view(),name='stock_index'),
     path('stock/create', create_stock, name='stock_create'),
-    path('stock/update/<int:pk>/',StockUpdateView.as_view(), name='stock_update'),
-    path('stock/delete/<int:pk>/', StockDeleteView.as_view(), name='stock_delete'),
+    path('stock/update/<str:pk>/',StockUpdateView.as_view(), name='stock_update'),
+    path('stock/delete/<str:pk>/', StockDeleteView.as_view(), name='stock_delete'),
 ]
 
