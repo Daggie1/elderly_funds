@@ -266,7 +266,7 @@ class UserDeleteView(LoginRequiredMixin, DeleteView):
 class GroupDeleteView(LoginRequiredMixin, DeleteView):
     permission_required = 'auth.delete_user'
 
-    model = User
+    model = Group
     success_url = '/roles/'
     template_name = 'group_delete_confirm.html'
 
