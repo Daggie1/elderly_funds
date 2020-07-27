@@ -3,6 +3,31 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
+            <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'home'%} menu-open {% endif %}">
+            <a href="#" class="nav-link  {% if request.resolver_match.url_name == 'home'%} active {% endif %} ">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+            {% if user.is_superuser %}
+              <li class="nav-item">
+                <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %} active {% endif %}">
+                  <i class="fas fa-flag nav-icon"></i>
+                  <p>Reports</p>
+                </a>
+              </li>
+            {% endif %}
+             <li class="nav-item">
+                <a href=" #" class="nav-link ">
+                  <i class="fas fa-chart-pie nav-icon"></i>
+                  <p>Analytics</p>
+                </a>
+              </li>
+            </ul>
+             </li>
             {% if perms.auth %}
             <li class="nav-item has-treeview {% if request.resolver_match.url_name == 'users.index' or request.resolver_match.url_name == 'users.create' or request.resolver_match.url_name == 'groups.index' or request.resolver_match.url_name == 'roles.create'  %} menu-open {% endif %}">
             <a href="#" class="nav-link {% if request.resolver_match.url_name == 'users.index' or request.resolver_match.url_name == 'users.create' or request.resolver_match.url_name == 'groups.index' or request.resolver_match.url_name == 'roles.create'  %} active {% endif %} ">

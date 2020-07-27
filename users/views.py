@@ -155,7 +155,7 @@ def elderly_create(request):
 
     else:
         form = ElderyRegistrationForm()
-    return render(request, 'create_user.html', {
+    return render(request, 'create_elderly.html', {
         'form': form,
     })
 @login_required
@@ -188,7 +188,7 @@ def guardian_create(request,elderly_id):
 
     else:
         form = ElderyRegistrationForm()
-    return render(request, 'create_user.html', {
+    return render(request, 'create_elderly.html', {
         'form': form,
     })
 class UserDetailView(LoginRequiredMixin, DetailView):
