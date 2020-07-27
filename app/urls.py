@@ -11,9 +11,11 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     # Auth
     path('users/', users_app_view.UserListView.as_view(), name='users.index'),
+    path('elderlys/', users_app_view.ElderlyListView.as_view(), name='users.elderly'),
+    path('guardians/', users_app_view.GuardiansListView.as_view(), name='users.guardians'),
     path('users/', users_app_view.UserListView.as_view(), name='users.index'),
     path('users/create/', users_app_view.user_create, name='users.create'),
-    path('users/create/elderly', users_app_view.elderly_create, name='users.create.elderly'),
+    path('create/elderly', users_app_view.elderly_create, name='users.create.elderly'),
     path('users/create/<int:elderly_id>/guardian', users_app_view.guardian_create, name='users.create.guardian'),
 
     path('users/<int:pk>/', users_app_view.UserDetailView.as_view(), name='users.detail'),

@@ -44,6 +44,16 @@ class UserListView(LoginRequiredMixin, ListView):
     model = User
     template_name = 'users.html'
 
+class ElderlyListView(LoginRequiredMixin, ListView):
+    model = User
+    template_name = 'elderly_users.html'
+    def get_queryset(self):
+        return User.objects.filter(groups__name="elderly",is_superuser=False)
+class GuardiansListView(LoginRequiredMixin, ListView):
+    model = User
+    template_name = 'guardians_users.html'
+    def get_queryset(self):
+        return User.objects.filter(groups__name="guardian",is_superuser=False)
 
 class UserDetailView(LoginRequiredMixin, DetailView):
     permission_required = 'auth.view_user'
@@ -133,14 +143,14 @@ def elderly_create(request):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             user = User.objects.create_user(username, email, password)
-            #user.groups.add(group)
+            user.groups.add(group)
             user.refresh_from_db()
             user.profile.id_no = form.cleaned_data.get('id_no')
             user.profile.phone = form.cleaned_data.get('phone')
             user.profile.full_name = form.cleaned_data.get('full_name')
             user.save()
             messages.success(request, f'Elderly created successfully!')
-            return redirect(reverse_lazy('users.create.guardian', kwargrs={'elderly_id': user.pk }))
+            return redirect('users.create.guardian', user.pk)
 
 
     else:
@@ -165,7 +175,7 @@ def guardian_create(request,elderly_id):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             user = User.objects.create_user(username, email, password)
-            # user.groups.add(group)
+            user.groups.add(group)
             user.refresh_from_db()
             user.profile.id_no = form.cleaned_data.get('id_no')
             user.profile.phone = form.cleaned_data.get('phone')

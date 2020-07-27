@@ -19,18 +19,31 @@
                  <li class="nav-item">
                 <a href="{% url 'users.index' %}" class="nav-link {% if request.resolver_match.url_name == 'users.index' %} active {% endif %}">
                   <i class="fas fa-user nav-icon"></i>
-                  <p>Users</p>
+                  <p>System managers</p>
                 </a>
               </li>
-            {% endif %}
-            {% if perms.auth.add_user %}
+                 {% if perms.auth.add_user %}
                  <li class="nav-item">
                 <a href="{% url 'users.create' %}" class="nav-link {% if request.resolver_match.url_name == 'users.create' %} active {% endif %} ">
                   <i class="fas fa-plus-circle nav-icon"></i>
-                  <p>Add user</p>
+                  <p>Add system manager</p>
                 </a>
               </li>
             {% endif %}
+                 <li class="nav-item">
+                <a href="{% url 'users.elderly' %}" class="nav-link {% if request.resolver_match.url_name == 'users.elderly' %} active {% endif %}">
+                  <i class="fas fa-user nav-icon"></i>
+                  <p>Elders</p>
+                </a>
+              </li>
+                 <li class="nav-item">
+                <a href="{% url 'users.guardians' %}" class="nav-link {% if request.resolver_match.url_name == 'users.guardians' %} active {% endif %}">
+                  <i class="fas fa-user nav-icon"></i>
+                  <p>Guardians</p>
+                </a>
+              </li>
+            {% endif %}
+
              {% if perms.auth.add_user %}
                  <li class="nav-item">
                 <a href="{% url 'users.create.elderly' %}" class="nav-link {% if request.resolver_match.url_name == 'users.create.elderly' %} active {% endif %} ">
