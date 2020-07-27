@@ -8,47 +8,9 @@ from app.models import *
 
 @login_required
 def report(request):
-    MAX = 5
-    # get all documents
-    documents = DocumentFileDetail.objects.all()
-    # get all files
-    files = DocumentFile.objects.all()
-    # get all document types
-    document_types = DocumentType.objects.all()
-    # get all file types
-    file_types = DocumentFileType.objects.all()
-    # get all users
-    users = User.objects.all()
 
-    file = DocumentFile.objects.first()
 
-    reject_file = DocumentFile.objects.filter(
-        flagged=True)
-
-    registry = DocumentFile.objects.filter(stage=STAGES[0]).order_by('-created_on')
-    reception = DocumentFile.objects.filter(stage=STAGES[1]).order_by('-created_on')
-    disassembly = DocumentFile.objects.filter(stage=STAGES[2]).order_by('-created_on')
-    transcription = DocumentFile.objects.filter(stage=STAGES[3]).order_by('-created_on')
-    qa = DocumentFile.objects.filter(stage=STAGES[4]).order_by('-created_on')
-    scanning = DocumentFile.objects.filter(stage=STAGES[5]).order_by('-created_on')
-
-    context = {
-        "documents": documents,
-        "files": files,
-        "document_types": document_types,
-        "file_types": file_types,
-        "users": users,
-        "registry": registry,
-        "reception": reception,
-        "qa": qa,
-        "scanning": scanning,
-        "transcription": transcription,
-        "disassembly": disassembly,
-
-        "rejected_file": reject_file,
-    }
-
-    return render(request, "home.html", context)
+    return render(request, "home.html")
 
 
 

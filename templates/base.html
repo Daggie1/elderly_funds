@@ -1,8 +1,7 @@
 
 <!DOCTYPE html>
 {% load static %}
-{% load notifications_filters %}
-{% load messages %}
+
 <html>
 <head>
   <meta charset="utf-8">
@@ -64,27 +63,27 @@
       </li>
 
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="{% url 'home' %}" class="nav-link">Home</a>
-      </li>
-        {% if 'app.can_register_batch' in perms %}
-          <li class="nav-item d-none d-sm-inline-block">
-        <a href="{% url 'batch_create' %}" class="nav-link">Create Batch</a>
+        <a href="" class="nav-link">Home</a>
       </li>
 
           <li class="nav-item d-none d-sm-inline-block">
-        <a href="{% url 'batch_index' %}" class="nav-link">Add File</a>
+        <a href="" class="nav-link">Create Batch</a>
+      </li>
+
+          <li class="nav-item d-none d-sm-inline-block">
+        <a href="" class="nav-link">Add File</a>
       </li>
 
 
           <li class="nav-item d-none d-sm-inline-block">
-        <a href="{% url 'list_document_files' %}" class="nav-link">Add Documents</a>
+        <a href="" class="nav-link">Add Documents</a>
       </li>
-        {% endif %}
-    {% if 'app.can_transcribe_file' in perms %}
+
+
           <li class="nav-item d-none d-sm-inline-block">
-        <a href="{% url 'list_transcribe_files' %}" class="nav-link">Transcribe Document</a>
+        <a href="" class="nav-link">Transcribe Document</a>
       </li>
-{% endif %}
+
     </ul>
 
     <!-- Right navbar links -->
@@ -93,7 +92,7 @@
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-envelope"></i>
-          <span class="badge badge-warning navbar-badge">{{ pending_tickets }}</span>
+          <span class="badge badge-warning navbar-badge"></span>
         </a>
 
       </li>
@@ -101,29 +100,28 @@
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
-          <span class="badge badge-warning navbar-badge">{%  if  user.notificationsentto_set.all.count > 0 %} {{user.notificationsentto_set.all | unread_notification_count  }}   {% endif %}</span>
+          <span class="badge badge-warning navbar-badge"></span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">{%  if  user.notificationsentto_set.all.count > 0 %}{{ user.notificationsentto_set.all | unread_notification_count  }}
-              new notification(s)
-              {% else %}
-              no new notifications
-          {% endif %}</span>
+          <span class="dropdown-item dropdown-header">
+
+
+          </span>
           <div class="dropdown-divider"></div>
 
 
-        {% for notification in  user.notificationsentto_set.all   %}
-          <a href="{%  url 'my_escalated_files' %}" class="dropdown-item">
-            <i class="fas fa-file-pdf mr-2"></i> {{ notification.notification.file }} Flagged
-            <span class="float-right text-muted text-sm">{{ notification.notification.created_at }}</span>
+
+          <a href="" class="dropdown-item">
+            <i class="fas fa-file-pdf mr-2"></i>  Flagged
+            <span class="float-right text-muted text-sm">date</span>
           </a>
           <div class="dropdown-divider"></div>
-        {% endfor %}
-{%  if  user.notificationsentto_set.all.count > 0 %}
 
 
-          <a href="{%  url 'my_escalated_files' %}" class="dropdown-item dropdown-footer">See All Notifications</a>
-        {% endif %}
+
+
+          <a href="" class="dropdown-item dropdown-footer">See All Notifications</a>
+
         </div>
       </li>
         <li class="nav-item dropdown user-menu">
